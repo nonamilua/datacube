@@ -10,6 +10,12 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --experimental-strip-types --test tests/*.test.ts"
   },
-  "dependencies": { "bootstrap": "^5.3.8" },
-  "devDependencies": { "typescript": "^5.9.3", "vite": "^7.3.0" }
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "lucide": "^1.52.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0"
+  }
 }

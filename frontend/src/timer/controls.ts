@@ -7,6 +7,7 @@ export function bindControls(timer: SolveTimer, area: HTMLElement, onSolve: (sol
   const isEditable = (target: EventTarget | null) => target instanceof Element && Boolean(target.closest('input, select, textarea, [contenteditable], summary, a, button:not(#timer-area)'));
 
   window.addEventListener('keydown', (event) => {
+    if (area instanceof HTMLButtonElement && area.disabled) return;
     if (area.closest('[hidden]')) return;
     if (event.repeat || event.ctrlKey || event.metaKey || event.altKey || isEditable(event.target)) return;
     if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'Escape'].includes(event.key) || event.key.startsWith('F') && /^F\d+$/.test(event.key)) return;
@@ -27,6 +28,7 @@ export function bindControls(timer: SolveTimer, area: HTMLElement, onSolve: (sol
     else timer.release();
   });
   area.addEventListener('pointerdown', (event) => {
+    if (area instanceof HTMLButtonElement && area.disabled) return;
     if (!event.isPrimary || event.button !== 0) return;
     event.preventDefault();
     area.focus({ preventScroll: true });

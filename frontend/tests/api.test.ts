@@ -14,23 +14,26 @@ test('failed saves survive reload and retry with the same id', async () => {
     },
   });
   try {
-    queueSolve({ duration_ms: 12345, started_at: '2026-10-04T15:00:00Z' });
-    const queued = pendingSolves()[0];
+    const labels = { category_id: 2, cube_name: 'gan 12' };
+    queueSolve({ duration_ms: 12345, started_at: '2026-10-04T15:00:00Z' }, 1, labels);
+    const queued = pendingSolves(1)[0];
     globalThis.fetch = async () => new Response('', { status: 503 });
-    await assert.rejects(savePendingSolves());
-    assert.deepEqual(pendingSolves(), [queued]);
+    await assert.rejects(savePendingSolves(1));
+    assert.deepEqual(pendingSolves(1), [queued]);
+    assert.deepEqual(pendingSolves(2), []);
     globalThis.fetch = async (_url, options) => {
       assert.deepEqual(JSON.parse(options?.body as string), queued);
+      assert.equal((options?.headers as Record<string, string>)['X-Namicubes-Account'], '1');
       // A new solve arrives while the first save is in progress.
-      queueSolve({ duration_ms: 20000, started_at: '2026-10-04T15:01:00Z' });
+      queueSolve({ duration_ms: 20000, started_at: '2026-10-04T15:01:00Z' }, 1, labels);
       return new Response('{}', { status: 201 });
     };
-    await savePendingSolves();
-    assert.equal(pendingSolves().length, 1);
-    assert.equal(pendingSolves()[0].duration_ms, 20000);
+    await savePendingSolves(1);
+    assert.equal(pendingSolves(1).length, 1);
+    assert.equal(pendingSolves(1)[0].duration_ms, 20000);
     globalThis.fetch = async () => new Response('{}', { status: 201 });
-    await savePendingSolves();
-    assert.deepEqual(pendingSolves(), []);
+    await savePendingSolves(1);
+    assert.deepEqual(pendingSolves(1), []);
   } finally {
     globalThis.fetch = originalFetch;
     if (originalStorage) Object.defineProperty(globalThis, 'localStorage', originalStorage);

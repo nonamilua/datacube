@@ -17,14 +17,27 @@
     <header class="app-header">
       <a class="brand" href="./">namicubes</a>
       <nav aria-label="navigation">
-        <button id="timer-tab" class="nav-button" aria-current="page">timer</button>
-        <button id="analysis-tab" class="nav-button">analysis</button>
+        <button id="timer-tab" class="nav-button icon-button" aria-current="page" aria-label="timer" title="timer"></button>
+        <button id="analysis-tab" class="nav-button icon-button" aria-label="analysis" title="analysis"></button>
       </nav>
       <details id="settings-panel" class="settings-panel">
-        <summary aria-label="timer settings">settings</summary>
-        <div class="settings-content form-check form-switch">
-          <input id="hidden-time" class="form-check-input" type="checkbox" role="switch" />
-          <label class="form-check-label" for="hidden-time">hide timer</label>
+        <summary class="icon-button" aria-label="settings" title="settings"></summary>
+        <div class="settings-content">
+          <label class="setting-field" for="event-select">event
+            <select id="event-select"></select>
+          </label>
+          <label class="setting-field" for="cube-name">cube
+            <input id="cube-name" type="text" maxlength="100" list="cube-options" autocomplete="off" />
+            <datalist id="cube-options"></datalist>
+          </label>
+          <div class="form-check form-switch">
+            <input id="hidden-time" class="form-check-input" type="checkbox" role="switch" />
+            <label class="form-check-label" for="hidden-time">hide timer</label>
+          </div>
+          <div class="account-controls">
+            <span id="account-name"></span>
+            <button id="logout" class="nav-button" type="button">sign out</button>
+          </div>
         </div>
       </details>
     </header>
@@ -44,6 +57,20 @@
       <ol id="recent-solves" class="solve-list"></ol>
     </section>
     <p id="announcement" class="visually-hidden" role="status" aria-live="polite"></p>
+    <dialog id="account-dialog" class="account-dialog" aria-labelledby="account-heading">
+      <form id="account-form">
+        <h1 id="account-heading">sign in</h1>
+        <label class="setting-field" for="username">username
+          <input id="username" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[a-zA-Z0-9_]+" required />
+        </label>
+        <label class="setting-field" for="password">password
+          <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="128" required />
+        </label>
+        <p id="account-message" class="storage-note" role="status" hidden></p>
+        <button id="account-submit" class="account-button" type="submit">sign in</button>
+        <button id="account-toggle" class="nav-button" type="button">create account</button>
+      </form>
+    </dialog>
   </main>
   <script type="module" src="/src/main.ts"></script>
 </body>

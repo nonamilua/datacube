@@ -3,6 +3,7 @@ from sqlmodel import SQLModel
 
 from backend.database import engine
 from backend.models.solve import Solve  # Register the table in metadata.
+from backend.models.account import User, LoginSession, Cube, Category
 
 if context.is_offline_mode():
     context.configure(url=str(engine.url), target_metadata=SQLModel.metadata, literal_binds=True)

@@ -11,6 +11,15 @@ export class SolveTimer {
   private lastDuration = 0;
   private previousState: TimerState = 'IDLE';
 
+  reset(): void {
+    this.state = 'IDLE';
+    this.previousState = 'IDLE';
+    this.heldAt = 0;
+    this.runningAt = 0;
+    this.startedAt = '';
+    this.lastDuration = 0;
+  }
+
   prepare(now = performance.now()): void {
     if (this.state !== 'IDLE' && this.state !== 'STOPPED') return;
     this.previousState = this.state;

@@ -22,6 +22,10 @@ def client(tmp_path, monkeypatch):
 
     app.dependency_overrides[get_session] = session
     with TestClient(app) as client:
+        client.headers["X-Namicubes-Request"] = "1"
+        registered = client.post("/api/auth/register", json={"username": "tester", "password": "test password"})
+        assert registered.status_code == 201
+        client.headers["X-Namicubes-Account"] = str(registered.json()["id"])
         yield client
     app.dependency_overrides.clear()
     engine.dispose()
@@ -43,6 +47,7 @@ def test_save_reload_and_retry(client):
     page = client.get("/api/solves").json()
     assert page == {"items": [saved], "total": 1}
     with TestClient(app) as reopened:
+        reopened.cookies.update(client.cookies)
         assert reopened.get("/api/solves").json() == page
     assert client.post("/api/solves", json={**data, "duration_ms": 1}).status_code == 409
 
@@ -63,3 +68,101 @@ def test_order_and_pagination(client):
     assert page["total"] == 3
     assert page["items"][0]["started_at"] == "2026-10-04T13:00:00Z"
     assert client.get("/api/solves?limit=0").status_code == 422
+
+
+def test_accounts_and_ownership(client):
+    events = client.get("/api/organization").json()["categories"]
+    expected = {"3x3", "2x2", "4x4", "5x5", "6x6", "7x7", "3bld", "3oh", "clock", "megaminx", "pyraminx", "skewb", "square 1", "4bld", "5bld", "3mbld", "fmc", "fto"}
+    assert {event["name"] for event in events} == expected
+    data = payload(category_id=events[0]["id"], cube_name="  gan 12  ")
+    saved = client.post("/api/solves", json=data)
+    assert saved.status_code == 201
+    assert client.post("/api/solves", json=data).status_code == 200
+    assert client.get("/api/organization").json()["cubes"][0]["name"] == "gan 12"
+    with TestClient(app) as other:
+        other.headers["X-Namicubes-Request"] = "1"
+        registered = other.post("/api/auth/register", json={"username": "other", "password": "other password"})
+        assert registered.status_code == 201
+        other.headers["X-Namicubes-Account"] = str(registered.json()["id"])
+        assert other.get("/api/solves").json() == {"items": [], "total": 0}
+        assert other.get("/api/organization").json()["cubes"] == []
+        assert other.post("/api/solves", json=data).status_code == 404
+        assert other.post("/api/solves", json={**data, "category_id": None}).status_code == 409
+        assert other.post("/api/solves", json=payload(user_id=client.headers["X-Namicubes-Account"])).status_code == 422
+
+
+def test_login_logout_and_csrf(client):
+    old_cookie = client.cookies.get("namicubes_session")
+    assert client.post("/api/auth/logout").status_code == 204
+    with TestClient(app) as replay:
+        replay.cookies.set("namicubes_session", old_cookie)
+        assert replay.get("/api/auth/me").status_code == 401
+    assert client.get("/api/auth/me").status_code == 401
+    assert client.get("/api/solves").status_code == 401
+    assert client.post("/api/auth/login", json={"username": "tester", "password": "wrong password"}).status_code == 401
+    response = client.post("/api/auth/login", json={"username": "TESTER", "password": "test password"})
+    assert response.status_code == 200
+    assert "HttpOnly" in response.headers["set-cookie"]
+    assert "SameSite=strict" in response.headers["set-cookie"]
+    assert client.cookies.get("namicubes_session") != old_cookie
+    assert client.post("/api/auth/register", json={"username": "tester", "password": "test password"}).status_code == 409
+    client.headers.pop("X-Namicubes-Request")
+    assert client.post("/api/auth/logout").status_code == 403
+    assert client.get("/api/auth/me").status_code == 200
+
+
+def test_stale_account_guard(client):
+    client.headers["X-Namicubes-Account"] = "99999"
+    assert client.post("/api/solves", json=payload()).status_code == 409
+    assert client.get("/api/solves").json()["total"] == 0
+
+
+def test_expired_session(client):
+    from datetime import datetime, timedelta, timezone
+    from backend.database import engine
+    from backend.models.account import LoginSession
+    from backend.services.auth import token_hash
+    with Session(engine) as session:
+        login = session.get(LoginSession, token_hash(client.cookies.get("namicubes_session")))
+        login.expires_at = datetime.now(timezone.utc) - timedelta(seconds=1)
+        session.add(login)
+        session.commit()
+    assert client.get("/api/auth/me").status_code == 401
+    assert client.post("/api/solves", json=payload()).status_code == 401
+
+
+def test_delete_solve_permanently(client):
+    from backend.database import engine
+    from backend.models.solve import Solve
+    from uuid import UUID
+    data = payload(cube_name="gan 12")
+    assert client.post("/api/solves", json=data).status_code == 201
+    assert client.delete(f"/api/solves/{data['id']}").status_code == 204
+    assert client.get("/api/solves").json() == {"items": [], "total": 0}
+    with Session(engine) as session:
+        assert session.get(Solve, UUID(data["id"])) is None
+    with TestClient(app) as reopened:
+        reopened.cookies.update(client.cookies)
+        assert reopened.get("/api/solves").json()["total"] == 0
+    assert client.delete(f"/api/solves/{data['id']}").status_code == 404
+    # Deleting a solve does not remove a reusable cube record.
+    assert client.get("/api/organization").json()["cubes"][0]["name"] == "gan 12"
+
+
+def test_delete_ownership_and_authentication(client):
+    data = payload()
+    client.post("/api/solves", json=data)
+    url = f"/api/solves/{data['id']}"
+    with TestClient(app) as other:
+        other.headers["X-Namicubes-Request"] = "1"
+        assert other.delete(url).status_code == 401
+        registered = other.post("/api/auth/register", json={"username": "other", "password": "other password"})
+        other.headers["X-Namicubes-Account"] = str(registered.json()["id"])
+        assert other.delete(url).status_code == 404
+        assert other.delete(f"/api/solves/{uuid4()}").status_code == 404
+        other.headers["X-Namicubes-Account"] = client.headers["X-Namicubes-Account"]
+        assert other.delete(url).status_code == 409
+    assert client.get("/api/solves").json()["total"] == 1
+    client.headers.pop("X-Namicubes-Request")
+    assert client.delete(url).status_code == 403
+    assert client.get("/api/solves").json()["total"] == 1

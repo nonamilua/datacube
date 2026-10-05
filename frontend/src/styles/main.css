@@ -24,7 +24,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -38,24 +39,26 @@ input {
 }
 
 .app-header {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: clamp(12px, 4vw, 24px);
 }
 
 .brand {
+  flex-shrink: 0;
   color: var(--checkbox-bg);
   text-decoration: none;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 500;
   letter-spacing: -.6px;
 }
 
 .app-header nav {
   display: flex;
-  gap: 4px;
+  gap: 12px;
 }
 
 .nav-button,
@@ -75,7 +78,6 @@ input {
 }
 
 .settings-panel {
-  position: relative;
   margin-left: auto;
 }
 
@@ -89,15 +91,93 @@ input {
 
 .settings-content {
   position: absolute;
-  top: 48px;
+  top: calc(100% + 16px);
   right: 0;
   z-index: 1;
-  width: 220px;
+  width: min(360px, 100%);
+  max-height: calc(100svh - 120px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
-  padding: 20px 16px 20px 48px;
+  padding: 24px;
   border-radius: 6px;
   font-size: 12px;
+}
+
+.setting-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.setting-field input,
+.setting-field select {
+  min-width: 0;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.setting-field input:focus,
+.setting-field select:focus {
+  outline: 1px solid var(--accent);
+}
+
+.account-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--panel-border);
+  padding-top: 16px;
+}
+
+.account-dialog {
+  width: min(360px, calc(100% - 32px));
+  max-height: calc(100svh - 32px);
+  padding: 24px;
+  background: var(--panel-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+}
+
+.account-dialog::backdrop {
+  background: var(--bs-body-bg);
+}
+
+.account-dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.account-dialog h1 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.account-button {
+  min-height: 44px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--bs-body-bg);
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.solve-labels {
+  color: var(--muted);
+  font-size: 11px;
+  overflow-wrap: anywhere;
 }
 
 .form-check-input:checked {
@@ -140,8 +220,11 @@ input {
 }
 
 .timer-value.hidden-value {
-  font-size: clamp(32px, 10vw, 72px);
-  letter-spacing: .05em;
+  font-size: clamp(32px, 10vw, 106px);
+  letter-spacing: 0;
+  min-height: 1.2em;
+  min-width: 5ch;
+  text-align: center;
 }
 
 .timer-hint {
@@ -216,13 +299,38 @@ summary:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
-.solve-list time {
+.delete-solve {
   color: var(--muted);
-  font-size: 12px;
+  margin-left: auto;
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
-.solve-list time {
-  margin-left: auto;
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
+}
+
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.delete-solve:hover,
+.delete-solve:focus-visible {
+  color: var(--accent);
+}
+
+.icon-button:disabled {
+  opacity: .45;
+  cursor: default;
 }
 
 [hidden] {
@@ -241,21 +349,5 @@ summary:focus-visible {
 
   .settings-panel {
     margin-left: auto;
-  }
-}
-
-@media (max-width: 380px) {
-  .app-header {
-    gap: 4px;
-  }
-
-  .brand {
-    font-size: 15px;
-  }
-
-  .nav-button,
-  .settings-panel summary {
-    padding-inline: 6px;
-    font-size: 11px;
   }
 }

@@ -13,6 +13,8 @@ class SolveCreate(SQLModel):
     duration_ms: StrictInt = Field(ge=0)
     started_at: AwareDatetime
     penalty: Literal["OK", "+2", "DNF"] = "OK"
+    category_id: int | None = None
+    cube_name: str | None = Field(default=None, max_length=100)
 
     @field_validator("started_at")
     @classmethod
@@ -30,6 +32,9 @@ class Solve(SQLModel, table=True):
     duration_ms: int
     started_at: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False, index=True))
     penalty: str = "OK"
+    user_id: int | None = Field(default=None, foreign_key="users.id", index=True)
+    cube_id: int | None = Field(default=None, foreign_key="cubes.id")
+    category_id: int | None = Field(default=None, foreign_key="categories.id")
 
 
 class SolveRead(SQLModel):
@@ -37,6 +42,8 @@ class SolveRead(SQLModel):
     duration_ms: int
     started_at: datetime
     penalty: Literal["OK", "+2", "DNF"]
+    cube_id: int | None = None
+    category_id: int | None = None
 
     @field_validator("started_at")
     @classmethod

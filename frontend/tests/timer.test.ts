@@ -43,3 +43,19 @@ test('formats seconds and minute boundaries without rounding up', () => {
   assert.equal(formatTime(60000), '1:00.00');
   assert.equal(formatTime(123456), '2:03.45');
 });
+
+test('account reset clears the last solve and cancelled preparation cannot restore it', () => {
+  const timer = new SolveTimer();
+  timer.prepare(0);
+  timer.release(400);
+  const saved = timer.stop(1400)!;
+  timer.prepare(2000);
+  timer.reset();
+  timer.cancelPreparation();
+  assert.equal(timer.state, 'IDLE');
+  assert.equal(formatTime(timer.elapsed(3000)), '0.00');
+  assert.equal(saved.duration_ms, 1000);
+  timer.prepare(3000);
+  timer.release(3400);
+  assert.equal(timer.stop(3900)?.duration_ms, 500);
+});
