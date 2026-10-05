@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0d10" />
+  <link rel="icon" type="image/png" href="%BASE_URL%cube_logo3.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <title>namicubes</title>
+</head>
+
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <a class="brand" href="./">namicubes</a>
+      <nav aria-label="navigation">
+        <button id="timer-tab" class="nav-button" aria-current="page">timer</button>
+        <button id="analysis-tab" class="nav-button">analysis</button>
+      </nav>
+      <details id="settings-panel" class="settings-panel">
+        <summary aria-label="timer settings">settings</summary>
+        <div class="settings-content form-check form-switch">
+          <input id="hidden-time" class="form-check-input" type="checkbox" role="switch" />
+          <label class="form-check-label" for="hidden-time">hide timer</label>
+        </div>
+      </details>
+    </header>
+    <section id="timer-panel" class="timer-panel" aria-label="solve timer">
+      <button id="timer-area" class="timer-area"
+        aria-label="hold then release to start press to stop">
+        <span id="timer-value" class="timer-value">0.00</span>
+        <span id="timer-hint" class="timer-hint">hold to start</span>
+      </button>
+    </section>
+    <section id="analysis-panel" class="analysis-panel" aria-labelledby="recent-heading" hidden>
+      <div class="section-heading">
+        <h1 id="recent-heading">recent solves</h1><span id="solve-count">0 solves</span>
+      </div>
+      <p id="storage-status" class="storage-note" role="status" hidden></p>
+      <p id="empty-message" class="empty-message">no solves yet</p>
+      <ol id="recent-solves" class="solve-list"></ol>
+    </section>
+    <p id="announcement" class="visually-hidden" role="status" aria-live="polite"></p>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
