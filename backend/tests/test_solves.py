@@ -70,6 +70,19 @@ def test_order_and_pagination(client):
     assert client.get("/api/solves?limit=0").status_code == 422
 
 
+def test_all_history_includes_every_owned_solve(client):
+    for minute in range(15):
+        client.post("/api/solves", json=payload(started_at=f"2026-10-04T12:{minute:02d}:00Z"))
+    page = client.get("/api/solves/all").json()
+    assert page["total"] == len(page["items"]) == 15
+    assert page["items"][0]["started_at"] == "2026-10-04T12:14:00Z"
+    with TestClient(app) as other:
+        assert other.get("/api/solves/all").status_code == 401
+        other.headers["X-Namicubes-Request"] = "1"
+        other.post("/api/auth/register", json={"username":"other", "password":"other password"})
+        assert other.get("/api/solves/all").json() == {"items": [], "total": 0}
+
+
 def test_accounts_and_ownership(client):
     events = client.get("/api/organization").json()["categories"]
     expected = {"3x3", "2x2", "4x4", "5x5", "6x6", "7x7", "3bld", "3oh", "clock", "megaminx", "pyraminx", "skewb", "square 1", "4bld", "5bld", "3mbld", "fmc", "fto"}
@@ -166,3 +179,111 @@ def test_delete_ownership_and_authentication(client):
     client.headers.pop("X-Namicubes-Request")
     assert client.delete(url).status_code == 403
     assert client.get("/api/solves").json()["total"] == 1
+
+
+def test_penalty_changes_preserve_raw_time_and_persist(client):
+    data = payload()
+    saved = client.post("/api/solves", json=data).json()
+    url = f"/api/solves/{data['id']}"
+    for penalty in ("+2", "+2", "DNF", "OK"):
+        response = client.patch(url, json={"penalty": penalty})
+        assert response.status_code == 200
+        assert response.json() == {**saved, "penalty": penalty}
+        with TestClient(app) as reopened:
+            reopened.cookies.update(client.cookies)
+            assert reopened.get("/api/solves").json()["items"][0] == response.json()
+
+
+@pytest.mark.parametrize("data", [{"penalty": "bad"}, {}, {"penalty": "+2", "duration_ms": 1}, {"penalty": "OK", "user_id": 2}])
+def test_invalid_penalty_edit(client, data):
+    solve = payload()
+    client.post("/api/solves", json=solve)
+    assert client.patch(f"/api/solves/{solve['id']}", json=data).status_code == 422
+    assert client.get("/api/solves").json()["items"][0]["penalty"] == "OK"
+
+
+def test_penalty_edit_ownership_and_authentication(client):
+    data = payload()
+    client.post("/api/solves", json=data)
+    url = f"/api/solves/{data['id']}"
+    with TestClient(app) as other:
+        other.headers["X-Namicubes-Request"] = "1"
+        assert other.patch(url, json={"penalty": "DNF"}).status_code == 401
+        registered = other.post("/api/auth/register", json={"username": "other", "password": "other password"})
+        other.headers["X-Namicubes-Account"] = str(registered.json()["id"])
+        assert other.patch(url, json={"penalty": "DNF"}).status_code == 404
+        other.headers["X-Namicubes-Account"] = client.headers["X-Namicubes-Account"]
+        assert other.patch(url, json={"penalty": "DNF"}).status_code == 409
+    client.headers.pop("X-Namicubes-Request")
+    assert client.patch(url, json={"penalty": "DNF"}).status_code == 403
+    assert client.get("/api/solves").json()["items"][0]["penalty"] == "OK"
+
+
+def test_custom_value_persists_normalizes_and_is_owned(client):
+    data = payload()
+    client.post("/api/solves", json=data)
+    url = f"/api/solves/{data['id']}"
+    updated = client.patch(url, json={"penalty": "+2", "custom": "  Cross  "})
+    assert updated.status_code == 200
+    assert updated.json()["custom"] == "cross"
+    assert updated.json()["duration_ms"] == data["duration_ms"]
+    assert client.patch(url, json={"penalty": "DNF"}).json()["custom"] == "cross"
+    with TestClient(app) as reopened:
+        reopened.cookies.update(client.cookies)
+        assert reopened.get("/api/solves/all").json()["items"][0]["custom"] == "cross"
+    with TestClient(app) as other:
+        other.headers["X-Namicubes-Request"] = "1"
+        registered = other.post("/api/auth/register", json={"username": "other", "password": "other password"})
+        other.headers["X-Namicubes-Account"] = str(registered.json()["id"])
+        assert other.patch(url, json={"penalty": "OK", "custom": "changed"}).status_code == 404
+    assert client.patch(url, json={"penalty": "OK", "custom": "  "}).json()["custom"] is None
+
+
+def test_custom_and_cube_limits_and_literal_sql_like_text(client):
+    assert client.post("/api/solves", json=payload(cube_name="a" * 11)).status_code == 201
+    assert client.get("/api/organization").json()["cubes"][0]["name"] == "a" * 10
+    assert client.post("/api/solves", json=payload(cube_name="cube\u0000")).status_code == 422
+    data = payload(cube_name="guhongpro+")
+    assert client.post("/api/solves", json=data).status_code == 201
+    url = f"/api/solves/{data['id']}"
+    assert client.patch(url, json={"penalty": "OK", "custom": "ABCDEFGHIJK"}).json()["custom"] == "abcdefghij"
+    for value in ("nul\u0000", "line\ntext"):
+        assert client.patch(url, json={"penalty": "OK", "custom": value}).status_code == 422
+    # Quotes and SQL-like text are ordinary values, never interpolated into SQL.
+    text = "';drop--"
+    assert client.patch(url, json={"penalty": "OK", "custom": text}).json()["custom"] == text
+    assert client.get("/api/solves/all").json()["total"] == 2
+    assert any(cube["name"] == "guhongpro+" for cube in client.get("/api/organization").json()["cubes"])
+
+
+def test_scramble_saved_unchanged_retry_consistency_and_immutable_edits(client):
+    text = "R' U' F\n(1, -2) / R++ D--"
+    data = payload(scramble=text)
+    response = client.post("/api/solves", json=data)
+    assert response.status_code == 201
+    assert response.json()["scramble"] == text
+    assert client.post("/api/solves", json=data).status_code == 200
+    assert client.post("/api/solves", json={**data, "scramble":"R U"}).status_code == 409
+    url = f"/api/solves/{data['id']}"
+    assert client.patch(url, json={"penalty":"+2", "custom":"pll"}).json()["scramble"] == text
+    assert client.patch(url, json={"penalty":"OK", "scramble":"B L"}).status_code == 422
+    with TestClient(app) as reopened:
+        reopened.cookies.update(client.cookies)
+        assert reopened.get("/api/solves/all").json()["items"][0]["scramble"] == text
+    with TestClient(app) as other:
+        assert other.get("/api/solves/all").status_code == 401
+        other.headers["X-Namicubes-Request"] = "1"
+        registered = other.post("/api/auth/register", json={"username":"other", "password":"other password"})
+        other.headers["X-Namicubes-Account"] = str(registered.json()["id"])
+        assert other.get("/api/solves/all").json()["items"] == []
+        assert other.patch(url,json={"penalty":"DNF"}).status_code == 404
+    # A pre-feature retry has no scramble key and remains idempotent.
+    legacy = payload()
+    assert client.post("/api/solves",json=legacy).json()["scramble"] is None
+    assert client.post("/api/solves",json=legacy).status_code == 200
+
+
+@pytest.mark.parametrize("scramble", ["", "  ", "R\u0000U", "R" * 4097])
+def test_invalid_scramble_is_rejected(client, scramble):
+    assert client.post("/api/solves",json=payload(scramble=scramble)).status_code == 422
+    assert client.get("/api/solves/all").json()["items"] == []

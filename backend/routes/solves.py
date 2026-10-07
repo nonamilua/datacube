@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlmodel import Session, select
 
 from backend.database import get_session
-from backend.models.solve import Solve, SolveCreate, SolvePage, SolveRead
+from backend.models.solve import Solve, SolveCreate, SolvePage, SolveRead, SolveUpdate
 from backend.models.account import Category, Cube, User
 from backend.services.auth import current_user
 
@@ -27,7 +27,7 @@ def save_solve(data: SolveCreate, request: Request, response: Response, user: Us
             raise HTTPException(409, "solve id already used")
         cube = session.get(Cube, existing.cube_id) if existing.cube_id else None
         saved = SolveRead.model_validate(existing)
-        if (saved.duration_ms, saved.started_at, saved.penalty, saved.category_id, cube.name if cube else "") != (data.duration_ms, data.started_at, data.penalty, data.category_id, cube_name):
+        if (saved.duration_ms, saved.started_at, saved.penalty, saved.category_id, cube.name if cube else "", saved.scramble) != (data.duration_ms, data.started_at, data.penalty, data.category_id, cube_name, data.scramble):
             raise HTTPException(409, "solve id already used")
         response.status_code = 200
         return saved
@@ -36,7 +36,7 @@ def save_solve(data: SolveCreate, request: Request, response: Response, user: Us
         cube = Cube(user_id=user.id, name=cube_name)
         session.add(cube)
         session.flush()
-    solve = Solve(id=data.id, duration_ms=data.duration_ms, started_at=data.started_at, penalty=data.penalty, user_id=user.id, category_id=data.category_id, cube_id=cube.id if cube else None)
+    solve = Solve(id=data.id, duration_ms=data.duration_ms, started_at=data.started_at, penalty=data.penalty, user_id=user.id, category_id=data.category_id, cube_id=cube.id if cube else None, scramble=data.scramble)
     session.add(solve)
     session.commit()
     session.refresh(solve)
@@ -50,6 +50,12 @@ def list_solves(limit: int = Query(10, ge=1, le=100), offset: int = Query(0, ge=
     return SolvePage(items=[SolveRead.model_validate(solve) for solve in solves], total=total)
 
 
+@router.get("/all", response_model=SolvePage)
+def all_solves(user: User = Depends(current_user), session: Session = Depends(get_session)):
+    solves = session.exec(select(Solve).where(Solve.user_id == user.id).order_by(Solve.started_at.desc(), Solve.id.desc())).all()
+    return SolvePage(items=[SolveRead.model_validate(solve) for solve in solves], total=len(solves))
+
+
 @router.delete("/{solve_id}", status_code=204)
 def delete_solve(solve_id: UUID, request: Request, user: User = Depends(current_user), session: Session = Depends(get_session)):
     if request.headers.get("x-namicubes-account") != str(user.id):
@@ -59,3 +65,19 @@ def delete_solve(solve_id: UUID, request: Request, user: User = Depends(current_
         raise HTTPException(404, "solve unavailable")
     session.delete(solve)
     session.commit()
+
+
+@router.patch("/{solve_id}", response_model=SolveRead)
+def update_solve(solve_id: UUID, data: SolveUpdate, request: Request, user: User = Depends(current_user), session: Session = Depends(get_session)):
+    if request.headers.get("x-namicubes-account") != str(user.id):
+        raise HTTPException(409, "account changed sign in again")
+    solve = session.exec(select(Solve).where(Solve.id == solve_id, Solve.user_id == user.id)).first()
+    if not solve:
+        raise HTTPException(404, "solve unavailable")
+    solve.penalty = data.penalty
+    if "custom" in data.model_fields_set:
+        solve.custom = data.custom
+    session.add(solve)
+    session.commit()
+    session.refresh(solve)
+    return SolveRead.model_validate(solve)

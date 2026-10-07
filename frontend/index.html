@@ -20,6 +20,15 @@
         <button id="timer-tab" class="nav-button icon-button" aria-current="page" aria-label="timer" title="timer"></button>
         <button id="analysis-tab" class="nav-button icon-button" aria-label="analysis" title="analysis"></button>
       </nav>
+      <div class="header-tools">
+      <details id="history-panel" class="history-panel">
+        <summary class="icon-button" aria-label="history" title="history"></summary>
+        <div class="history-content" role="region" aria-label="solve history">
+          <p id="storage-status" class="storage-note" role="status" hidden></p>
+          <p id="empty-message" class="empty-message">no solves yet</p>
+          <ol id="recent-solves" class="solve-list"></ol>
+        </div>
+      </details>
       <details id="settings-panel" class="settings-panel">
         <summary class="icon-button" aria-label="settings" title="settings"></summary>
         <div class="settings-content">
@@ -27,34 +36,93 @@
             <select id="event-select"></select>
           </label>
           <label class="setting-field" for="cube-name">cube
-            <input id="cube-name" type="text" maxlength="100" list="cube-options" autocomplete="off" />
+            <input id="cube-name" type="text" maxlength="10" list="cube-options" autocomplete="off" aria-describedby="cube-validation" />
             <datalist id="cube-options"></datalist>
           </label>
-          <div class="form-check form-switch">
+          <p id="cube-validation" class="validation-message" role="status" hidden></p>
+          <div class="settings-switches"><div class="form-check form-switch">
             <input id="hidden-time" class="form-check-input" type="checkbox" role="switch" />
             <label class="form-check-label" for="hidden-time">hide timer</label>
           </div>
+          <div class="form-check form-switch">
+            <input id="scrambles-enabled" class="form-check-input" type="checkbox" role="switch" />
+            <label class="form-check-label" for="scrambles-enabled">scrambles</label>
+          </div></div>
           <div class="account-controls">
             <span id="account-name"></span>
             <button id="logout" class="nav-button" type="button">sign out</button>
           </div>
         </div>
       </details>
+      </div>
     </header>
     <section id="timer-panel" class="timer-panel" aria-label="solve timer">
+      <div id="current-scramble" class="current-scramble" hidden>
+        <p id="scramble-text" aria-live="polite"></p>
+        <button id="replace-scramble" class="solve-action icon-button" type="button" aria-label="new scramble" title="new scramble"></button>
+      </div>
+      <div class="timer-stage">
       <button id="timer-area" class="timer-area"
         aria-label="hold then release to start press to stop">
         <span id="timer-value" class="timer-value">0.00</span>
         <span id="timer-hint" class="timer-hint">hold to start</span>
       </button>
-    </section>
-    <section id="analysis-panel" class="analysis-panel" aria-labelledby="recent-heading" hidden>
-      <div class="section-heading">
-        <h1 id="recent-heading">recent solves</h1><span id="solve-count">0 solves</span>
+      <div class="completed-actions"><div id="last-solve-actions" class="solve-actions" hidden></div></div>
+      <p id="solve-action-status" class="storage-note" role="status" hidden></p>
       </div>
-      <p id="storage-status" class="storage-note" role="status" hidden></p>
-      <p id="empty-message" class="empty-message">no solves yet</p>
-      <ol id="recent-solves" class="solve-list"></ol>
+    </section>
+    <div id="scramble-popup" class="scramble-popup" role="dialog" aria-label="saved scramble" hidden><p id="saved-scramble"></p></div>
+    <div id="solve-editor" class="solve-editor" role="dialog" aria-label="edit solve" hidden>
+      <div class="penalty-options"><div class="form-check form-switch">
+        <input id="penalty-plus-two" class="form-check-input" type="checkbox" role="switch" />
+        <label class="form-check-label" for="penalty-plus-two">+2</label>
+      </div>
+      <div class="form-check form-switch">
+        <input id="penalty-dnf" class="form-check-input" type="checkbox" role="switch" />
+        <label class="form-check-label" for="penalty-dnf">dnf</label>
+      </div></div>
+      <label class="setting-field" for="solve-custom">custom tags
+        <input id="solve-custom" type="text" maxlength="10" autocomplete="off" aria-describedby="custom-validation" />
+      </label>
+      <p id="custom-validation" class="validation-message" role="status" hidden></p>
+      <p id="solve-editor-status" class="storage-note" role="status" hidden></p>
+    </div>
+    <section id="analysis-panel" class="analysis-panel" aria-label="analytics" hidden>
+      <div class="analytics-filters">
+        <label class="setting-field" for="filter-range"><span class="filter-label">range</span><select id="filter-range">
+          <option value="">all time</option><option value="1">today</option><option value="7">last 7 days</option><option value="30">last 30 days</option><option value="90">last 90 days</option><option value="custom">custom</option>
+        </select></label>
+        <label class="setting-field" for="filter-start"><span class="filter-label">from</span><input id="filter-start" type="date" /></label>
+        <label class="setting-field" for="filter-end"><span class="filter-label">to</span><input id="filter-end" type="date" /></label>
+        <label class="setting-field" for="filter-event"><span class="filter-label">event</span><select id="filter-event" disabled></select></label>
+        <label class="setting-field" for="filter-cube"><span class="filter-label">cube</span><select id="filter-cube"><option value="">all</option></select></label>
+        <label class="setting-field" for="filter-custom"><span class="filter-label">custom</span><select id="filter-custom"><option value="">all</option></select></label>
+      </div>
+      <div class="analytics-stat-area"><dl class="analytics-stats" data-page="1">
+        <div><dt>solves</dt><dd id="stat-count">0</dd></div>
+        <div><dt>mean</dt><dd id="stat-mean"></dd></div>
+        <div><dt>median</dt><dd id="stat-median"></dd></div>
+        <div><dt>std dev</dt><dd id="stat-deviation"></dd></div>
+        <div><dt>+2 count</dt><dd id="stat-plusTwoCount">0</dd></div>
+        <div><dt>ao5</dt><dd id="stat-ao5"></dd></div>
+        <div><dt>ao12</dt><dd id="stat-ao12"></dd></div>
+        <div><dt>ao50</dt><dd id="stat-ao50"></dd></div>
+        <div><dt>ao100</dt><dd id="stat-ao100"></dd></div>
+        <div><dt>best</dt><dd id="stat-best"></dd></div>
+        <div><dt>best ao5</dt><dd id="stat-bestAo5"></dd></div>
+        <div><dt>best ao12</dt><dd id="stat-bestAo12"></dd></div>
+        <div><dt>best ao50</dt><dd id="stat-bestAo50"></dd></div>
+        <div><dt>best ao100</dt><dd id="stat-bestAo100"></dd></div>
+        <div><dt>worst</dt><dd id="stat-worst"></dd></div>
+        <div><dt>fav event</dt><dd id="stat-favoriteEvent" class="stat-text"></dd></div>
+        <div><dt>best cube</dt><dd id="stat-bestCube" class="stat-text"></dd></div>
+        <div><dt>best custom</dt><dd id="stat-bestCustom" class="stat-text"></dd></div>
+      </dl><button id="stats-next" class="icon-button" type="button" aria-label="show best statistics" aria-controls="analysis-panel"></button></div>
+      <div class="analytics-charts">
+        <figure class="chart-panel"><figcaption>times <span id="time-dnfs" class="chart-count" hidden></span></figcaption><div class="chart-canvas"><canvas id="time-chart" role="img" aria-label="solve times rolling averages and best progression"></canvas></div></figure>
+        <figure class="chart-panel"><figcaption>distribution <span id="histogram-outliers" hidden></span></figcaption><div class="chart-canvas"><canvas id="histogram-chart" role="img" aria-label="solve time histogram"></canvas></div></figure>
+        <p id="analytics-empty" class="analytics-empty" role="status">no solves</p>
+      </div>
     </section>
     <p id="announcement" class="visually-hidden" role="status" aria-live="polite"></p>
     <dialog id="account-dialog" class="account-dialog" aria-labelledby="account-heading">

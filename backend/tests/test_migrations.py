@@ -24,6 +24,8 @@ def test_phase_two_data_survives_migration(tmp_path, monkeypatch):
         assert solve.duration_ms == 12345
         assert solve.user_id is None
         assert solve.cube_id is None
+        assert solve.custom is None
+        assert solve.scramble is None
         user = User(username="test", password_hash=passwords.hash("a secure password"))
         session.add(user)
         session.commit()

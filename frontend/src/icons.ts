@@ -1,6 +1,6 @@
-import { ChartLine, Clock3, Settings, Trash2, createElement } from 'lucide';
+import { ChartLine, ChevronRight, Clock3, Dice5, History, Pencil, Settings, Shuffle, Trash2, createElement } from 'lucide';
 
-const icons = { timer: Clock3, analysis: ChartLine, settings: Settings, trash: Trash2 };
+const icons = { timer: Clock3, analysis: ChartLine, history: History, settings: Settings, trash: Trash2, edit: Pencil, next: ChevronRight, scramble:Dice5, shuffle:Shuffle };
 
 export function icon(name: keyof typeof icons): SVGElement {
   return createElement(icons[name], {
