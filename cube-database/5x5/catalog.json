@@ -1,0 +1,110 @@
+{
+  "schema_version": 2,
+  "event": "5x5",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "5x5-gan-562-m",
+      "brand": "GAN",
+      "name": "562 M",
+      "aliases": [
+        "gan 562 m"
+      ]
+    },
+    {
+      "id": "5x5-moyu-aochuang-gts-m",
+      "brand": "MoYu",
+      "name": "AoChuang GTS M",
+      "aliases": [
+        "aochuang gts"
+      ]
+    },
+    {
+      "id": "5x5-moyu-aochuang-v6",
+      "brand": "MoYu",
+      "name": "AoChuang V6",
+      "aliases": [
+        "aochuang v6"
+      ]
+    },
+    {
+      "id": "5x5-moyu-aochuang-wrm",
+      "brand": "MoYu",
+      "name": "AoChuang WR M",
+      "aliases": [
+        "aochuang wrm"
+      ]
+    },
+    {
+      "id": "5x5-moyu-meilong-m",
+      "brand": "MoYu",
+      "name": "MeiLong M",
+      "aliases": [
+        "meilong m"
+      ]
+    },
+    {
+      "id": "5x5-qiyi-hong",
+      "brand": "QiYi",
+      "name": "Hong",
+      "aliases": [
+        "hong"
+      ]
+    },
+    {
+      "id": "5x5-qiyi-m-pro",
+      "brand": "QiYi",
+      "name": "M Pro",
+      "aliases": [
+        "qiyi m pro"
+      ]
+    },
+    {
+      "id": "5x5-qiyi-ms",
+      "brand": "QiYi",
+      "name": "MS",
+      "aliases": [
+        "qiyi ms"
+      ]
+    },
+    {
+      "id": "5x5-qiyi-valk5-m",
+      "brand": "QiYi",
+      "name": "Valk 5 M",
+      "aliases": [
+        "valk 5 m"
+      ]
+    },
+    {
+      "id": "5x5-qiyi-warrior-m",
+      "brand": "QiYi",
+      "name": "Warrior M",
+      "aliases": [
+        "warrior m"
+      ]
+    },
+    {
+      "id": "5x5-other-vin5",
+      "brand": "Other",
+      "name": "VIN 5",
+      "aliases": [
+        "vin 5"
+      ]
+    },
+    {
+      "id": "5x5-other-yj-mgc",
+      "brand": "Other",
+      "name": "YJ MGC",
+      "aliases": [
+        "yj mgc"
+      ]
+    }
+  ]
+}

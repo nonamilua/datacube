@@ -1,0 +1,102 @@
+{
+  "schema_version": 2,
+  "event": "6x6",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "6x6-moyu-aoshi-gts-m",
+      "brand": "MoYu",
+      "name": "AoShi GTS M",
+      "aliases": [
+        "aoshi gts m"
+      ]
+    },
+    {
+      "id": "6x6-moyu-aoshi-v4",
+      "brand": "MoYu",
+      "name": "AoShi V4",
+      "aliases": [
+        "aoshi v4"
+      ]
+    },
+    {
+      "id": "6x6-moyu-aoshi-wrm",
+      "brand": "MoYu",
+      "name": "AoShi WR M",
+      "aliases": [
+        "aoshi wrm"
+      ]
+    },
+    {
+      "id": "6x6-moyu-meilong-v2-m",
+      "brand": "MoYu",
+      "name": "MeiLong V2 M",
+      "aliases": [
+        "meilong v2 m"
+      ]
+    },
+    {
+      "id": "6x6-qiyi-m-pro",
+      "brand": "QiYi",
+      "name": "M Pro",
+      "aliases": [
+        "qiyi m pro"
+      ]
+    },
+    {
+      "id": "6x6-qiyi-shadow-m",
+      "brand": "QiYi",
+      "name": "Shadow M",
+      "aliases": [
+        "shadow m"
+      ]
+    },
+    {
+      "id": "6x6-qiyi-shadow-v2-m",
+      "brand": "QiYi",
+      "name": "Shadow V2 M",
+      "aliases": [
+        "shadow v2 m"
+      ]
+    },
+    {
+      "id": "6x6-qiyi-shadow-v3",
+      "brand": "QiYi",
+      "name": "Shadow V3",
+      "aliases": [
+        "shadow v3"
+      ]
+    },
+    {
+      "id": "6x6-qiyi-warrior-m",
+      "brand": "QiYi",
+      "name": "Warrior M",
+      "aliases": [
+        "warrior m"
+      ]
+    },
+    {
+      "id": "6x6-other-yj-mgc",
+      "brand": "Other",
+      "name": "YJ MGC",
+      "aliases": [
+        "yj mgc"
+      ]
+    },
+    {
+      "id": "6x6-other-yj-yushi-v2-m",
+      "brand": "Other",
+      "name": "YJ YuShi V2 M",
+      "aliases": [
+        "yushi v2 m"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "event": "7x7",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "7x7-moyu-aofu-v5",
+      "brand": "MoYu",
+      "name": "AoFu V5",
+      "aliases": [
+        "aofu v5"
+      ]
+    },
+    {
+      "id": "7x7-moyu-aofu-wrm",
+      "brand": "MoYu",
+      "name": "AoFu WR M",
+      "aliases": [
+        "aofu wrm"
+      ]
+    },
+    {
+      "id": "7x7-moyu-meilong-v2-m",
+      "brand": "MoYu",
+      "name": "MeiLong V2 M",
+      "aliases": [
+        "meilong v2 m"
+      ]
+    },
+    {
+      "id": "7x7-qiyi-m-pro",
+      "brand": "QiYi",
+      "name": "M Pro",
+      "aliases": [
+        "qiyi m pro"
+      ]
+    },
+    {
+      "id": "7x7-qiyi-spark-m",
+      "brand": "QiYi",
+      "name": "Spark M",
+      "aliases": [
+        "spark m"
+      ]
+    },
+    {
+      "id": "7x7-qiyi-spark-v2-m",
+      "brand": "QiYi",
+      "name": "Spark V2 M",
+      "aliases": [
+        "spark v2 m"
+      ]
+    },
+    {
+      "id": "7x7-qiyi-warrior-m",
+      "brand": "QiYi",
+      "name": "Warrior M",
+      "aliases": [
+        "warrior m"
+      ]
+    },
+    {
+      "id": "7x7-other-yj-mgc",
+      "brand": "Other",
+      "name": "YJ MGC",
+      "aliases": [
+        "yj mgc"
+      ]
+    },
+    {
+      "id": "7x7-other-yj-yufu-v2-m",
+      "brand": "Other",
+      "name": "YJ YuFu V2 M",
+      "aliases": [
+        "yufu v2 m"
+      ]
+    },
+    {
+      "id": "7x7-other-yuxin-hays7-m",
+      "brand": "Other",
+      "name": "YuXin Hays 7 M",
+      "aliases": [
+        "hays 7 m"
+      ]
+    }
+  ]
+}

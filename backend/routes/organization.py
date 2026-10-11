@@ -15,5 +15,5 @@ def organization(user: User = Depends(current_user), session: Session = Depends(
     cubes = session.exec(select(Cube).where(Cube.user_id == user.id).order_by(Cube.name)).all()
     return {
         "categories": [{"id": item.id, "name": item.name} for item in categories],
-        "cubes": [{"id": item.id, "name": item.name} for item in cubes],
+        "cubes": [{"id": item.id, "name": item.name, "catalog_event": item.catalog_event, "catalog_model_id": item.catalog_model_id} for item in cubes],
     }

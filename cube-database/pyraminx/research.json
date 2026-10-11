@@ -1,0 +1,175 @@
+{
+  "research_date": "2026-10-09",
+  "event": "pyraminx",
+  "sources": [
+    {
+      "id": "yj-video",
+      "title": "YJ official named model videos",
+      "url": "https://www.youngjoecube.com/video",
+      "type": "manufacturer",
+      "access_method": "web_collection_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "r-budget",
+      "title": "r/Cubers budget hardware discussion June 22 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1ucbbdj/daily_discussion_thread_jun_22_2026/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "pyra-list",
+      "title": "TheCubicle Pyraminx collection",
+      "url": "https://www.thecubicle.com/collections/pyraminx",
+      "type": "retailer",
+      "access_method": "web_collection_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "gan-pyra",
+      "title": "GAN official Pyraminx M editions",
+      "url": "https://www.gancube.com/products/pyraminx-m-minx-cube",
+      "type": "manufacturer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "yj-pyra",
+      "title": "YJ official Pyraminx catalog",
+      "url": "https://www.youngjoecube.com/pyraminx",
+      "type": "manufacturer",
+      "access_method": "web_collection_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "bell",
+      "title": "Original X-Man Bell Pyraminx",
+      "url": "https://www.thecubicle.com/products/x-man-bell-magnetic-pyraminx",
+      "type": "retailer",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "bell2",
+      "title": "X-Man Bell V2 Pyraminx listing",
+      "url": "https://www.thecubicle.com/en-hr/products/x-man-bell-magnetic-pyraminx-v2",
+      "type": "retailer",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "ms",
+      "title": "QiYi MS Pyraminx listing",
+      "url": "https://speedcubing.org/products/qiyi-ms-pyraminx",
+      "type": "retailer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "r-pyra",
+      "title": "r/Cubers Bell and WeiLong Pyraminx comparison",
+      "url": "https://www.reddit.com/r/Cubers/comments/17z7yrp",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    }
+  ],
+  "entries": {
+    "pyraminx-gan-pyraminx-m-standard": {
+      "source_ids": [
+        "gan-pyra",
+        "pyra-list"
+      ],
+      "evidence": "Core Positioning edition; meaningful magnetic distinction from Enhanced."
+    },
+    "pyraminx-gan-pyraminx-m-enhanced": {
+      "source_ids": [
+        "gan-pyra",
+        "pyra-list"
+      ],
+      "evidence": "Enhanced Core Positioning edition; UV/frosted grouped."
+    },
+    "pyraminx-moyu-weilong-pyraminx": {
+      "source_ids": [
+        "pyra-list",
+        "r-pyra"
+      ],
+      "evidence": "Competitive family; springs/MagLev, core kits and PiCube setups grouped."
+    },
+    "pyraminx-moyu-rs-pyraminx-m": {
+      "source_ids": [
+        "pyra-list",
+        "r-budget"
+      ],
+      "evidence": "Budget family; springs/MagLev grouped."
+    },
+    "pyraminx-moyu-meilong-pyraminx-v2-m": {
+      "source_ids": [
+        "pyra-list"
+      ],
+      "evidence": "Current magnetic budget model; MFJS normalized to MoYu."
+    },
+    "pyraminx-qiyi-bell-m": {
+      "source_ids": [
+        "bell",
+        "r-pyra"
+      ],
+      "evidence": "Original magnetic X-Man classic."
+    },
+    "pyraminx-qiyi-bell-v2-m": {
+      "source_ids": [
+        "bell2",
+        "r-pyra"
+      ],
+      "evidence": "Named second X-Man Bell generation."
+    },
+    "pyraminx-qiyi-m-pro-pyraminx": {
+      "source_ids": [
+        "pyra-list"
+      ],
+      "evidence": "Current model; Pioneer/UV configurations grouped."
+    },
+    "pyraminx-qiyi-ms-pyraminx": {
+      "source_ids": [
+        "ms"
+      ],
+      "evidence": "Recognizable magnetic budget model."
+    },
+    "pyraminx-other-yuxin-little-magic-m": {
+      "source_ids": [
+        "pyra-list"
+      ],
+      "evidence": "Established magnetic budget model."
+    },
+    "pyraminx-other-yj-mgc-evo": {
+      "source_ids": [
+        "yj-pyra",
+        "yj-video"
+      ],
+      "evidence": "Named alternative confirmed by manufacturer."
+    }
+  },
+  "limitations": [
+    "Curated autocomplete families, not an exhaustive SKU list or measured popularity ranking.",
+    "Official GAN and YJ pages were consulted. QiYi official homepage confirms X-Man belongs to QiYi but did not expose all exact model names. DaYan and MoYu official sites could not be fetched; specialist product listings supply model evidence.",
+    "Reddit discussion informs inclusion and is subjective; no mechanism or performance specification is inferred from model selection."
+  ],
+  "brand_site_checks": [
+    {
+      "brand": "QiYi",
+      "url": "https://www.qiyitoys.net/en/",
+      "result": "Homepage read; four sub-brands include X-MAN DESIGN; exact models supported by retailer sources."
+    },
+    {
+      "brand": "DaYan",
+      "url": "https://www.dayancube.com/",
+      "result": "Fetch failed; no official model verification claimed."
+    },
+    {
+      "brand": "MoYu",
+      "url": "https://www.moyucube.com/",
+      "result": "Fetch failed; no official model verification claimed."
+    }
+  ]
+}

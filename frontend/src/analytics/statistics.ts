@@ -83,3 +83,21 @@ export function histogram(times: number[]) {
   const boundaries = Array.from({length: bins + 1}, (_, index) => (lower + width * index) / 1000);
   return { labels: counts.map((_, index) => `${boundaries[index].toFixed(1)}–${boundaries[index + 1].toFixed(1)}`), boundaries, counts, omitted };
 }
+
+// Omitted outliers still contribute to the denominator; DNF has no time interval.
+export function intervalPercentage(count: number, total: number): string {
+  return `${(total > 0 ? count / total * 100 : 0).toFixed(1)}%`;
+}
+
+export function timePlot(stats: ReturnType<typeof statistics>, hideOutliers: boolean) {
+  const upper = stats.mean === null || stats.deviation === null ? Infinity : stats.mean + 3 * stats.deviation;
+  const isOutlier = (time: number | null) => hideOutliers && time !== null && Number.isFinite(time) && time > upper;
+  return {
+    times: stats.times.map(time => isOutlier(time) ? null : time),
+    bestProgression: stats.bestProgression.map(time => isOutlier(time) ? null : time),
+    // Keep rolling averages and all statistics calculated from the original solves.
+    rolling5: stats.rolling5,
+    rolling12: stats.rolling12,
+    omitted: stats.times.filter(isOutlier).length,
+  };
+}

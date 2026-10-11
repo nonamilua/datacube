@@ -1,0 +1,134 @@
+{
+  "research_date": "2026-10-09",
+  "event": "6x6",
+  "sources": [
+    {
+      "id": "aoshigts",
+      "title": "MoYu AoShi GTS M 6x6",
+      "url": "https://www.thecubicle.com/products/moyu-aoshi-6x6-gts-m",
+      "type": "retailer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "collection6",
+      "title": "TheCubicle 6x6 catalog",
+      "url": "https://www.thecubicle.com/collections/6x6-speed-cubes",
+      "type": "retailer",
+      "access_method": "web_collection_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "mpro6",
+      "title": "QiYi M Pro 6x6",
+      "url": "https://speedcubing.org/products/qiyi-m-pro-6x6-m-uv",
+      "type": "retailer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "reddit-current",
+      "title": "r/Cubers July 19 2026 hardware discussion",
+      "url": "https://www.reddit.com/r/Cubers/comments/1v0hdeh/daily_discussion_thread_jul_19_2026/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "reddit6",
+      "title": "r/Cubers 6x6 options",
+      "url": "https://www.reddit.com/r/Cubers/comments/1u83b4w/6x6_options/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "redditshadow3",
+      "title": "r/Cubers Shadow V3 owner discussion",
+      "url": "https://www.reddit.com/r/Cubers/comments/1l7tq1k",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "shadow1",
+      "title": "X-Man Shadow M 6x6",
+      "url": "https://www.thecubicle.com/products/x-man-shadow-6x6-m",
+      "type": "retailer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    }
+  ],
+  "entries": {
+    "6x6-moyu-aoshi-gts-m": {
+      "source_ids": [
+        "aoshigts"
+      ],
+      "evidence": "Product or collection listing confirms AoShi GTS M for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-moyu-aoshi-wrm": {
+      "source_ids": [
+        "collection6"
+      ],
+      "evidence": "Product or collection listing confirms AoShi WR M for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-moyu-aoshi-v4": {
+      "source_ids": [
+        "collection6",
+        "reddit-current"
+      ],
+      "evidence": "Product or collection listing confirms AoShi V4 for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-moyu-meilong-v2-m": {
+      "source_ids": [
+        "collection6"
+      ],
+      "evidence": "Product or collection listing confirms MeiLong V2 M for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-qiyi-shadow-m": {
+      "source_ids": [
+        "shadow1"
+      ],
+      "evidence": "Product or collection listing confirms Shadow M for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-qiyi-shadow-v2-m": {
+      "source_ids": [
+        "collection6"
+      ],
+      "evidence": "Product or collection listing confirms Shadow V2 M for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-qiyi-shadow-v3": {
+      "source_ids": [
+        "collection6",
+        "redditshadow3"
+      ],
+      "evidence": "Product or collection listing confirms Shadow V3 for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-qiyi-m-pro": {
+      "source_ids": [
+        "mpro6"
+      ],
+      "evidence": "Product or collection listing confirms M Pro for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-qiyi-warrior-m": {
+      "source_ids": [
+        "collection6",
+        "reddit6"
+      ],
+      "evidence": "Product or collection listing confirms Warrior M for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-other-yj-mgc": {
+      "source_ids": [
+        "collection6",
+        "reddit6"
+      ],
+      "evidence": "Product or collection listing confirms YJ MGC for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    },
+    "6x6-other-yj-yushi-v2-m": {
+      "source_ids": [
+        "collection6"
+      ],
+      "evidence": "Product or collection listing confirms YJ YuShi V2 M for 6x6; configurations are grouped under this named model. Community references inform inclusion where supplied."
+    }
+  }
+}

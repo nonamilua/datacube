@@ -1,0 +1,118 @@
+{
+  "schema_version": 2,
+  "event": "megaminx",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "megaminx-gan-megaminx-m",
+      "brand": "GAN",
+      "name": "Megaminx M",
+      "aliases": [
+        "gan mega"
+      ]
+    },
+    {
+      "id": "megaminx-gan-megaminx-maglev",
+      "brand": "GAN",
+      "name": "Megaminx MagLev",
+      "aliases": [
+        "gan mega v2"
+      ]
+    },
+    {
+      "id": "megaminx-dayan-megaminx-v2-m",
+      "brand": "DaYan",
+      "name": "Megaminx V2 M",
+      "aliases": [
+        "dayan v2"
+      ]
+    },
+    {
+      "id": "megaminx-dayan-megaminx-pro",
+      "brand": "DaYan",
+      "name": "Megaminx Pro",
+      "aliases": [
+        "dayan pro"
+      ]
+    },
+    {
+      "id": "megaminx-dayan-megaminx-pro-plus",
+      "brand": "DaYan",
+      "name": "Megaminx Pro+",
+      "aliases": [
+        "dayan pro+"
+      ]
+    },
+    {
+      "id": "megaminx-qiyi-galaxy-v2",
+      "brand": "QiYi",
+      "name": "Galaxy V2",
+      "aliases": [
+        "galaxy v2"
+      ]
+    },
+    {
+      "id": "megaminx-qiyi-qiheng-s2",
+      "brand": "QiYi",
+      "name": "QiHeng S2",
+      "aliases": [
+        "qiheng s2"
+      ]
+    },
+    {
+      "id": "megaminx-moyu-meilong-v2-m",
+      "brand": "MoYu",
+      "name": "MeiLong V2 M",
+      "aliases": [
+        "meilong v2 m"
+      ]
+    },
+    {
+      "id": "megaminx-other-yj-yuhu-v2-m",
+      "brand": "Other",
+      "name": "YJ YuHu V2 M",
+      "aliases": [
+        "yuhu v2 m"
+      ]
+    },
+    {
+      "id": "megaminx-other-yj-yuhu-v3",
+      "brand": "Other",
+      "name": "YJ YuHu V3",
+      "aliases": [
+        "yuhu v3"
+      ]
+    },
+    {
+      "id": "megaminx-other-yj-pocket-mini",
+      "brand": "Other",
+      "name": "YJ Pocket Mini",
+      "aliases": [
+        "pocket mini"
+      ]
+    },
+    {
+      "id": "megaminx-other-yuxin-little-magic-v3-m",
+      "brand": "Other",
+      "name": "YuXin Little Magic V3 M",
+      "aliases": [
+        "ylm v3 m"
+      ]
+    },
+    {
+      "id": "megaminx-other-vin-azure",
+      "brand": "Other",
+      "name": "VIN Azure",
+      "aliases": [
+        "vin azure"
+      ]
+    }
+  ]
+}

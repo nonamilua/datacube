@@ -1,0 +1,1096 @@
+{
+  "research_date": "2026-10-06",
+  "sources": [
+    {
+      "id": "gan-356",
+      "title": "GAN 356 collection",
+      "url": "https://www.gancube.com/collections/gan356-3x3-cubes",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Lists 356 M editions, Me finishes, Maglev, RS and RS2."
+    },
+    {
+      "id": "gan-flagships",
+      "title": "GAN flagship collection",
+      "url": "https://www.gancube.com/collections/flagship-speed-cubes",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Lists GAN11 models, GAN14 finishes, GAN16 and MAX editions; describes NewBlack as spring-based."
+    },
+    {
+      "id": "gan-15",
+      "title": "GAN15 product",
+      "url": "https://www.gancube.com/products/gan15-3x3-speed-cube",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Lists Maglev UV and Matte variants and NewBlack UV."
+    },
+    {
+      "id": "gan-13",
+      "title": "GAN13 Maglev",
+      "url": "https://www.gancube.cn/en/gan13-maglev/",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Confirms GAN13 Maglev model."
+    },
+    {
+      "id": "gan-records",
+      "title": "GAN records and achievements",
+      "url": "https://www.gancube.com/pages/gan-records-achievements",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Names GAN12 Maglev among record equipment. Record claims are not copied into the catalog."
+    },
+    {
+      "id": "rs3-2020",
+      "title": "RS3 M 2020",
+      "url": "https://speedcubeshop.com/collections/all-products/products/moyu-rs3-m-2020-3x3-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Lists frosted and UV variants; specifies 56 mm and spring compression."
+    },
+    {
+      "id": "rs3-v5",
+      "title": "RS3 M V5 comparison",
+      "url": "https://speedcubeshop.com/collections/all-products/products/moyu-rs3-m-3x3-v5-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Comparison explicitly distinguishes four variants, suspension, core, finish and 55.5 mm size."
+    },
+    {
+      "id": "wrm-v10",
+      "title": "WeiLong WR M V10 comparison",
+      "url": "https://speedcubeshop.com/collections/3x3x3-high-speed-magic-cube/products/moyu-weilong-wr-m-3x3-v10-magnetic-maglev-20-magnet-ball-core-uv-coated",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Comparison distinguishes four variants, suspension, ball-core, finish and 55.5 mm size."
+    },
+    {
+      "id": "ys3m",
+      "title": "YS3 M comparison",
+      "url": "https://ca.speedcubeshop.com/products/moyu-ys3-m-3x3-magnetic-maglev?variant=40241913102449",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Comparison distinguishes Standard, MagLev, Ball-Core frosted/UV and 20-magnet Ball-Core UV."
+    },
+    {
+      "id": "guhong-pro",
+      "title": "GuHong Pro comparison",
+      "url": "https://ca.speedcubeshop.com/products/dayan-guhong-pro-3x3-magnetic-55mm-maglev",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Lists 54/55/56 mm in Standard and MagLev, core magnets and frosted finish."
+    },
+    {
+      "id": "guhong-plus",
+      "title": "GuHong Pro+ variants",
+      "url": "https://speedcubeshop.com/products/dayan-guhong-pro-plus-3x3-magnetic-core-magnets-54mm",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Lists 54/55/56 mm magnetic and MagLev editions with core magnets and semi-gloss finish. Spring mechanism not independently specified for non-MagLev entries."
+    },
+    {
+      "id": "tornado-v3",
+      "title": "Tornado V3 Standard and related versions",
+      "url": "https://www.thecubicle.com/en-pl/products/x-man-tornado-v3-m-standard",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Distinguishes Standard piece magnets, Flagship core magnets and Pioneer core magnets plus MagLev."
+    },
+    {
+      "id": "tornado-modern",
+      "title": "Tornado V4 comparison and variant menu",
+      "url": "https://speedcubeshop.com/products/x-man-tornado-3x3-v4-pioneer-magnetic-maglev-core-magnets-uv-coated",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "V4 comparison specifies Flagship frosted and Pioneer UV, core magnets and Pioneer MagLev. Menu lists V5 editions and V3 Premium editions; unspecified dimensions left unknown."
+    },
+    {
+      "id": "tengyun-v2",
+      "title": "TengYun V2",
+      "url": "https://ca.speedcubeshop.com/products/dayan-tengyun-3x3-v2-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Confirms magnetic model, spring adjustment and 55.5 mm."
+    },
+    {
+      "id": "tengyun-v1",
+      "title": "DaYan collection",
+      "url": "https://speedcubeshop.com/collections/dayan",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Lists original TengYun magnetic 3x3."
+    },
+    {
+      "id": "budget",
+      "title": "Budget cube overview",
+      "url": "https://speedcubeshop.com/a/blog/the-best-budget-speed-cubes-under-10",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract_prior_pass",
+      "evidence": "Confirms MFJS MeiLong M 3x3, spring screws and frosted finish. Historic recommendations are only a seed-selection signal."
+    },
+    {
+      "id": "gan-v100",
+      "title": "GAN V100",
+      "url": "https://www.gancube.com/products/v100-3x3-speed-cube",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Names Maglev and spring-based Leap. Finishes and decorative editions are grouped."
+    },
+    {
+      "id": "gan-17",
+      "title": "GAN17 MagDrive",
+      "url": "https://www.gancube.com/products/gan17-magdrive-3x3-speed-cube",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms conventional GAN17 MagDrive 3x3; bundles excluded."
+    },
+    {
+      "id": "swift-super",
+      "title": "Swift Block Super Maglev",
+      "url": "https://www.gancube.com/products/speed-cubing-cube-swift-3x3",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "GAN product page lists UV and frost finishes; one catalog entry."
+    },
+    {
+      "id": "swift-355",
+      "title": "Swift Block 355S",
+      "url": "https://www.gancube.com/products/swift-block-355s-3x3-puzzle-cube",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "GAN product page names 355S Magnetic."
+    },
+    {
+      "id": "gan-airsm",
+      "title": "GAN356 Air SM",
+      "url": "https://www.gancube.cn/en/gan356airsm/",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms classic Air SM model."
+    },
+    {
+      "id": "gan-manuals",
+      "title": "GAN manuals",
+      "url": "https://www.gancube.cn/en/tutorials/",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Names 356 X, XS, Air M, 356 RS2 and newer generations."
+    },
+    {
+      "id": "gan-12-leap",
+      "title": "GAN12 comparison",
+      "url": "https://www.gancube.com/product/gan12",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Search extract distinguishes GAN12 M Leap and Maglev. Older indexed page."
+    },
+    {
+      "id": "qiyi-company",
+      "title": "QiYi company and subbrands",
+      "url": "https://www.qiyitoys.net/en/",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists X-MAN DESIGN as a subbrand; homepage features Tornado V4. Product listing pages did not provide readable details."
+    },
+    {
+      "id": "yj-official",
+      "title": "YJ manufacturer",
+      "url": "https://www.youngjoecube.com/",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists MGC EVO 3x3 and MGC Beta 3x3. YJ remains in Other, not merged into MoYu."
+    },
+    {
+      "id": "ferro-v1",
+      "title": "Ferrocore V1",
+      "url": "https://www.thecubicle.com/en-global/products/moyu-weilong-ferrocore-3x3-custom-wr-m-v10",
+      "type": "collaborator",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Product names Special Edition WRM V10. Keep one entry across finishes and setup services."
+    },
+    {
+      "id": "ferro-v2",
+      "title": "Ferrocore V2",
+      "url": "https://www.thecubicle.com/products/moyu-weilong-ferrocore-v2-3x3",
+      "type": "collaborator",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Product description says based on V11 and developed with MoYu and CubeHead."
+    },
+    {
+      "id": "reddit-current",
+      "title": "2026 hardware opinions",
+      "url": "https://www.reddit.com/r/Cubers/comments/1tups2r/a_not_so_brief_opinion_post_on_2026_3x3_hardware/",
+      "type": "community",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Qualitative relevance signal for V11, PiCube V11, Ferrocore V2, Super AoLong, Super WeiLong V2 and VIN Nova. Conflicting subjective preferences; no ranking inferred."
+    },
+    {
+      "id": "reddit-classics",
+      "title": "Popular cubes when people started",
+      "url": "https://www.reddit.com/r/Cubers/comments/1ct4yv6/",
+      "type": "community",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Search extract mentions AoLong V2, Valk 3 M, GTS2 M, Air SM, GuHong and ZhanChi."
+    },
+    {
+      "id": "reddit-older",
+      "title": "Older cubes still used",
+      "url": "https://www.reddit.com/r/Cubers/comments/16q36pp/whats_a_cube_that_can_be_considered_old_but_is/",
+      "type": "community",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Community discusses AoLong V2, GTS3 M and older cubes; selection evidence only."
+    },
+    {
+      "id": "reddit-gan17",
+      "title": "One month with GAN17",
+      "url": "https://www.reddit.com/r/Cubers/comments/1wexfxc/one_month_with_the_gan17_second_thoughts/",
+      "type": "community",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Recent ownership discussion establishes relevance; performance opinions not used as specifications."
+    },
+    {
+      "id": "reddit-swift",
+      "title": "Swift Super versus GuHong Pro+",
+      "url": "https://www.reddit.com/r/Cubers/comments/1vkgqs9/swift_block_super_maglev_or_dayan_guhong_pro/",
+      "type": "community",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Recent comparison of Swift Super and GuHong Pro+, also discusses V100."
+    },
+    {
+      "id": "reddit-ferro",
+      "title": "Which V11 variant",
+      "url": "https://www.reddit.com/r/Cubers/comments/1tyt5ts/weilong_v11_questions/",
+      "type": "community",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Compares stock V11, Ferrocore V2 and PiCube V11; meaningful modified versions retained."
+    },
+    {
+      "id": "gts2",
+      "title": "WeiLong GTS2 M",
+      "url": "https://www.thecubicle.com/products/moyu-weilong-gts2-m",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms mass-market magnetic GTS2."
+    },
+    {
+      "id": "aolong-classic",
+      "title": "AoLong V2",
+      "url": "https://legacy.thecubicle.us/moyu-aolong-p-4152.html?page=1",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Archived retailer listing confirms classic AoLong V2."
+    },
+    {
+      "id": "wrm-2021",
+      "title": "WR M 2021",
+      "url": "https://ca.speedcubeshop.com/products/moyu-weilong-wr-m-2021-3x3-magnetic-maglev",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms 2021 generation; suspension editions grouped."
+    },
+    {
+      "id": "wrm-v9",
+      "title": "WR M V9",
+      "url": "https://speedcubeshop.com/products/moyu-weilong-wr-m-3x3-v9-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms V9 generation; all stock mechanism/finish editions grouped."
+    },
+    {
+      "id": "rs3-2021",
+      "title": "RS3 M 2021 MagLev",
+      "url": "https://www.thecubicle.com/en-asia/collections/3x3-speed-cubes/products/moyu-rs3-m-2021-3x3-maglev",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms MagLev 2021 generation."
+    },
+    {
+      "id": "super-rs3",
+      "title": "Super RS3 M",
+      "url": "https://speedcubeshop.com/products/moyu-super-rs3-m-3x3-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms Super RS3 M family; original generation separated from V2."
+    },
+    {
+      "id": "super-weilong",
+      "title": "Super WeiLong series",
+      "url": "https://speedcubeshop.com/collections/moyu-super-weilong",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Series collection; V1 and V2 also identified in current community discussion."
+    },
+    {
+      "id": "super-aolong",
+      "title": "Super AoLong",
+      "url": "https://speedcubeshop.com/products/moyu-super-aolong-3x3-magnetic-maglev-20-magnet-ball-core-uv-coated",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms Super AoLong model; finishes grouped."
+    },
+    {
+      "id": "aolong-v5",
+      "title": "AoLong V5",
+      "url": "https://speedcubeshop.com/products/moyu-aolong-v5-3x3-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms AoLong V5 family."
+    },
+    {
+      "id": "pb-wr",
+      "title": "PB Cube WR",
+      "url": "https://cubershop.com/collections/moyu/products/moyu-pb-cube-wr",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Product listing names MoYu PB Cube WR."
+    },
+    {
+      "id": "dayan-list",
+      "title": "DaYan catalog",
+      "url": "https://www.thecubicle.com/collections/dayan",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists TengYun V3, ZhanChi Pro M and ZhanChi V5 M as distinct from original models."
+    },
+    {
+      "id": "zhanchi",
+      "title": "Original ZhanChi",
+      "url": "https://www.thecubicle.com/en-asia/products/dayan-zhanchi",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms original ZhanChi; not confused with modern V5 M."
+    },
+    {
+      "id": "guhong-original",
+      "title": "Original GuHong",
+      "url": "https://legacy.thecubicle.us/dayan-guhong-p-67.html",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Legacy product listing confirms original GuHong."
+    },
+    {
+      "id": "guhong-v4",
+      "title": "GuHong V4 M",
+      "url": "https://store.tribox.com/products/detail.php?product_id=3100",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Names GuHong V4 M."
+    },
+    {
+      "id": "reddit-guhong-v4",
+      "title": "GuHong V4 M owners",
+      "url": "https://www.reddit.com/r/Cubers/comments/l2au37/",
+      "type": "community",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Community review confirms continued identifiable older model."
+    },
+    {
+      "id": "qiyi-ms",
+      "title": "QiYi MS",
+      "url": "https://speedcubeshop.com/a/blog/the-best-speed-cubes",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Names QiYi MS magnetic 3x3; historic budget discovery source."
+    },
+    {
+      "id": "qiyi-mpro",
+      "title": "QiYi M Pro",
+      "url": "https://ca.speedcubeshop.com/products/qiyi-m-pro-3x3-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms original M Pro."
+    },
+    {
+      "id": "qiyi-mpro2",
+      "title": "QiYi 3x3 collection",
+      "url": "https://speedcubeshop.com/collections/qiyi-cube-3x3",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists M Pro V2; editions grouped."
+    },
+    {
+      "id": "qiyi-mpro3",
+      "title": "QiYi M Pro V3",
+      "url": "https://speedcubeshop.com/products/qiyi-m-pro-v3-flagship",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms M Pro V3 Flagship; one family entry."
+    },
+    {
+      "id": "qiyi-classics",
+      "title": "QiYi legacy family names",
+      "url": "https://www.thecubicle.com/en-europe/products/qiyi-mfg-3x3-core",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Names Sail, Thunderclap V1/V2 and Valk 3."
+    },
+    {
+      "id": "valk-elite",
+      "title": "Valk 3 Elite M",
+      "url": "https://speedcubing.org/products/qiyi-valk-3-elite-m",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms Elite M separate from Valk 3."
+    },
+    {
+      "id": "tornado-v2",
+      "title": "Tornado V2",
+      "url": "https://speedcubing.org/products/x-man-tornado-v2m",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms Tornado V2 M."
+    },
+    {
+      "id": "warrior",
+      "title": "Warrior W",
+      "url": "https://cubinglab.com/collections/qiyi/products/qiyi-3x3-warrior-w",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms budget Warrior W."
+    },
+    {
+      "id": "yj-meta",
+      "title": "YJ Meta series",
+      "url": "https://speedcubing.org/blogs/news/yj-mgc-meta-3x3-review-all-3-versions",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms MGC Meta and Beta; stock Meta editions grouped."
+    },
+    {
+      "id": "yj-elite",
+      "title": "YJ MGC Elite",
+      "url": "https://speedcubing.org/products/mgc-elite-3x3",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms MGC Elite 3x3."
+    },
+    {
+      "id": "vin-nova",
+      "title": "VIN Nova",
+      "url": "https://speedcubeshop.com/collections/ball-core-speed-cubes/products/vin-cube-3x3-nova-magnetic-maglev-ball-core-uv-coated",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms VIN Nova; family grouped."
+    },
+    {
+      "id": "haitun-v2",
+      "title": "HaiTun WaveRider V2",
+      "url": "https://www.cubelelo.com/products/haitun-waverider-v2-3x3-1",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms WaveRider V2; hardware tiers grouped."
+    },
+    {
+      "id": "moretry",
+      "title": "MoreTry TianMa X3 Super",
+      "url": "https://speedcubeshop.com/collections/core-magnet-speed-cubes/products/moretry-tianma-x3-3x3-super-magnetic-maglev-core-magnets",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms X3 Super; separate name from original TianMa X3."
+    },
+    {
+      "id": "ylm",
+      "title": "YuXin Little Magic",
+      "url": "https://www.thecubicle.com/products/yuxin-little-magic-3x3",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms original Little Magic."
+    },
+    {
+      "id": "reddit-other",
+      "title": "YJ Meta and Beta owners",
+      "url": "https://www.reddit.com/r/Cubers/comments/1ozuo4z/",
+      "type": "community",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Community comparison establishes current relevance; no measured market share inferred."
+    },
+    {
+      "id": "wrm-2019",
+      "title": "Original WR M 2019",
+      "url": "https://www.thecubicle.com/en-hk/products/moyu-weilong-wr-m",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Product and customer extract explicitly identify 2019 generation."
+    },
+    {
+      "id": "gts3-review",
+      "title": "GTS3 M review by TheCubicle",
+      "url": "https://www.youtube.com/watch?v=3q8nzhHEkX4",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Retailer review title confirms WeiLong GTS3 M."
+    },
+    {
+      "id": "super-rs3-v2",
+      "title": "Super RS3 M V2",
+      "url": "https://www.thecubicle.com/en-ro/products/moyu-super-rs3-m-v2-magnetic-uv-3x3",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Product title confirms V2 as distinct from original."
+    },
+    {
+      "id": "warrior-s",
+      "title": "QiYi Warrior S 3x3",
+      "url": "https://speedcubing.org/products/qiyi-warrior-s",
+      "type": "retailer",
+      "checked_on": "2026-10-06",
+      "access_method": "web_product_page",
+      "evidence": "Product listing confirms QiYi Warrior S as a 3x3 model."
+    },
+    {
+      "id": "warrior-m",
+      "title": "QiYi Warrior M 3x3",
+      "url": "https://speedcubeshop.com/products/qiyi-warrior-m-3x3-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-06",
+      "access_method": "web_product_page",
+      "evidence": "Product listing confirms QiYi Warrior M as a 3x3 model."
+    }
+  ],
+  "entries": {
+    "moyu-rs3m-2020": {
+      "source_ids": [
+        "rs3-2020"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "moyu-rs3m-v5": {
+      "source_ids": [
+        "rs3-v5"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "moyu-weilong-wrm-v10": {
+      "source_ids": [
+        "wrm-v10"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "moyu-ys3m": {
+      "source_ids": [
+        "ys3m"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "dayan-guhong-pro": {
+      "source_ids": [
+        "guhong-pro"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "dayan-guhong-pro-plus": {
+      "source_ids": [
+        "guhong-plus"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "xman-tornado-v3": {
+      "source_ids": [
+        "tornado-v3"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "xman-tornado-v3-premium": {
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "xman-tornado-v4": {
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "xman-tornado-v5": {
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "dayan-tengyun": {
+      "source_ids": [
+        "tengyun-v1"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "dayan-tengyun-v2": {
+      "source_ids": [
+        "tengyun-v2"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "mfjs-meilong-m": {
+      "source_ids": [
+        "budget"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-356-m": {
+      "source_ids": [
+        "gan-356"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-356-me": {
+      "source_ids": [
+        "gan-356"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-356-maglev": {
+      "source_ids": [
+        "gan-356"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-11-m-pro": {
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-11-m": {
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-11-m-duo": {
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-12-maglev": {
+      "source_ids": [
+        "gan-records"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-13-maglev": {
+      "source_ids": [
+        "gan-13"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-14-maglev": {
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-14-maglev-pro": {
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-15": {
+      "source_ids": [
+        "gan-15"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-16-maglev": {
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-16-maglev-max": {
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "selection_note": "Stock finishes, sizes and minor editions grouped under this name."
+    },
+    "gan-15-newblack": {
+      "source_ids": [
+        "gan-flagships",
+        "gan-15"
+      ],
+      "selection_note": "Spring-based edition retained separately from 15 MagLev."
+    },
+    "gan-v100": {
+      "source_ids": [
+        "gan-v100",
+        "reddit-swift"
+      ]
+    },
+    "gan-v100-leap": {
+      "source_ids": [
+        "gan-v100"
+      ],
+      "selection_note": "Named spring-based edition; seasonal decoration grouped."
+    },
+    "gan-17-magdrive": {
+      "source_ids": [
+        "gan-17",
+        "reddit-gan17"
+      ]
+    },
+    "gan-swift-super": {
+      "source_ids": [
+        "swift-super",
+        "reddit-swift"
+      ]
+    },
+    "gan-swift-355s": {
+      "source_ids": [
+        "swift-355"
+      ]
+    },
+    "gan-356-air-sm": {
+      "source_ids": [
+        "gan-airsm",
+        "reddit-classics"
+      ]
+    },
+    "gan-356-air-m": {
+      "source_ids": [
+        "gan-manuals"
+      ]
+    },
+    "gan-356-x": {
+      "source_ids": [
+        "gan-manuals"
+      ],
+      "selection_note": "X revisions grouped."
+    },
+    "gan-356-xs": {
+      "source_ids": [
+        "gan-manuals"
+      ]
+    },
+    "gan-356-rs": {
+      "source_ids": [
+        "gan-356"
+      ]
+    },
+    "gan-356-rs2": {
+      "source_ids": [
+        "gan-356",
+        "gan-manuals"
+      ]
+    },
+    "gan-12-leap": {
+      "source_ids": [
+        "gan-12-leap"
+      ]
+    },
+    "moyu-rs3m-v5-ballcore": {
+      "source_ids": [
+        "rs3-v5"
+      ],
+      "selection_note": "One noteworthy core edition; finishes and packaging grouped. Generic V5 entry covers unspecified and basic editions."
+    },
+    "moyu-weilong-v11": {
+      "source_ids": [
+        "reddit-current",
+        "reddit-ferro"
+      ],
+      "selection_note": "All stock V11 releases grouped; modified Ferrocore and PiCube entries retained."
+    },
+    "moyu-weilong-v11-picube": {
+      "source_ids": [
+        "reddit-current",
+        "reddit-ferro"
+      ],
+      "selection_note": "Distinct modification repeatedly discussed; decorative versions grouped."
+    },
+    "moyu-ferrocore-v1": {
+      "source_ids": [
+        "ferro-v1",
+        "reddit-current"
+      ],
+      "selection_note": "V10-based collaboration, not a lubricant setup."
+    },
+    "moyu-ferrocore-v2": {
+      "source_ids": [
+        "ferro-v2",
+        "reddit-ferro"
+      ],
+      "selection_note": "V11-based collaboration; signature setups and finishes grouped."
+    },
+    "moyu-aolong-v2": {
+      "source_ids": [
+        "aolong-classic",
+        "reddit-classics"
+      ]
+    },
+    "moyu-gts2m": {
+      "source_ids": [
+        "gts2",
+        "reddit-classics"
+      ]
+    },
+    "moyu-gts3m": {
+      "source_ids": [
+        "reddit-older",
+        "gts3-review"
+      ]
+    },
+    "moyu-wrm-2019": {
+      "source_ids": [
+        "wrm-2019",
+        "reddit-classics"
+      ],
+      "selection_note": "Classic original WR M generation."
+    },
+    "moyu-wrm-2021": {
+      "source_ids": [
+        "wrm-2021"
+      ]
+    },
+    "moyu-wrm-v9": {
+      "source_ids": [
+        "wrm-v9"
+      ]
+    },
+    "moyu-rs3m-2021": {
+      "source_ids": [
+        "rs3-2021"
+      ]
+    },
+    "moyu-super-rs3m": {
+      "source_ids": [
+        "super-rs3"
+      ]
+    },
+    "moyu-super-rs3m-v2": {
+      "source_ids": [
+        "super-rs3-v2"
+      ],
+      "selection_note": "V2 hardware generation; finishes and suspension editions grouped."
+    },
+    "moyu-super-weilong": {
+      "source_ids": [
+        "super-weilong"
+      ]
+    },
+    "moyu-super-weilong-v2": {
+      "source_ids": [
+        "super-weilong",
+        "reddit-current"
+      ]
+    },
+    "moyu-super-aolong": {
+      "source_ids": [
+        "super-aolong",
+        "reddit-current"
+      ]
+    },
+    "moyu-aolong-v5": {
+      "source_ids": [
+        "aolong-v5"
+      ]
+    },
+    "moyu-pb-wr": {
+      "source_ids": [
+        "pb-wr"
+      ]
+    },
+    "dayan-zhanchi": {
+      "source_ids": [
+        "zhanchi",
+        "reddit-classics"
+      ]
+    },
+    "dayan-guhong": {
+      "source_ids": [
+        "guhong-original",
+        "reddit-classics"
+      ]
+    },
+    "dayan-guhong-v4": {
+      "source_ids": [
+        "guhong-v4",
+        "reddit-guhong-v4"
+      ]
+    },
+    "dayan-tengyun-v3": {
+      "source_ids": [
+        "dayan-list"
+      ]
+    },
+    "dayan-zhanchi-pro": {
+      "source_ids": [
+        "dayan-list"
+      ]
+    },
+    "dayan-zhanchi-v5": {
+      "source_ids": [
+        "dayan-list"
+      ],
+      "selection_note": "Modern magnetic model distinct from original DaYan 5."
+    },
+    "qiyi-tornado-v2": {
+      "source_ids": [
+        "tornado-v2",
+        "qiyi-company"
+      ]
+    },
+    "qiyi-valk3": {
+      "source_ids": [
+        "qiyi-classics",
+        "reddit-classics"
+      ],
+      "selection_note": "Classic nonmagnetic and magnetic versions grouped."
+    },
+    "qiyi-valk-elite": {
+      "source_ids": [
+        "valk-elite"
+      ]
+    },
+    "qiyi-thunderclap": {
+      "source_ids": [
+        "qiyi-classics"
+      ]
+    },
+    "qiyi-ms": {
+      "source_ids": [
+        "qiyi-ms"
+      ]
+    },
+    "qiyi-mpro": {
+      "source_ids": [
+        "qiyi-mpro"
+      ]
+    },
+    "qiyi-mpro-v2": {
+      "source_ids": [
+        "qiyi-mpro2"
+      ]
+    },
+    "qiyi-mpro-v3": {
+      "source_ids": [
+        "qiyi-mpro3"
+      ]
+    },
+    "qiyi-warrior-w": {
+      "source_ids": [
+        "warrior"
+      ]
+    },
+    "other-yj-mgc-elite": {
+      "source_ids": [
+        "yj-elite"
+      ]
+    },
+    "other-yj-mgc-evo": {
+      "source_ids": [
+        "yj-official"
+      ]
+    },
+    "other-yj-mgc-beta": {
+      "source_ids": [
+        "yj-official",
+        "reddit-other"
+      ]
+    },
+    "other-yj-mgc-meta": {
+      "source_ids": [
+        "yj-meta",
+        "reddit-other"
+      ]
+    },
+    "other-vin-nova": {
+      "source_ids": [
+        "vin-nova",
+        "reddit-current"
+      ]
+    },
+    "other-haitun-waverider-v2": {
+      "source_ids": [
+        "haitun-v2"
+      ]
+    },
+    "other-moretry-tianma-super": {
+      "source_ids": [
+        "moretry"
+      ]
+    },
+    "other-yuxin-little-magic": {
+      "source_ids": [
+        "ylm"
+      ]
+    },
+    "qiyi-warrior-s": {
+      "source_ids": [
+        "warrior-s"
+      ]
+    },
+    "qiyi-warrior-m": {
+      "source_ids": [
+        "warrior-m"
+      ]
+    }
+  }
+}

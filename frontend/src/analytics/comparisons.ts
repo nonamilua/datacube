@@ -3,7 +3,7 @@ import { effectiveTime } from './statistics.ts';
 import { filterSolves, type Filters } from './filters.ts';
 
 // Compare named groups only; unlabeled solves still contribute to the main statistics.
-export function comparisonLabels(solves: StoredSolve[], organization: Organization, filters: Filters) {
+export function comparisonLabels(solves: StoredSolve[], organization: Organization, filters: Filters, now = new Date()) {
   function favoriteEvent(rows: StoredSolve[]): number | null {
     const counts = new Map<number, number>();
     for (const solve of rows) {
@@ -13,13 +13,13 @@ export function comparisonLabels(solves: StoredSolve[], organization: Organizati
     return organization.categories.reduce<number | null>((best, event) =>
       (counts.get(event.id) ?? 0) > (best === null ? 0 : counts.get(best) ?? 0) ? event.id : best, null);
   }
-  const favorite = favoriteEvent(filterSolves(solves, {...filters, event: ''}));
+  const favorite = favoriteEvent(filterSolves(solves, {...filters, event: ''}, now));
   // Ignore cube selection even when deriving the fallback event for best cube.
-  const cubeCandidates = filterSolves(solves, {...filters, event: '', cube: ''});
+  const cubeCandidates = filterSolves(solves, {...filters, event: '', cube: ''}, now);
   const cubeEvent = filters.event ? Number(filters.event) : favoriteEvent(cubeCandidates);
   const customEvent = filters.event ? Number(filters.event) : favorite;
   const cubeSolves = cubeEvent === null ? [] : cubeCandidates.filter(solve => solve.category_id === cubeEvent);
-  const customSolves = customEvent === null ? [] : filterSolves(solves, {...filters, event: String(customEvent)});
+  const customSolves = customEvent === null ? [] : filterSolves(solves, {...filters, event: String(customEvent)}, now);
   function bestMedian(rows: StoredSolve[], label: (solve: StoredSolve) => string | undefined): string | null {
     const groups = new Map<string, number[]>();
     for (const solve of rows) {

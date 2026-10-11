@@ -1,0 +1,119 @@
+{
+  "repository": "https://github.com/cubing/icons",
+  "commit": "64496c57d2e6c3ce8f7b5b2c9d03c16da2b3ff4c",
+  "license": "MIT",
+  "changes": [
+    "Renamed files to app event labels",
+    "Set root fill to currentColor for inline SVG styling"
+  ],
+  "files": [
+    {
+      "event": "2x2",
+      "source_path": "src/svg/event/222.svg",
+      "original_sha256": "2eb94e5356ea047268fb9f05581fb07b789ab5e739fa560b1c9f1a38bfb3f2e8",
+      "local_file": "2x2.svg"
+    },
+    {
+      "event": "3x3",
+      "source_path": "src/svg/event/333.svg",
+      "original_sha256": "3fb22d510ab9af2484f6388b0bb36088d0b00a081f7186cce244a4e29e46fb92",
+      "local_file": "3x3.svg"
+    },
+    {
+      "event": "4x4",
+      "source_path": "src/svg/event/444.svg",
+      "original_sha256": "c04fee3d0804f1b5124419c3df8ed1ffa2ae0d2f0060c637b857cf880ab590e8",
+      "local_file": "4x4.svg"
+    },
+    {
+      "event": "5x5",
+      "source_path": "src/svg/event/555.svg",
+      "original_sha256": "deadf09df38e2646477f2b610a5010fb7cd6b851055f8704f63a60b263e9803d",
+      "local_file": "5x5.svg"
+    },
+    {
+      "event": "6x6",
+      "source_path": "src/svg/event/666.svg",
+      "original_sha256": "aca58ec8435f6f9e9a5bfcda4377cbc3d997e46e67a22f4edeb3720750ff0451",
+      "local_file": "6x6.svg"
+    },
+    {
+      "event": "7x7",
+      "source_path": "src/svg/event/777.svg",
+      "original_sha256": "dcac8a71d12faf263f9a5d2417baaea7a9e032e41693a22dd476e54aa6c42fc8",
+      "local_file": "7x7.svg"
+    },
+    {
+      "event": "3bld",
+      "source_path": "src/svg/event/333bf.svg",
+      "original_sha256": "c8f7d7302e7e94af7f0f88a3ff5fd4206882f89cb14357f6b9c4aa5882c690d4",
+      "local_file": "3bld.svg"
+    },
+    {
+      "event": "4bld",
+      "source_path": "src/svg/event/444bf.svg",
+      "original_sha256": "c7afe29528e0b1aa829bd787b6f21caec46fe0d0d71f7f33e57de104557b0a30",
+      "local_file": "4bld.svg"
+    },
+    {
+      "event": "5bld",
+      "source_path": "src/svg/event/555bf.svg",
+      "original_sha256": "79bb461901e435de03f1376589e7d620889f263265c8b9233a52f6a32a0086e5",
+      "local_file": "5bld.svg"
+    },
+    {
+      "event": "3oh",
+      "source_path": "src/svg/event/333oh.svg",
+      "original_sha256": "d610ccf82208e6b48cea81ae95aae3f7c5bff0023dd2fa72478d2aef9f1050ec",
+      "local_file": "3oh.svg"
+    },
+    {
+      "event": "3mbld",
+      "source_path": "src/svg/event/333mbf.svg",
+      "original_sha256": "cd7bfd0e34c85564c5d1e447b1d9006ac78bef0c3f4930dd631b399da2c8ec94",
+      "local_file": "3mbld.svg"
+    },
+    {
+      "event": "fmc",
+      "source_path": "src/svg/event/333fm.svg",
+      "original_sha256": "f247a86a55ac996a63463d785b33579307662d24ce4281acaa94c3387a600d61",
+      "local_file": "fmc.svg"
+    },
+    {
+      "event": "clock",
+      "source_path": "src/svg/event/clock.svg",
+      "original_sha256": "5344bfee3aac8994f8499f7fd7b3c875d2f68f6e996d1268f3f8e4ffaa676f0a",
+      "local_file": "clock.svg"
+    },
+    {
+      "event": "megaminx",
+      "source_path": "src/svg/event/minx.svg",
+      "original_sha256": "f87cb1f7fd1f14c63e284616332f819085519a5b4f655aa04442525f956254ed",
+      "local_file": "megaminx.svg"
+    },
+    {
+      "event": "pyraminx",
+      "source_path": "src/svg/event/pyram.svg",
+      "original_sha256": "aa53af3cff4d4df384f6ab213d9287428773a7102874a4cffd15dd63428e4bda",
+      "local_file": "pyraminx.svg"
+    },
+    {
+      "event": "skewb",
+      "source_path": "src/svg/event/skewb.svg",
+      "original_sha256": "17c1d178e82d08900fb47282d108cbb3833da531b6d5373cf990d7ccadd973a6",
+      "local_file": "skewb.svg"
+    },
+    {
+      "event": "square 1",
+      "source_path": "src/svg/event/sq1.svg",
+      "original_sha256": "3bee047d6a4218b23be9ecfcbe4adb58d32c79678c9551dba2f3056991782336",
+      "local_file": "square-1.svg"
+    },
+    {
+      "event": "fto",
+      "source_path": "src/svg/unofficial/fto.svg",
+      "original_sha256": "c0d561a6b4f5b4cebcf8ba53d42a9541147512dab1a368e63498d77d51813b01",
+      "local_file": "fto.svg"
+    }
+  ]
+}

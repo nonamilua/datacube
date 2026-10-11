@@ -1,0 +1,142 @@
+{
+  "schema_version": 2,
+  "event": "4x4",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "4x4-gan-460-m",
+      "brand": "GAN",
+      "name": "460 M",
+      "aliases": [
+        "gan 460 m"
+      ]
+    },
+    {
+      "id": "4x4-gan-460-m-v2",
+      "brand": "GAN",
+      "name": "460 M V2",
+      "aliases": [
+        "gan 460 v2"
+      ]
+    },
+    {
+      "id": "4x4-moyu-aosu-gts2-m",
+      "brand": "MoYu",
+      "name": "AoSu GTS2 M",
+      "aliases": [
+        "aosu gts2m"
+      ]
+    },
+    {
+      "id": "4x4-moyu-aosu-v7",
+      "brand": "MoYu",
+      "name": "AoSu V7",
+      "aliases": [
+        "aosu v7"
+      ]
+    },
+    {
+      "id": "4x4-moyu-aosu-wrm",
+      "brand": "MoYu",
+      "name": "AoSu WR M",
+      "aliases": [
+        "aosu wrm"
+      ]
+    },
+    {
+      "id": "4x4-moyu-meilong-m",
+      "brand": "MoYu",
+      "name": "MeiLong M",
+      "aliases": [
+        "meilong m"
+      ]
+    },
+    {
+      "id": "4x4-moyu-rs4-m",
+      "brand": "MoYu",
+      "name": "RS4 M",
+      "aliases": [
+        "rs4m"
+      ]
+    },
+    {
+      "id": "4x4-dayan-jinghong",
+      "brand": "DaYan",
+      "name": "JingHong",
+      "aliases": [
+        "jinghong"
+      ]
+    },
+    {
+      "id": "4x4-qiyi-m-pro",
+      "brand": "QiYi",
+      "name": "M Pro",
+      "aliases": [
+        "qiyi m pro"
+      ]
+    },
+    {
+      "id": "4x4-qiyi-m-pro-v2",
+      "brand": "QiYi",
+      "name": "M Pro V2",
+      "aliases": [
+        "m pro v2"
+      ]
+    },
+    {
+      "id": "4x4-qiyi-ms",
+      "brand": "QiYi",
+      "name": "MS",
+      "aliases": [
+        "qiyi ms"
+      ]
+    },
+    {
+      "id": "4x4-qiyi-wuque",
+      "brand": "QiYi",
+      "name": "WuQue",
+      "aliases": [
+        "wuque"
+      ]
+    },
+    {
+      "id": "4x4-other-vin4",
+      "brand": "Other",
+      "name": "VIN 4",
+      "aliases": [
+        "vin 4"
+      ]
+    },
+    {
+      "id": "4x4-other-vin4-v2",
+      "brand": "Other",
+      "name": "VIN 4 V2",
+      "aliases": [
+        "vin 4 v2"
+      ]
+    },
+    {
+      "id": "4x4-other-yj-mgc",
+      "brand": "Other",
+      "name": "YJ MGC",
+      "aliases": [
+        "yj mgc"
+      ]
+    },
+    {
+      "id": "4x4-other-yj-mgc4-elite",
+      "brand": "Other",
+      "name": "YJ MGC4 Elite",
+      "aliases": [
+        "mgc4 elite"
+      ]
+    }
+  ]
+}

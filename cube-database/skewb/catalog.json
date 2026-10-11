@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "event": "skewb",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "skewb-gan-skewb-m-standard",
+      "brand": "GAN",
+      "name": "Skewb M Standard",
+      "aliases": [
+        "gan skewb"
+      ]
+    },
+    {
+      "id": "skewb-gan-skewb-m-enhanced",
+      "brand": "GAN",
+      "name": "Skewb M Enhanced",
+      "aliases": [
+        "gan skew enh"
+      ]
+    },
+    {
+      "id": "skewb-dayan-skewb-v2",
+      "brand": "DaYan",
+      "name": "Skewb V2",
+      "aliases": [
+        "dayan v2"
+      ]
+    },
+    {
+      "id": "skewb-moyu-rs-skewb-m",
+      "brand": "MoYu",
+      "name": "RS Skewb M",
+      "aliases": [
+        "rs skewb m"
+      ]
+    },
+    {
+      "id": "skewb-moyu-weilong-skewb",
+      "brand": "MoYu",
+      "name": "WeiLong Skewb",
+      "aliases": [
+        "weilong"
+      ]
+    },
+    {
+      "id": "skewb-moyu-aoyan-skewb",
+      "brand": "MoYu",
+      "name": "AoYan Skewb",
+      "aliases": [
+        "aoyan"
+      ]
+    },
+    {
+      "id": "skewb-qiyi-wingy-m",
+      "brand": "QiYi",
+      "name": "Wingy M",
+      "aliases": [
+        "wingy m"
+      ]
+    },
+    {
+      "id": "skewb-qiyi-wingy-v2-m",
+      "brand": "QiYi",
+      "name": "Wingy V2 M",
+      "aliases": [
+        "wingy v2 m"
+      ]
+    },
+    {
+      "id": "skewb-other-yuxin-kylin",
+      "brand": "Other",
+      "name": "YuXin Kylin",
+      "aliases": [
+        "yuxin kylin"
+      ]
+    }
+  ]
+}

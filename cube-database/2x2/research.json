@@ -1,0 +1,239 @@
+{
+  "research_date": "2026-10-09",
+  "event": "2x2",
+  "sources": [
+    {
+      "id": "collection-2x2",
+      "title": "TheCubicle 2x2 collection",
+      "url": "https://www.thecubicle.com/collections/2x2-speed-cubes",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_collection_page"
+    },
+    {
+      "id": "flare2",
+      "title": "X-Man Flare 2x2 M",
+      "url": "https://www.thecubicle.com/products/x-man-flare-2x2-m",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "gan2",
+      "title": "GAN official 2x2 collection",
+      "url": "https://www.gancube.com/collections/gan-2x2-speed-cubes",
+      "type": "manufacturer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_collection_page"
+    },
+    {
+      "id": "mgcelite2",
+      "title": "YJ MGC2 Elite 2x2",
+      "url": "https://www.thecubicle.com/en-gb/products/yj-mgc2-elite-2x2",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "ms2",
+      "title": "QiYi MS 2x2",
+      "url": "https://www.thecubicle.com/products/qiyi-ms-2x2",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "reddit2",
+      "title": "r/Cubers: best 2x2s in 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1rssygo/best_2x2s_in_2026/",
+      "type": "community",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "reddit2beta",
+      "title": "r/Cubers: August 12 2026 discussion",
+      "url": "https://www.reddit.com/r/Cubers/comments/1vm4m3c/daily_discussion_thread_aug_12_2026/",
+      "type": "community",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "tengyun2",
+      "title": "DaYan TengYun V2 M 2x2",
+      "url": "https://www.thecubicle.com/products/dayan-tengyun-v2-m-2x2",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "valk2",
+      "title": "Valk 2 M",
+      "url": "https://www.thecubicle.com/en-br/products/valk2-m",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "vin2",
+      "title": "Vin Cube 2x2",
+      "url": "https://www.thecubicle.com/products/vin-cube-2x2-ball-core",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "weipo5",
+      "title": "MoYu WeiPo V5 2x2",
+      "url": "https://www.thecubicle.com/en-gb/products/moyu-weipo-v5-2x2-ball-core-uv",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    }
+  ],
+  "entries": {
+    "2x2-gan-249-v2": {
+      "source_ids": [
+        "gan2"
+      ],
+      "evidence": "Name source identifies 249 V2 for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-gan-251-v2": {
+      "source_ids": [
+        "gan2"
+      ],
+      "evidence": "Name source identifies 251 V2 for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-gan-251-m-air": {
+      "source_ids": [
+        "gan2",
+        "reddit2"
+      ],
+      "evidence": "Name source identifies 251 M Air for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-gan-251-m-pro": {
+      "source_ids": [
+        "gan2",
+        "reddit2"
+      ],
+      "evidence": "Name source identifies 251 M Pro for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-gan-251-m-leap": {
+      "source_ids": [
+        "gan2",
+        "reddit2"
+      ],
+      "evidence": "Name source identifies 251 M Leap for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-moyu-weipo-v5": {
+      "source_ids": [
+        "weipo5",
+        "reddit2"
+      ],
+      "evidence": "Name source identifies WeiPo V5 for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-moyu-weipo-wrs": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies WeiPo WRS for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-moyu-weipo-wrm": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies WeiPo WR M for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-moyu-rs2m-evolution": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies RS2 M Evolution for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-moyu-meilong-m": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies MeiLong M for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-dayan-tengyun-m": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies TengYun M for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-dayan-tengyun-v2-m": {
+      "source_ids": [
+        "tengyun2"
+      ],
+      "evidence": "Name source identifies TengYun V2 M for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-qiyi-valk2-m": {
+      "source_ids": [
+        "valk2"
+      ],
+      "evidence": "Name source identifies Valk 2 M for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-qiyi-flare-m": {
+      "source_ids": [
+        "flare2"
+      ],
+      "evidence": "Name source identifies Flare M for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-qiyi-ms": {
+      "source_ids": [
+        "ms2"
+      ],
+      "evidence": "Name source identifies MS for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-qiyi-m-pro": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies M Pro for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-qiyi-warrior-m": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies Warrior M for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-qiyi-qidi-s2": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies QiDi S2 for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-other-yj-mgc": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies YJ MGC for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-other-yj-mgc2-elite": {
+      "source_ids": [
+        "mgcelite2"
+      ],
+      "evidence": "Name source identifies YJ MGC2 Elite for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-other-yj-mgc2-beta": {
+      "source_ids": [
+        "collection-2x2",
+        "reddit2beta"
+      ],
+      "evidence": "Name source identifies YJ MGC2 Beta for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-other-vin2": {
+      "source_ids": [
+        "vin2"
+      ],
+      "evidence": "Name source identifies VIN 2 for 2x2. Inclusion is curated; no sales ranking inferred."
+    },
+    "2x2-other-yuxin-little-magic-v2-m": {
+      "source_ids": [
+        "collection-2x2"
+      ],
+      "evidence": "Name source identifies YuXin Little Magic V2 M for 2x2. Inclusion is curated; no sales ranking inferred."
+    }
+  }
+}

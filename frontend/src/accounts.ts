@@ -1,4 +1,5 @@
 import { ApiError, request, type User } from './api/api';
+import { setText, onLanguageChange } from './i18n';
 
 export function setupAccounts(onChange: (user: User | null) => Promise<void>): { requireLogin: () => void } {
   const dialog = document.getElementById('account-dialog') as HTMLDialogElement;
@@ -9,19 +10,23 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
   const toggle = document.getElementById('account-toggle') as HTMLButtonElement;
   const message = document.getElementById('account-message') as HTMLElement;
   let registering = false;
-  const showMessage = (text: string) => { message.hidden = false; message.textContent = text; };
+  const showMessage = (text: string) => { message.hidden = false; setText(message,text); };
   const requireLogin = () => {
     void onChange(null);
     if (!dialog.open) dialog.showModal();
   };
   dialog.addEventListener('cancel', event => event.preventDefault());
+  const updateMode = () => {
+    const label = registering ? 'create account' : 'sign in';
+    setText(document.getElementById('account-heading')!,label);
+    setText(submit,label);
+    setText(toggle,registering ? 'sign in' : 'create account');
+    password.autocomplete = registering ? 'new-password' : 'current-password';
+  };
+  onLanguageChange(updateMode);
   toggle.addEventListener('click', () => {
     registering = !registering;
-    const label = registering ? 'create account' : 'sign in';
-    document.getElementById('account-heading')!.textContent = label;
-    submit.textContent = label;
-    toggle.textContent = registering ? 'sign in' : 'create account';
-    password.autocomplete = registering ? 'new-password' : 'current-password';
+    updateMode();
     message.hidden = true;
   });
   form.addEventListener('submit', async event => {
@@ -45,7 +50,7 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
       requireLogin();
     } catch {
       document.getElementById('storage-status')!.hidden = false;
-      document.getElementById('storage-status')!.textContent = 'sign out unavailable';
+      setText(document.getElementById('storage-status')!,'sign out unavailable');
     }
   });
   void request<User>('/api/auth/me').then(onChange).catch(error => {

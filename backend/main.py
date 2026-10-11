@@ -4,11 +4,13 @@ from fastapi.responses import JSONResponse
 from backend.routes.solves import router
 from backend.routes.auth import router as auth_router
 from backend.routes.organization import router as organization_router
+from backend.routes.cube_catalog import router as cube_catalog_router
 
 app = FastAPI(title="namicubes")
 app.include_router(router)
 app.include_router(auth_router)
 app.include_router(organization_router)
+app.include_router(cube_catalog_router)
 
 
 @app.middleware("http")

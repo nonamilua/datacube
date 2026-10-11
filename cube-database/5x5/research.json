@@ -1,0 +1,147 @@
+{
+  "research_date": "2026-10-09",
+  "event": "5x5",
+  "sources": [
+    {
+      "id": "aochuanggts",
+      "title": "MoYu AoChuang GTS M 5x5",
+      "url": "https://www.thecubicle.com/products/moyu-aochuang-5x5-gts-m",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "aochuangwrm",
+      "title": "MoYu AoChuang WR M 5x5",
+      "url": "https://www.thecubicle.com/products/moyu-aochuang-5x5-wr-m",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "collection-5x5",
+      "title": "TheCubicle 5x5 collection",
+      "url": "https://www.thecubicle.com/collections/5x5-speed-cubes",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_collection_page"
+    },
+    {
+      "id": "gan5",
+      "title": "GAN562 M official product",
+      "url": "https://www.gancube.com/products/gan562-m-5x5-speed-cube",
+      "type": "manufacturer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "hong5",
+      "title": "X-Man Hong 5x5",
+      "url": "https://speedcubeshop.com/collections/cubes-puzzles-wca/products/x-man-hong-5x5-magnetic-ball-core-uv-coated",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "ms5",
+      "title": "Speedcubing.org 5x5 selections",
+      "url": "https://speedcubing.org/pages/5x5x5-recommendations",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "redditbig",
+      "title": "r/Cubers: 4x4 vs 5x5 September 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1wnbug3/4x4_vs_5x5_what_do_you_prefer/",
+      "type": "community",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "valk5",
+      "title": "Valk 5 M",
+      "url": "https://www.thecubicle.com/products/valk-5-m",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    }
+  ],
+  "entries": {
+    "5x5-gan-562-m": {
+      "source_ids": [
+        "gan5",
+        "redditbig"
+      ],
+      "evidence": "Name source identifies 562 M for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-moyu-aochuang-gts-m": {
+      "source_ids": [
+        "aochuanggts"
+      ],
+      "evidence": "Name source identifies AoChuang GTS M for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-moyu-aochuang-wrm": {
+      "source_ids": [
+        "aochuangwrm"
+      ],
+      "evidence": "Name source identifies AoChuang WR M for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-moyu-aochuang-v6": {
+      "source_ids": [
+        "collection-5x5",
+        "redditbig"
+      ],
+      "evidence": "Name source identifies AoChuang V6 for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-moyu-meilong-m": {
+      "source_ids": [
+        "collection-5x5"
+      ],
+      "evidence": "Name source identifies MeiLong M for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-qiyi-hong": {
+      "source_ids": [
+        "hong5"
+      ],
+      "evidence": "Name source identifies Hong for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-qiyi-valk5-m": {
+      "source_ids": [
+        "valk5"
+      ],
+      "evidence": "Name source identifies Valk 5 M for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-qiyi-ms": {
+      "source_ids": [
+        "ms5"
+      ],
+      "evidence": "Name source identifies MS for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-qiyi-m-pro": {
+      "source_ids": [
+        "collection-5x5"
+      ],
+      "evidence": "Name source identifies M Pro for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-qiyi-warrior-m": {
+      "source_ids": [
+        "collection-5x5"
+      ],
+      "evidence": "Name source identifies Warrior M for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-other-yj-mgc": {
+      "source_ids": [
+        "collection-5x5",
+        "redditbig"
+      ],
+      "evidence": "Name source identifies YJ MGC for 5x5. Inclusion is curated; no sales ranking inferred."
+    },
+    "5x5-other-vin5": {
+      "source_ids": [
+        "collection-5x5"
+      ],
+      "evidence": "Name source identifies VIN 5 for 5x5. Inclusion is curated; no sales ranking inferred."
+    }
+  }
+}

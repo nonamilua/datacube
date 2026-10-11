@@ -1,0 +1,203 @@
+{
+  "research_date": "2026-10-09",
+  "event": "4x4",
+  "sources": [
+    {
+      "id": "aosugts2",
+      "title": "MoYu AoSu GTS2 M 4x4",
+      "url": "https://www.thecubicle.com/products/moyu-aosu-4x4-gts2-m",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "aosuwrm",
+      "title": "MoYu AoSu WR M 4x4",
+      "url": "https://www.thecubicle.com/products/moyu-aosu-4x4-wr-m",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "collection-4x4",
+      "title": "TheCubicle 4x4 collection",
+      "url": "https://www.thecubicle.com/collections/4x4-speed-cubes",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_collection_page"
+    },
+    {
+      "id": "gan4",
+      "title": "GAN official 4x4 collection",
+      "url": "https://www.gancube.com/collections/gan-4x4-speed-cubes",
+      "type": "manufacturer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_collection_page"
+    },
+    {
+      "id": "gan460",
+      "title": "SpeedCubeShop original GAN 460 M review (2018)",
+      "url": "https://www.youtube.com/watch?v=T-PCzVTSzSI",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "mpro4",
+      "title": "QiYi M Pro 4x4",
+      "url": "https://www.thecubicle.com/products/qiyi-m-pro-4x4",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "ms4",
+      "title": "QiYi MS 4x4",
+      "url": "https://www.cuberspace.shop/products/qiyi-ms-4x4-singapore-sg-speedcube",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "redditbig",
+      "title": "r/Cubers: 4x4 vs 5x5 September 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1wnbug3/4x4_vs_5x5_what_do_you_prefer/",
+      "type": "community",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "redditvin",
+      "title": "r/Cubers: first cube purchase of 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1qnxujy/my_first_cube_purchase_of_2026/",
+      "type": "community",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "vin4",
+      "title": "Vin Cube 4x4",
+      "url": "https://www.thecubicle.com/en-fi/products/vin-cube-4x4",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_search_extract"
+    },
+    {
+      "id": "wuque4",
+      "title": "QiYi WuQue 4x4",
+      "url": "https://www.thecubicle.com/products/qiyi-wuque-4x4",
+      "type": "retailer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    },
+    {
+      "id": "yj4elite",
+      "title": "YJ MGC4 Elite announcement",
+      "url": "https://www.youngjoecube.com/news/mgc4-elite-a-high-performance-4x4-cube-with-unbeatable-value",
+      "type": "manufacturer",
+      "checked_on": "2026-10-09",
+      "access_method": "web_product_page"
+    }
+  ],
+  "entries": {
+    "4x4-gan-460-m": {
+      "source_ids": [
+        "gan460"
+      ],
+      "evidence": "Name source identifies 460 M for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-gan-460-m-v2": {
+      "source_ids": [
+        "gan4"
+      ],
+      "evidence": "Name source identifies 460 M V2 for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-moyu-aosu-gts2-m": {
+      "source_ids": [
+        "aosugts2"
+      ],
+      "evidence": "Name source identifies AoSu GTS2 M for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-moyu-aosu-wrm": {
+      "source_ids": [
+        "aosuwrm"
+      ],
+      "evidence": "Name source identifies AoSu WR M for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-moyu-aosu-v7": {
+      "source_ids": [
+        "collection-4x4",
+        "redditbig"
+      ],
+      "evidence": "Name source identifies AoSu V7 for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-moyu-rs4-m": {
+      "source_ids": [
+        "collection-4x4"
+      ],
+      "evidence": "Name source identifies RS4 M for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-moyu-meilong-m": {
+      "source_ids": [
+        "collection-4x4"
+      ],
+      "evidence": "Name source identifies MeiLong M for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-dayan-jinghong": {
+      "source_ids": [
+        "collection-4x4"
+      ],
+      "evidence": "Name source identifies JingHong for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-qiyi-ms": {
+      "source_ids": [
+        "ms4"
+      ],
+      "evidence": "Name source identifies MS for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-qiyi-m-pro": {
+      "source_ids": [
+        "mpro4"
+      ],
+      "evidence": "Name source identifies M Pro for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-qiyi-m-pro-v2": {
+      "source_ids": [
+        "collection-4x4"
+      ],
+      "evidence": "Name source identifies M Pro V2 for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-qiyi-wuque": {
+      "source_ids": [
+        "wuque4"
+      ],
+      "evidence": "Name source identifies WuQue for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-other-yj-mgc": {
+      "source_ids": [
+        "collection-4x4",
+        "redditbig"
+      ],
+      "evidence": "Name source identifies YJ MGC for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-other-yj-mgc4-elite": {
+      "source_ids": [
+        "yj4elite"
+      ],
+      "evidence": "Name source identifies YJ MGC4 Elite for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-other-vin4": {
+      "source_ids": [
+        "vin4"
+      ],
+      "evidence": "Name source identifies VIN 4 for 4x4. Inclusion is curated; no sales ranking inferred."
+    },
+    "4x4-other-vin4-v2": {
+      "source_ids": [
+        "collection-4x4",
+        "redditvin"
+      ],
+      "evidence": "Name source identifies VIN 4 V2 for 4x4. Inclusion is curated; no sales ranking inferred."
+    }
+  }
+}

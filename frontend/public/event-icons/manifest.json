@@ -1,0 +1,77 @@
+{
+  "viewBox": "0 0 128 128",
+  "events": {
+    "2x2": {
+      "detailed": "/event-icons/detailed/2x2.svg",
+      "reference": "/event-icons/reference/2x2.svg"
+    },
+    "3x3": {
+      "detailed": "/event-icons/detailed/3x3.svg",
+      "reference": "/event-icons/reference/3x3.svg"
+    },
+    "4x4": {
+      "detailed": "/event-icons/detailed/4x4.svg",
+      "reference": "/event-icons/reference/4x4.svg"
+    },
+    "5x5": {
+      "detailed": "/event-icons/detailed/5x5.svg",
+      "reference": "/event-icons/reference/5x5.svg"
+    },
+    "6x6": {
+      "detailed": "/event-icons/detailed/6x6.svg",
+      "reference": "/event-icons/reference/6x6.svg"
+    },
+    "7x7": {
+      "detailed": "/event-icons/detailed/7x7.svg",
+      "reference": "/event-icons/reference/7x7.svg"
+    },
+    "3bld": {
+      "detailed": "/event-icons/detailed/3bld.svg",
+      "reference": "/event-icons/reference/3bld.svg"
+    },
+    "4bld": {
+      "detailed": "/event-icons/detailed/4bld.svg",
+      "reference": "/event-icons/reference/4bld.svg"
+    },
+    "5bld": {
+      "detailed": "/event-icons/detailed/5bld.svg",
+      "reference": "/event-icons/reference/5bld.svg"
+    },
+    "3oh": {
+      "detailed": "/event-icons/detailed/3oh.svg",
+      "reference": "/event-icons/reference/3oh.svg"
+    },
+    "3mbld": {
+      "detailed": "/event-icons/detailed/3mbld.svg",
+      "reference": "/event-icons/reference/3mbld.svg"
+    },
+    "fmc": {
+      "detailed": "/event-icons/detailed/fmc.svg",
+      "reference": "/event-icons/reference/fmc.svg"
+    },
+    "clock": {
+      "detailed": "/event-icons/detailed/clock.svg",
+      "reference": "/event-icons/reference/clock.svg"
+    },
+    "megaminx": {
+      "detailed": "/event-icons/detailed/megaminx.svg",
+      "reference": "/event-icons/reference/megaminx.svg"
+    },
+    "pyraminx": {
+      "detailed": "/event-icons/detailed/pyraminx.svg",
+      "reference": "/event-icons/reference/pyraminx.svg"
+    },
+    "skewb": {
+      "detailed": "/event-icons/detailed/skewb.svg",
+      "reference": "/event-icons/reference/skewb.svg"
+    },
+    "square 1": {
+      "detailed": "/event-icons/detailed/square-1.svg",
+      "reference": "/event-icons/reference/square-1.svg"
+    },
+    "fto": {
+      "detailed": "/event-icons/detailed/fto.svg",
+      "reference": "/event-icons/reference/fto.svg"
+    }
+  }
+}

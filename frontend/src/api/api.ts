@@ -1,12 +1,13 @@
 import type { Solve } from '../timer/timer';
 
 export interface StoredSolve extends Solve { id: string; penalty: 'OK' | '+2' | 'DNF'; cube_id?: number | null; category_id?: number | null; custom?: string | null; scramble?: string | null }
-export interface SolveLabels { category_id: number | null; cube_name: string | null; scramble?: string | null }
+export interface SolveLabels { category_id: number | null; cube_name: string | null; cube_model_id?: string | null; scramble?: string | null; custom?: string | null }
 export interface PendingSolve extends StoredSolve { category_id: number | null; cube_name: string | null }
 export interface SolvePage { items: StoredSolve[]; total: number }
 export interface User { id: number; username: string }
 export interface NamedItem { id: number; name: string }
-export interface Organization { categories: NamedItem[]; cubes: NamedItem[] }
+export interface OwnedCube extends NamedItem { catalog_event?: string | null; catalog_model_id?: string | null }
+export interface Organization { categories: NamedItem[]; cubes: OwnedCube[] }
 const queueKey = (userId: number) => `namicubes pending solves ${userId}`;
 
 export class ApiError extends Error {

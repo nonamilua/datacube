@@ -1,0 +1,149 @@
+{
+  "research_date": "2026-10-09",
+  "event": "square 1",
+  "sources": [
+    {
+      "id": "yj-video",
+      "title": "YJ official named model videos",
+      "url": "https://www.youngjoecube.com/video",
+      "type": "manufacturer",
+      "access_method": "web_collection_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "r-budget",
+      "title": "r/Cubers budget hardware discussion June 22 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1ucbbdj/daily_discussion_thread_jun_22_2026/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "sq-list",
+      "title": "TheCubicle Square-1 collection",
+      "url": "https://www.thecubicle.com/collections/square-1",
+      "type": "retailer",
+      "access_method": "web_collection_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "gan-sq",
+      "title": "GAN official Square-1",
+      "url": "https://www.gancube.com/products/gan-sq1",
+      "type": "manufacturer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "volt",
+      "title": "Original X-Man Volt Square-1",
+      "url": "https://www.thecubicle.com/products/x-man-volt-square-1",
+      "type": "retailer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "sq-guide",
+      "title": "SpeedCubeShop Square-1 model collection guide",
+      "url": "https://speedcubeshop.com/a/blog/our-square-1-cube-collection-at-speedcubeshop",
+      "type": "retailer",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "r-sq",
+      "title": "r/Cubers Square-1 choices September 29 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1wt161v/daily_discussion_thread_sep_29_2026/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "mgc-v2",
+      "title": "YJ MGC SQ-1 V2 product description",
+      "url": "https://www.thecubicle.com/collections/square-1/products/yj-mgc-sq-1-v2-magnetic-uv-coated",
+      "type": "retailer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    }
+  ],
+  "entries": {
+    "square-1-gan-square-1": {
+      "source_ids": [
+        "gan-sq",
+        "sq-list",
+        "r-sq"
+      ],
+      "evidence": "Released competitive model; colors, UV and LBL/BensKewbs modifications grouped."
+    },
+    "square-1-other-yj-mgc": {
+      "source_ids": [
+        "sq-list",
+        "yj-video",
+        "r-budget"
+      ],
+      "evidence": "Established competitive model; aftermarket kits and retailer setups grouped."
+    },
+    "square-1-other-yj-mgc-v2": {
+      "source_ids": [
+        "sq-list",
+        "r-budget",
+        "mgc-v2"
+      ],
+      "evidence": "Named generation adds edge magnets; not merely a UV finish of V1."
+    },
+    "square-1-qiyi-volt": {
+      "source_ids": [
+        "volt"
+      ],
+      "evidence": "Classic X-Man generation for existing owned cubes."
+    },
+    "square-1-qiyi-volt-v2": {
+      "source_ids": [
+        "sq-guide"
+      ],
+      "evidence": "Second X-Man generation; M/fully magnetic configurations and colors grouped."
+    },
+    "square-1-qiyi-qifa": {
+      "source_ids": [
+        "sq-guide",
+        "r-sq"
+      ],
+      "evidence": "Recognizable entry-level family."
+    },
+    "square-1-other-yuxin-little-magic-m": {
+      "source_ids": [
+        "sq-list"
+      ],
+      "evidence": "Established magnetic budget model."
+    },
+    "square-1-moyu-meilong-square-1": {
+      "source_ids": [
+        "sq-list"
+      ],
+      "evidence": "Recognizable budget model; MFJS normalized to MoYu."
+    }
+  },
+  "limitations": [
+    "Curated autocomplete families, not an exhaustive SKU list or measured popularity ranking.",
+    "Official GAN and YJ pages were consulted. QiYi official homepage confirms X-Man belongs to QiYi but did not expose all exact model names. DaYan and MoYu official sites could not be fetched; specialist product listings supply model evidence.",
+    "Reddit discussion informs inclusion and is subjective; no mechanism or performance specification is inferred from model selection."
+  ],
+  "brand_site_checks": [
+    {
+      "brand": "QiYi",
+      "url": "https://www.qiyitoys.net/en/",
+      "result": "Homepage read; four sub-brands include X-MAN DESIGN; exact models supported by retailer sources."
+    },
+    {
+      "brand": "DaYan",
+      "url": "https://www.dayancube.com/",
+      "result": "Fetch failed; no official model verification claimed."
+    },
+    {
+      "brand": "MoYu",
+      "url": "https://www.moyucube.com/",
+      "result": "Fetch failed; no official model verification claimed."
+    }
+  ]
+}

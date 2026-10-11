@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "event": "square 1",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "square-1-gan-square-1",
+      "brand": "GAN",
+      "name": "Square-1",
+      "aliases": [
+        "gan sq1"
+      ]
+    },
+    {
+      "id": "square-1-other-yj-mgc",
+      "brand": "Other",
+      "name": "YJ MGC",
+      "aliases": [
+        "yj mgc"
+      ]
+    },
+    {
+      "id": "square-1-other-yj-mgc-v2",
+      "brand": "Other",
+      "name": "YJ MGC V2",
+      "aliases": [
+        "yj mgc v2"
+      ]
+    },
+    {
+      "id": "square-1-qiyi-volt",
+      "brand": "QiYi",
+      "name": "Volt",
+      "aliases": [
+        "volt"
+      ]
+    },
+    {
+      "id": "square-1-qiyi-volt-v2",
+      "brand": "QiYi",
+      "name": "Volt V2",
+      "aliases": [
+        "volt v2"
+      ]
+    },
+    {
+      "id": "square-1-qiyi-qifa",
+      "brand": "QiYi",
+      "name": "QiFa",
+      "aliases": [
+        "qifa"
+      ]
+    },
+    {
+      "id": "square-1-other-yuxin-little-magic-m",
+      "brand": "Other",
+      "name": "YuXin Little Magic M",
+      "aliases": [
+        "ylm m"
+      ]
+    },
+    {
+      "id": "square-1-moyu-meilong-square-1",
+      "brand": "MoYu",
+      "name": "MeiLong Square-1",
+      "aliases": [
+        "meilong"
+      ]
+    }
+  ]
+}

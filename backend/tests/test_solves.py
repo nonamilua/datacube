@@ -52,6 +52,25 @@ def test_save_reload_and_retry(client):
     assert client.post("/api/solves", json={**data, "duration_ms": 1}).status_code == 409
 
 
+def test_initial_custom_tag_normalization_persistence_and_retries(client):
+    data = payload(custom="  T PERM  ")
+    saved = client.post("/api/solves", json=data)
+    assert saved.status_code == 201
+    assert saved.json()["custom"] == "t perm"
+    assert client.post("/api/solves", json=data).status_code == 200
+    assert client.post("/api/solves", json={**data, "custom":"j perm"}).status_code == 409
+    assert client.get("/api/solves/all").json()["items"][0]["custom"] == "t perm"
+    legacy_retry = {key:value for key,value in data.items() if key != "custom"}
+    assert client.post("/api/solves", json=legacy_retry).status_code == 200
+    assert client.post("/api/solves", json=payload(custom="ABCDEFGHIJKLM")).json()["custom"] == "abcdefghijkl"
+    assert client.post("/api/solves", json=payload(custom="  ")).json()["custom"] is None
+    assert client.post("/api/solves", json=payload(custom="t\u0000perm")).status_code == 422
+    with TestClient(app) as reopened:
+        reopened.cookies.update(client.cookies)
+        rows = reopened.get("/api/solves/all").json()["items"]
+        assert next(row for row in rows if row["id"] == data["id"])["custom"] == "t perm"
+
+
 @pytest.mark.parametrize("changes", [
     {"duration_ms": -1}, {"duration_ms": 1.5}, {"duration_ms": "12"},
     {"started_at": "2026-10-04T12:00:00"}, {"penalty": "bad"}, {"user_id": 2},
@@ -240,20 +259,107 @@ def test_custom_value_persists_normalizes_and_is_owned(client):
 
 
 def test_custom_and_cube_limits_and_literal_sql_like_text(client):
-    assert client.post("/api/solves", json=payload(cube_name="a" * 11)).status_code == 201
-    assert client.get("/api/organization").json()["cubes"][0]["name"] == "a" * 10
+    assert client.post("/api/solves", json=payload(cube_name="a" * 13)).status_code == 201
+    assert client.get("/api/organization").json()["cubes"][0]["name"] == "a" * 12
     assert client.post("/api/solves", json=payload(cube_name="cube\u0000")).status_code == 422
-    data = payload(cube_name="guhongpro+")
+    data = payload(cube_name="abcdefghijkl")
     assert client.post("/api/solves", json=data).status_code == 201
     url = f"/api/solves/{data['id']}"
-    assert client.patch(url, json={"penalty": "OK", "custom": "ABCDEFGHIJK"}).json()["custom"] == "abcdefghij"
+    assert client.patch(url, json={"penalty": "OK", "custom": "ABCDEFGHIJKL"}).json()["custom"] == "abcdefghijkl"
+    assert client.patch(url, json={"penalty": "OK", "custom": "ABCDEFGHIJKLM"}).json()["custom"] == "abcdefghijkl"
     for value in ("nul\u0000", "line\ntext"):
         assert client.patch(url, json={"penalty": "OK", "custom": value}).status_code == 422
     # Quotes and SQL-like text are ordinary values, never interpolated into SQL.
     text = "';drop--"
     assert client.patch(url, json={"penalty": "OK", "custom": text}).json()["custom"] == text
     assert client.get("/api/solves/all").json()["total"] == 2
-    assert any(cube["name"] == "guhongpro+" for cube in client.get("/api/organization").json()["cubes"])
+    assert any(cube["name"] == "abcdefghijkl" for cube in client.get("/api/organization").json()["cubes"])
+
+
+def test_catalog_event_routing_and_authentication(client):
+    models = client.get("/api/cube-models", params={"event":"3x3"}).json()
+    assert any(model["label"] == "DaYan GuHong Pro+" and model["aliases"][0] == "guhong pro+" for model in models)
+    for event in ("3bld", "3oh", "3mbld", "fmc"):
+        assert client.get("/api/cube-models", params={"event":event}).json() == models
+    for event, catalog in (("4bld","4x4"), ("5bld","5x5")):
+        assert client.get("/api/cube-models", params={"event":event}).json() == client.get("/api/cube-models", params={"event":catalog}).json()
+    assert client.get("/api/cube-models", params={"event":"clock"}).json() == []
+    assert client.get("/api/cube-models", params={"event":"../3x3"}).status_code == 422
+    with TestClient(app) as anonymous:
+        assert anonymous.get("/api/cube-models", params={"event":"3x3"}).status_code == 401
+
+
+def test_cube_models_remain_distinct_and_custom_handles_do_not_infer_identity(client):
+    categories = {item["name"]:item["id"] for item in client.get("/api/organization").json()["categories"]}
+    cubes = []
+    for event, model_id in (("4x4","4x4-other-yj-mgc"), ("5x5","5x5-other-yj-mgc")):
+        data = payload(category_id=categories[event], cube_name="yj mgc", cube_model_id=model_id)
+        saved = client.post("/api/solves",json=data)
+        assert saved.status_code == 201
+        cubes.append(saved.json()["cube_id"])
+        assert client.post("/api/solves",json=data).status_code == 200
+        assert client.post("/api/solves",json={**data,"cube_model_id":None}).status_code == 200
+    custom = client.post("/api/solves",json=payload(category_id=categories["4x4"],cube_name="yj mgc"))
+    assert custom.status_code == 201
+    cubes.append(custom.json()["cube_id"])
+    assert len(set(cubes)) == 3
+    records = client.get("/api/organization").json()["cubes"]
+    assert next(cube for cube in records if cube["id"] == cubes[2])["catalog_model_id"] is None
+    assert client.post("/api/solves",json=payload(category_id=categories["4x4"],cube_name="yj mgc",cube_model_id="5x5-other-yj-mgc")).status_code == 422
+    assert client.post("/api/solves",json=payload(cube_name="yj mgc",cube_model_id="4x4-other-yj-mgc")).status_code == 422
+    assert client.post("/api/solves",json=payload(category_id=categories["4x4"],cube_name="yj mgc",cube_model_id="invalid")).status_code == 422
+    with TestClient(app) as other:
+        other.headers["X-Namicubes-Request"] = "1"
+        registered = other.post("/api/auth/register",json={"username":"other","password":"other password"})
+        other.headers["X-Namicubes-Account"] = str(registered.json()["id"])
+        assert other.get("/api/organization").json()["cubes"] == []
+        assert other.post("/api/solves",json=payload(category_id=categories["4x4"],cube_name="yj mgc",cube_model_id="4x4-other-yj-mgc")).status_code == 404
+
+
+def test_explicit_model_selection_links_legacy_solves_and_merges_later_duplicates(client):
+    categories = {item["name"]:item["id"] for item in client.get("/api/organization").json()["categories"]}
+    old = payload(category_id=categories["3x3"],cube_name="guhong pro+",penalty="+2",scramble="R U")
+    original = client.post("/api/solves",json=old).json()
+    client.patch(f"/api/solves/{old['id']}",json={"penalty":"+2","custom":"cross"})
+    selected = payload(category_id=categories["3x3"],cube_name="guhong pro+",cube_model_id="dayan-guhong-pro-plus")
+    new = client.post("/api/solves",json=selected)
+    assert new.status_code == 201
+    assert new.json()["cube_id"] == original["cube_id"]
+    assert client.post("/api/solves",json=old).status_code == 200
+    # An unrecognized label stays unassociated until explicitly selected again.
+    duplicate = payload(category_id=categories["3x3"],cube_name="guhong pro+")
+    extra = client.post("/api/solves",json=duplicate).json()
+    assert extra["cube_id"] != original["cube_id"]
+    assert client.post("/api/solves",json={**selected,"id":str(uuid4())}).status_code == 201
+    cubes = client.get("/api/organization").json()["cubes"]
+    assert len(cubes) == 1
+    assert cubes[0]["catalog_model_id"] == "dayan-guhong-pro-plus"
+    rows = client.get("/api/solves/all").json()["items"]
+    assert {row["cube_id"] for row in rows} == {original["cube_id"]}
+    saved = next(row for row in rows if row["id"] == old["id"])
+    assert (saved["duration_ms"],saved["penalty"],saved["custom"],saved["scramble"]) == (old["duration_ms"],"+2","cross","R U")
+
+
+def test_legacy_reconciliation_is_account_and_event_scoped_and_skips_ambiguous_aliases(client):
+    from backend.reconcile_cubes import reconcile
+    categories = {item["name"]:item["id"] for item in client.get("/api/organization").json()["categories"]}
+    for event,name in (("3x3","rs3m v5"),("4x4","rs3m v5"),("3x3","gan 15")):
+        assert client.post("/api/solves",json=payload(category_id=categories[event],cube_name=name)).status_code == 201
+    user_id = int(client.headers["X-Namicubes-Account"])
+    provider = app.dependency_overrides[get_session]()
+    session = next(provider)
+    try:
+        assert reconcile(session,user_id) == 1
+        session.commit()
+        assert reconcile(session,user_id) == 0
+    finally:
+        provider.close()
+    cubes = client.get("/api/organization").json()["cubes"]
+    assert next(cube for cube in cubes if cube["name"] == "gan 15")["catalog_model_id"] is None
+    labeled = next(cube for cube in cubes if cube["catalog_model_id"] == "moyu-rs3m-v5")
+    rows = client.get("/api/solves/all").json()["items"]
+    assert next(row for row in rows if row["category_id"] == categories["3x3"] and row["cube_id"] == labeled["id"])
+    assert next(row for row in rows if row["category_id"] == categories["4x4"])["cube_id"] != labeled["id"]
 
 
 def test_scramble_saved_unchanged_retry_consistency_and_immutable_edits(client):

@@ -1,0 +1,102 @@
+{
+  "schema_version": 2,
+  "event": "pyraminx",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "pyraminx-gan-pyraminx-m-standard",
+      "brand": "GAN",
+      "name": "Pyraminx M Standard",
+      "aliases": [
+        "gan pyra"
+      ]
+    },
+    {
+      "id": "pyraminx-gan-pyraminx-m-enhanced",
+      "brand": "GAN",
+      "name": "Pyraminx M Enhanced",
+      "aliases": [
+        "gan pyra enh"
+      ]
+    },
+    {
+      "id": "pyraminx-moyu-weilong-pyraminx",
+      "brand": "MoYu",
+      "name": "WeiLong Pyraminx",
+      "aliases": [
+        "weilong"
+      ]
+    },
+    {
+      "id": "pyraminx-moyu-rs-pyraminx-m",
+      "brand": "MoYu",
+      "name": "RS Pyraminx M",
+      "aliases": [
+        "rs pyra m"
+      ]
+    },
+    {
+      "id": "pyraminx-moyu-meilong-pyraminx-v2-m",
+      "brand": "MoYu",
+      "name": "MeiLong Pyraminx V2 M",
+      "aliases": [
+        "meilong v2 m"
+      ]
+    },
+    {
+      "id": "pyraminx-qiyi-bell-m",
+      "brand": "QiYi",
+      "name": "Bell M",
+      "aliases": [
+        "bell m"
+      ]
+    },
+    {
+      "id": "pyraminx-qiyi-bell-v2-m",
+      "brand": "QiYi",
+      "name": "Bell V2 M",
+      "aliases": [
+        "bell v2 m"
+      ]
+    },
+    {
+      "id": "pyraminx-qiyi-m-pro-pyraminx",
+      "brand": "QiYi",
+      "name": "M Pro Pyraminx",
+      "aliases": [
+        "qiyi m pro"
+      ]
+    },
+    {
+      "id": "pyraminx-qiyi-ms-pyraminx",
+      "brand": "QiYi",
+      "name": "MS Pyraminx",
+      "aliases": [
+        "qiyi ms"
+      ]
+    },
+    {
+      "id": "pyraminx-other-yuxin-little-magic-m",
+      "brand": "Other",
+      "name": "YuXin Little Magic M",
+      "aliases": [
+        "ylm m"
+      ]
+    },
+    {
+      "id": "pyraminx-other-yj-mgc-evo",
+      "brand": "Other",
+      "name": "YJ MGC EVO",
+      "aliases": [
+        "yj mgc evo"
+      ]
+    }
+  ]
+}

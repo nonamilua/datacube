@@ -1,0 +1,1371 @@
+{
+  "schema_version": 1,
+  "research_date": "2026-10-05",
+  "scope": "Curated conventional 3x3 starter catalog; not exhaustive and not a measured popularity ranking.",
+  "unknown_value_policy": "null means not verified; never interpret null as false.",
+  "brands": [
+    {
+      "id": "GAN",
+      "parent_brand": null
+    },
+    {
+      "id": "MoYu",
+      "parent_brand": null
+    },
+    {
+      "id": "DaYan",
+      "parent_brand": null
+    },
+    {
+      "id": "X-Man Design",
+      "parent_brand": "QiYi"
+    },
+    {
+      "id": "MoFang JiaoShi",
+      "parent_brand": "MoYu"
+    }
+  ],
+  "sources": [
+    {
+      "id": "gan-356",
+      "title": "GAN 356 collection",
+      "url": "https://www.gancube.com/collections/gan356-3x3-cubes",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists 356 M editions, Me finishes, Maglev, RS and RS2."
+    },
+    {
+      "id": "gan-flagships",
+      "title": "GAN flagship collection",
+      "url": "https://www.gancube.com/collections/flagship-speed-cubes",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists GAN11 models, GAN14 finishes, GAN16 and MAX editions; describes NewBlack as spring-based."
+    },
+    {
+      "id": "gan-15",
+      "title": "GAN15 product",
+      "url": "https://www.gancube.com/products/gan15-3x3-speed-cube",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists Maglev UV and Matte variants and NewBlack UV."
+    },
+    {
+      "id": "gan-13",
+      "title": "GAN13 Maglev",
+      "url": "https://www.gancube.cn/en/gan13-maglev/",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms GAN13 Maglev model."
+    },
+    {
+      "id": "gan-records",
+      "title": "GAN records and achievements",
+      "url": "https://www.gancube.com/pages/gan-records-achievements",
+      "type": "manufacturer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Names GAN12 Maglev among record equipment. Record claims are not copied into the catalog."
+    },
+    {
+      "id": "rs3-2020",
+      "title": "RS3 M 2020",
+      "url": "https://speedcubeshop.com/collections/all-products/products/moyu-rs3-m-2020-3x3-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists frosted and UV variants; specifies 56 mm and spring compression."
+    },
+    {
+      "id": "rs3-v5",
+      "title": "RS3 M V5 comparison",
+      "url": "https://speedcubeshop.com/collections/all-products/products/moyu-rs3-m-3x3-v5-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Comparison explicitly distinguishes four variants, suspension, core, finish and 55.5 mm size."
+    },
+    {
+      "id": "wrm-v10",
+      "title": "WeiLong WR M V10 comparison",
+      "url": "https://speedcubeshop.com/collections/3x3x3-high-speed-magic-cube/products/moyu-weilong-wr-m-3x3-v10-magnetic-maglev-20-magnet-ball-core-uv-coated",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Comparison distinguishes four variants, suspension, ball-core, finish and 55.5 mm size."
+    },
+    {
+      "id": "ys3m",
+      "title": "YS3 M comparison",
+      "url": "https://ca.speedcubeshop.com/products/moyu-ys3-m-3x3-magnetic-maglev?variant=40241913102449",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Comparison distinguishes Standard, MagLev, Ball-Core frosted/UV and 20-magnet Ball-Core UV."
+    },
+    {
+      "id": "ys3m-size",
+      "title": "YS3 M introduction",
+      "url": "https://speedcubeshop.com/a/blog/what-is-the-moyu-ys3-m-new-world-record-holder-speedcube",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "States 55 mm size. Historic article; pricing and world-record statements omitted."
+    },
+    {
+      "id": "guhong-pro",
+      "title": "GuHong Pro comparison",
+      "url": "https://ca.speedcubeshop.com/products/dayan-guhong-pro-3x3-magnetic-55mm-maglev",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists 54/55/56 mm in Standard and MagLev, core magnets and frosted finish."
+    },
+    {
+      "id": "guhong-plus",
+      "title": "GuHong Pro+ variants",
+      "url": "https://speedcubeshop.com/products/dayan-guhong-pro-plus-3x3-magnetic-core-magnets-54mm",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists 54/55/56 mm magnetic and MagLev editions with core magnets and semi-gloss finish. Spring mechanism not independently specified for non-MagLev entries."
+    },
+    {
+      "id": "tornado-v3",
+      "title": "Tornado V3 Standard and related versions",
+      "url": "https://www.thecubicle.com/en-pl/products/x-man-tornado-v3-m-standard",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Distinguishes Standard piece magnets, Flagship core magnets and Pioneer core magnets plus MagLev."
+    },
+    {
+      "id": "tornado-v3-uv",
+      "title": "Tornado V3 Pioneer UV",
+      "url": "https://www.thecubicle.com/en-global/products/x-man-tornado-v3-m-pioneer-uv-3x3",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms UV Pioneer edition."
+    },
+    {
+      "id": "tornado-modern",
+      "title": "Tornado V4 comparison and variant menu",
+      "url": "https://speedcubeshop.com/products/x-man-tornado-3x3-v4-pioneer-magnetic-maglev-core-magnets-uv-coated",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "V4 comparison specifies Flagship frosted and Pioneer UV, core magnets and Pioneer MagLev. Menu lists V5 editions and V3 Premium editions; unspecified dimensions left unknown."
+    },
+    {
+      "id": "tengyun-v2",
+      "title": "TengYun V2",
+      "url": "https://ca.speedcubeshop.com/products/dayan-tengyun-3x3-v2-magnetic",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms magnetic model, spring adjustment and 55.5 mm."
+    },
+    {
+      "id": "tengyun-v1",
+      "title": "DaYan collection",
+      "url": "https://speedcubeshop.com/collections/dayan",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Lists original TengYun magnetic 3x3."
+    },
+    {
+      "id": "budget",
+      "title": "Budget cube overview",
+      "url": "https://speedcubeshop.com/a/blog/the-best-budget-speed-cubes-under-10",
+      "type": "retailer",
+      "checked_on": "2026-10-05",
+      "access_method": "web_search_extract",
+      "evidence": "Confirms MFJS MeiLong M 3x3, spring screws and frosted finish. Historic recommendations are only a seed-selection signal."
+    }
+  ],
+  "models": [
+    {
+      "id": "moyu-rs3m-2020",
+      "brand": "MoYu",
+      "name": "RS3 M 2020",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "RS3M 2020"
+      ],
+      "source_ids": [
+        "rs3-2020"
+      ]
+    },
+    {
+      "id": "moyu-rs3m-v5",
+      "brand": "MoYu",
+      "name": "RS3 M V5",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "RS3M V5"
+      ],
+      "source_ids": [
+        "rs3-v5"
+      ]
+    },
+    {
+      "id": "moyu-weilong-wrm-v10",
+      "brand": "MoYu",
+      "name": "WeiLong WR M V10",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "WRM V10",
+        "WeiLong V10"
+      ],
+      "source_ids": [
+        "wrm-v10"
+      ]
+    },
+    {
+      "id": "moyu-ys3m",
+      "brand": "MoYu",
+      "name": "YS3 M",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "YS3M",
+        "Huameng YS3M"
+      ],
+      "source_ids": [
+        "ys3m"
+      ]
+    },
+    {
+      "id": "dayan-guhong-pro",
+      "brand": "DaYan",
+      "name": "GuHong Pro",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "Guhong Pro M"
+      ],
+      "source_ids": [
+        "guhong-pro"
+      ]
+    },
+    {
+      "id": "dayan-guhong-pro-plus",
+      "brand": "DaYan",
+      "name": "GuHong Pro+",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "Guhong Pro+ M"
+      ],
+      "source_ids": [
+        "guhong-plus"
+      ]
+    },
+    {
+      "id": "xman-tornado-v3",
+      "brand": "X-Man Design",
+      "name": "Tornado V3 M",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "Tornado V3",
+        "TV3"
+      ],
+      "source_ids": [
+        "tornado-v3"
+      ]
+    },
+    {
+      "id": "xman-tornado-v3-premium",
+      "brand": "X-Man Design",
+      "name": "Tornado V3 Premium",
+      "puzzle_type": "3x3",
+      "aliases": [],
+      "source_ids": [
+        "tornado-modern"
+      ]
+    },
+    {
+      "id": "xman-tornado-v4",
+      "brand": "X-Man Design",
+      "name": "Tornado V4",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "TV4"
+      ],
+      "source_ids": [
+        "tornado-modern"
+      ]
+    },
+    {
+      "id": "xman-tornado-v5",
+      "brand": "X-Man Design",
+      "name": "Tornado V5",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "TV5"
+      ],
+      "source_ids": [
+        "tornado-modern"
+      ]
+    },
+    {
+      "id": "dayan-tengyun",
+      "brand": "DaYan",
+      "name": "TengYun M",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "TengYun V1",
+        "Tengyun"
+      ],
+      "source_ids": [
+        "tengyun-v1"
+      ]
+    },
+    {
+      "id": "dayan-tengyun-v2",
+      "brand": "DaYan",
+      "name": "TengYun V2 M",
+      "puzzle_type": "3x3",
+      "aliases": [],
+      "source_ids": [
+        "tengyun-v2"
+      ]
+    },
+    {
+      "id": "mfjs-meilong-m",
+      "brand": "MoFang JiaoShi",
+      "name": "MeiLong M",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "MFJS MeiLong M",
+        "Meilong M"
+      ],
+      "source_ids": [
+        "budget"
+      ]
+    },
+    {
+      "id": "gan-356-m",
+      "brand": "GAN",
+      "name": "356 M",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN356 M"
+      ],
+      "source_ids": [
+        "gan-356"
+      ]
+    },
+    {
+      "id": "gan-356-me",
+      "brand": "GAN",
+      "name": "356 Me",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN356 Me",
+        "GAN 356 M E"
+      ],
+      "source_ids": [
+        "gan-356"
+      ]
+    },
+    {
+      "id": "gan-356-maglev",
+      "brand": "GAN",
+      "name": "356 Maglev",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN356 Maglev"
+      ],
+      "source_ids": [
+        "gan-356"
+      ]
+    },
+    {
+      "id": "gan-11-m-pro",
+      "brand": "GAN",
+      "name": "11 M Pro",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN11 M Pro"
+      ],
+      "source_ids": [
+        "gan-flagships"
+      ]
+    },
+    {
+      "id": "gan-11-m",
+      "brand": "GAN",
+      "name": "11 M",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN11 M"
+      ],
+      "source_ids": [
+        "gan-flagships"
+      ]
+    },
+    {
+      "id": "gan-11-m-duo",
+      "brand": "GAN",
+      "name": "11 M Duo",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN11 M Duo"
+      ],
+      "source_ids": [
+        "gan-flagships"
+      ]
+    },
+    {
+      "id": "gan-12-maglev",
+      "brand": "GAN",
+      "name": "12 Maglev",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN12 Maglev"
+      ],
+      "source_ids": [
+        "gan-records"
+      ]
+    },
+    {
+      "id": "gan-13-maglev",
+      "brand": "GAN",
+      "name": "13 Maglev",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN13 Maglev"
+      ],
+      "source_ids": [
+        "gan-13"
+      ]
+    },
+    {
+      "id": "gan-14-maglev",
+      "brand": "GAN",
+      "name": "14 Maglev",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN14 Maglev"
+      ],
+      "source_ids": [
+        "gan-flagships"
+      ]
+    },
+    {
+      "id": "gan-14-maglev-pro",
+      "brand": "GAN",
+      "name": "14 Maglev Pro",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN14 Maglev Pro"
+      ],
+      "source_ids": [
+        "gan-flagships"
+      ]
+    },
+    {
+      "id": "gan-15",
+      "brand": "GAN",
+      "name": "15",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN15"
+      ],
+      "source_ids": [
+        "gan-15"
+      ]
+    },
+    {
+      "id": "gan-16-maglev",
+      "brand": "GAN",
+      "name": "16 Maglev",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN16 Maglev"
+      ],
+      "source_ids": [
+        "gan-flagships"
+      ]
+    },
+    {
+      "id": "gan-16-maglev-max",
+      "brand": "GAN",
+      "name": "16 Maglev MAX",
+      "puzzle_type": "3x3",
+      "aliases": [
+        "GAN16 Maglev MAX"
+      ],
+      "source_ids": [
+        "gan-flagships"
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "id": "moyu-rs3m-2020-frosted",
+      "model_id": "moyu-rs3m-2020",
+      "label": "Frosted",
+      "size_mm": 56,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "frosted",
+      "source_ids": [
+        "rs3-2020"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-rs3m-2020-uv",
+      "model_id": "moyu-rs3m-2020",
+      "label": "UV",
+      "size_mm": 56,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "rs3-2020"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-rs3m-v5-standard",
+      "model_id": "moyu-rs3m-v5",
+      "label": "Standard",
+      "size_mm": 55.5,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": false,
+      "finish": "frosted",
+      "source_ids": [
+        "rs3-v5"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-rs3m-v5-dual",
+      "model_id": "moyu-rs3m-v5",
+      "label": "Dual Adjustment",
+      "size_mm": 55.5,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": false,
+      "finish": "frosted",
+      "source_ids": [
+        "rs3-v5"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-rs3m-v5-maglev",
+      "model_id": "moyu-rs3m-v5",
+      "label": "MagLev",
+      "size_mm": 55.5,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": false,
+      "finish": "frosted",
+      "source_ids": [
+        "rs3-v5"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-rs3m-v5-ballcore-uv",
+      "model_id": "moyu-rs3m-v5",
+      "label": "MagLev Ball-Core UV",
+      "size_mm": 55.5,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "rs3-v5"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-weilong-wrm-v10-standard",
+      "model_id": "moyu-weilong-wrm-v10",
+      "label": "Standard",
+      "size_mm": 55.5,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": false,
+      "finish": "frosted",
+      "source_ids": [
+        "wrm-v10"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-weilong-wrm-v10-standard-uv",
+      "model_id": "moyu-weilong-wrm-v10",
+      "label": "Standard UV",
+      "size_mm": 55.5,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": false,
+      "finish": "uv",
+      "source_ids": [
+        "wrm-v10"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-weilong-wrm-v10-ballcore-uv",
+      "model_id": "moyu-weilong-wrm-v10",
+      "label": "20-Magnet Ball-Core UV",
+      "size_mm": 55.5,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "wrm-v10"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-weilong-wrm-v10-maglev-ballcore-uv",
+      "model_id": "moyu-weilong-wrm-v10",
+      "label": "MagLev 20-Magnet Ball-Core UV",
+      "size_mm": 55.5,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "wrm-v10"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-ys3m-standard",
+      "model_id": "moyu-ys3m",
+      "label": "Standard",
+      "size_mm": 55,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": false,
+      "finish": "frosted",
+      "source_ids": [
+        "ys3m",
+        "ys3m-size"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-ys3m-maglev",
+      "model_id": "moyu-ys3m",
+      "label": "MagLev",
+      "size_mm": 55,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": false,
+      "finish": "frosted",
+      "source_ids": [
+        "ys3m",
+        "ys3m-size"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-ys3m-ballcore-frosted",
+      "model_id": "moyu-ys3m",
+      "label": "MagLev Ball-Core Frosted",
+      "size_mm": 55,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "frosted",
+      "source_ids": [
+        "ys3m",
+        "ys3m-size"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-ys3m-ballcore-uv",
+      "model_id": "moyu-ys3m",
+      "label": "MagLev Ball-Core UV",
+      "size_mm": 55,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "ys3m",
+        "ys3m-size"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "moyu-ys3m-20-ballcore-uv",
+      "model_id": "moyu-ys3m",
+      "label": "MagLev 20-Magnet Ball-Core UV",
+      "size_mm": 55,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "ys3m",
+        "ys3m-size"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-standard-54",
+      "model_id": "dayan-guhong-pro",
+      "label": "Standard 54 mm",
+      "size_mm": 54,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "frosted",
+      "source_ids": [
+        "guhong-pro"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-maglev-54",
+      "model_id": "dayan-guhong-pro",
+      "label": "MagLev 54 mm",
+      "size_mm": 54,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "frosted",
+      "source_ids": [
+        "guhong-pro"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-standard-55",
+      "model_id": "dayan-guhong-pro",
+      "label": "Standard 55 mm",
+      "size_mm": 55,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "frosted",
+      "source_ids": [
+        "guhong-pro"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-maglev-55",
+      "model_id": "dayan-guhong-pro",
+      "label": "MagLev 55 mm",
+      "size_mm": 55,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "frosted",
+      "source_ids": [
+        "guhong-pro"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-standard-56",
+      "model_id": "dayan-guhong-pro",
+      "label": "Standard 56 mm",
+      "size_mm": 56,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "frosted",
+      "source_ids": [
+        "guhong-pro"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-maglev-56",
+      "model_id": "dayan-guhong-pro",
+      "label": "MagLev 56 mm",
+      "size_mm": 56,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "frosted",
+      "source_ids": [
+        "guhong-pro"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-plus-standard-54",
+      "model_id": "dayan-guhong-pro-plus",
+      "label": "Standard 54 mm",
+      "size_mm": 54,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "semi_gloss",
+      "source_ids": [
+        "guhong-plus"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-plus-maglev-54",
+      "model_id": "dayan-guhong-pro-plus",
+      "label": "MagLev 54 mm",
+      "size_mm": 54,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "semi_gloss",
+      "source_ids": [
+        "guhong-plus"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-plus-standard-55",
+      "model_id": "dayan-guhong-pro-plus",
+      "label": "Standard 55 mm",
+      "size_mm": 55,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "semi_gloss",
+      "source_ids": [
+        "guhong-plus"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-plus-maglev-55",
+      "model_id": "dayan-guhong-pro-plus",
+      "label": "MagLev 55 mm",
+      "size_mm": 55,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "semi_gloss",
+      "source_ids": [
+        "guhong-plus"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-plus-standard-56",
+      "model_id": "dayan-guhong-pro-plus",
+      "label": "Standard 56 mm",
+      "size_mm": 56,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "semi_gloss",
+      "source_ids": [
+        "guhong-plus"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-guhong-pro-plus-maglev-56",
+      "model_id": "dayan-guhong-pro-plus",
+      "label": "MagLev 56 mm",
+      "size_mm": 56,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "semi_gloss",
+      "source_ids": [
+        "guhong-plus"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v3-standard",
+      "model_id": "xman-tornado-v3",
+      "label": "Standard",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": false,
+      "finish": null,
+      "source_ids": [
+        "tornado-v3"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v3-flagship",
+      "model_id": "xman-tornado-v3",
+      "label": "Flagship",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": null,
+      "source_ids": [
+        "tornado-v3"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v3-pioneer-uv",
+      "model_id": "xman-tornado-v3",
+      "label": "Pioneer UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "tornado-v3",
+        "tornado-v3-uv"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v3-premium-standard",
+      "model_id": "xman-tornado-v3-premium",
+      "label": "Standard",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "frosted",
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v3-premium-flagship-uv",
+      "model_id": "xman-tornado-v3-premium",
+      "label": "Flagship UV",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v3-premium-pioneer-uv",
+      "model_id": "xman-tornado-v3-premium",
+      "label": "Pioneer UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v4-flagship",
+      "model_id": "xman-tornado-v4",
+      "label": "Flagship",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "frosted",
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v4-pioneer-uv",
+      "model_id": "xman-tornado-v4",
+      "label": "Pioneer UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v5-flagship-uv",
+      "model_id": "xman-tornado-v5",
+      "label": "Flagship UV",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "xman-tornado-v5-pioneer-uv",
+      "model_id": "xman-tornado-v5",
+      "label": "Pioneer UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": true,
+      "finish": "uv",
+      "source_ids": [
+        "tornado-modern"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-tengyun-magnetic",
+      "model_id": "dayan-tengyun",
+      "label": "Magnetic",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "tengyun-v1"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "dayan-tengyun-v2-magnetic",
+      "model_id": "dayan-tengyun-v2",
+      "label": "Magnetic",
+      "size_mm": 55.5,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "tengyun-v2"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "mfjs-meilong-m-frosted",
+      "model_id": "mfjs-meilong-m",
+      "label": "Frosted",
+      "size_mm": null,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "frosted",
+      "source_ids": [
+        "budget"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-356-m-standard-frosted",
+      "model_id": "gan-356-m",
+      "label": "Standard Frosted",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "frosted",
+      "source_ids": [
+        "gan-356"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-356-m-lite-frosted",
+      "model_id": "gan-356-m",
+      "label": "Lightweight Frosted",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "frosted",
+      "source_ids": [
+        "gan-356"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-356-m-standard-uv",
+      "model_id": "gan-356-m",
+      "label": "Standard UV",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "gan-356"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-356-me-frosted",
+      "model_id": "gan-356-me",
+      "label": "Frosted",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "frosted",
+      "source_ids": [
+        "gan-356"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-356-me-uv",
+      "model_id": "gan-356-me",
+      "label": "UV",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "gan-356"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-356-maglev-unspecified",
+      "model_id": "gan-356-maglev",
+      "label": "Finish unspecified",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "gan-356"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-11-m-pro-unspecified",
+      "model_id": "gan-11-m-pro",
+      "label": "Edition unspecified",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-11-m-unspecified",
+      "model_id": "gan-11-m",
+      "label": "Edition unspecified",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-11-m-duo-unspecified",
+      "model_id": "gan-11-m-duo",
+      "label": "Edition unspecified",
+      "size_mm": null,
+      "suspension": null,
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-12-maglev-unspecified",
+      "model_id": "gan-12-maglev",
+      "label": "Finish unspecified",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "gan-records"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-13-maglev-unspecified",
+      "model_id": "gan-13-maglev",
+      "label": "Finish unspecified",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "gan-13"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-14-maglev-frosted",
+      "model_id": "gan-14-maglev",
+      "label": "Frosted",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "frosted",
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-14-maglev-uv",
+      "model_id": "gan-14-maglev",
+      "label": "UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-14-maglev-pro-frosted",
+      "model_id": "gan-14-maglev-pro",
+      "label": "Frosted",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "frosted",
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-14-maglev-pro-uv",
+      "model_id": "gan-14-maglev-pro",
+      "label": "UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-15-maglev-uv",
+      "model_id": "gan-15",
+      "label": "MagLev UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "gan-15"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-15-maglev-matte",
+      "model_id": "gan-15",
+      "label": "MagLev Matte",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "matte",
+      "source_ids": [
+        "gan-15"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-15-newblack-uv",
+      "model_id": "gan-15",
+      "label": "NewBlack UV",
+      "size_mm": null,
+      "suspension": "spring",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "gan-15",
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-16-maglev-unspecified",
+      "model_id": "gan-16-maglev",
+      "label": "Finish unspecified",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": null,
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-16-maglev-max-max-uv",
+      "model_id": "gan-16-maglev-max",
+      "label": "MAX UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    },
+    {
+      "id": "gan-16-maglev-max-max-l-uv",
+      "model_id": "gan-16-maglev-max",
+      "label": "MAX-L UV",
+      "size_mm": null,
+      "suspension": "maglev",
+      "magnetic": true,
+      "core_magnets": null,
+      "finish": "uv",
+      "source_ids": [
+        "gan-flagships"
+      ],
+      "verification": "source_supported"
+    }
+  ]
+}

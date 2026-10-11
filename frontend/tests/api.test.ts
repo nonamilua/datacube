@@ -14,7 +14,7 @@ test('failed saves survive reload and retry with the same id', async () => {
     },
   });
   try {
-    const labels = { category_id: 2, cube_name: 'gan 12', scramble:"R U' F2" };
+    const labels = { category_id: 2, cube_name: 'gan 12', cube_model_id:'gan-12-maglev', scramble:"R U' F2", custom:'t perm' };
     queueSolve({ duration_ms: 12345, started_at: '2026-10-04T15:00:00Z' }, 1, labels);
     const queued = pendingSolves(1)[0];
     globalThis.fetch = async () => new Response('', { status: 503 });
@@ -40,6 +40,8 @@ test('failed saves survive reload and retry with the same id', async () => {
     // Pre-feature queues lack the optional field and must be sent unchanged.
     const legacy = {...queued};
     delete legacy.scramble;
+    delete legacy.cube_model_id;
+    delete (legacy as {custom?: string}).custom;
     storage.set('namicubes pending solves 1', JSON.stringify([legacy]));
     globalThis.fetch = async (_url, options) => {
       assert.deepEqual(JSON.parse(options?.body as string),legacy);
@@ -49,6 +51,7 @@ test('failed saves survive reload and retry with the same id', async () => {
     assert.deepEqual(pendingSolves(1),[]);
     const disabled = queueSolve({duration_ms:1000, started_at:'2026-10-06T15:00:00Z'}, 1, {...labels, scramble:null});
     assert.equal(disabled.scramble,null);
+    assert.equal(disabled.custom,'t perm');
   } finally {
     globalThis.fetch = originalFetch;
     if (originalStorage) Object.defineProperty(globalThis, 'localStorage', originalStorage);

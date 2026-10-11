@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "event": "fto",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "fto-dayan-fto",
+      "brand": "DaYan",
+      "name": "FTO",
+      "aliases": [
+        "dayan fto"
+      ]
+    },
+    {
+      "id": "fto-other-diansheng-galaxy",
+      "brand": "Other",
+      "name": "DianSheng Galaxy FTO",
+      "aliases": [
+        "ds fto"
+      ]
+    },
+    {
+      "id": "fto-other-diansheng-galaxy-neo",
+      "brand": "Other",
+      "name": "DianSheng Galaxy FTO NEO",
+      "aliases": [
+        "ds fto neo"
+      ]
+    },
+    {
+      "id": "fto-qiyi-fto",
+      "brand": "QiYi",
+      "name": "FTO",
+      "aliases": [
+        "qiyi fto"
+      ]
+    }
+  ]
+}

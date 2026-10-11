@@ -8,7 +8,12 @@ import { icon } from './icons';
 import { setupDashboard } from './analytics/dashboard';
 import { bindShortText, validateShortText } from './text-fields';
 import { editorAnchor } from './solve-editor';
+import { CubeSelector } from './cube-selector';
 import { Scrambles, type ScrambleSnapshot } from './scrambles';
+import { FixedTags } from './fixed-tags';
+import { t, setText, setActionLabel, initializeTranslations, setLanguage, currentLanguage, onLanguageChange, settingsKey, languageForAccount, rememberLanguage } from './i18n';
+
+initializeTranslations();
 
 function element<T extends HTMLElement>(id: string): T {
   const found = document.getElementById(id);
@@ -21,15 +26,21 @@ const value = element('timer-value');
 const hint = element('timer-hint');
 const hidden = element<HTMLInputElement>('hidden-time');
 const scramblesEnabled = element<HTMLInputElement>('scrambles-enabled');
+const fixedTagsEnabled = element<HTMLInputElement>('fixed-tags');
+const hideOutliers = element<HTMLInputElement>('hide-outliers');
+const fixedTags = new FixedTags();
+const languageSelect = element<HTMLSelectElement>('language-select');
 const scrambleText = element('scramble-text');
 const replaceScramble = element<HTMLButtonElement>('replace-scramble');
 replaceScramble.append(icon('shuffle'));
-const scrambles = new Scrambles(() => {
+function renderScramble(): void {
   element('current-scramble').hidden = !scrambles.enabled;
-  scrambleText.textContent = scrambles.status === 'ready' ? scrambles.text : scrambles.status === 'failed' ? 'scramble failed try again' : 'loading scramble';
-});
+  scrambleText.textContent = scrambles.status === 'ready' ? scrambles.text : t(scrambles.status === 'failed' ? 'scramble failed try again' : 'loading scramble');
+}
+const scrambles = new Scrambles(renderScramble);
+onLanguageChange(renderScramble);
 let startedScramble: ScrambleSnapshot | null = null;
-let startedLabels: {category_id: number | null; cube_name: string | null} = {category_id:null, cube_name:null};
+let startedLabels: {category_id: number | null; cube_name: string | null; cube_model_id?: string | null; custom?: string | null} = {category_id:null, cube_name:null};
 const scramblePopup = element('scramble-popup');
 let scrambleButton: HTMLButtonElement | null = null;
 
@@ -123,8 +134,7 @@ function solveActions(solve: DisplaySolve, historyRow = false): HTMLDivElement {
     button.type = 'button';
     button.className = 'solve-action icon-button';
     button.dataset.solveId = solve.id;
-    button.title = action === 'scramble' ? 'view scramble' : action === 'edit' ? 'edit solve' : 'delete solve';
-    button.setAttribute('aria-label', `${button.title} ${solveResult(solve)}`);
+    setActionLabel(button, action === 'scramble' ? 'view scramble' : action === 'edit' ? 'edit solve' : 'delete solve', ` ${solveResult(solve)}`);
     button.disabled = action === 'scramble' ? deleting || editing : !solve.id || Boolean(solve.pending) || deleting || editing;
     button.append(icon(action));
     if (action === 'edit') {
@@ -155,6 +165,8 @@ async function persistEditor(): Promise<boolean> {
   const customValue = custom.value.trim().toLowerCase() || null;
   if (penalty === (solve.penalty ?? 'OK') && customValue === (solve.custom ?? null)) { closeEditor(); return true; }
   const activeUser = user;
+  const tagVersion = fixedTags.version;
+  const customChanged = customValue !== (solve.custom ?? null);
   editing = true;
   solveRevision += 1;
   plusTwo.checked = penalty === '+2';
@@ -164,19 +176,20 @@ async function persistEditor(): Promise<boolean> {
   try {
     const updated = await updateSolve(solve.id, activeUser.id, penalty, customValue);
     if (user !== activeUser) return false;
+    if (customChanged) fixedTags.remember(updated.category_id, updated.custom, tagVersion);
     Object.assign(solve, updated);
     const row = solves.find(item => item.id === solve.id);
     if (row) Object.assign(row, updated);
     if (lastSolve?.id === solve.id) Object.assign(lastSolve, updated);
     element('solve-editor-status').hidden = true;
-    element('announcement').textContent = 'solve updated';
+    setText(element('announcement'), 'solve updated');
     closeEditor();
     return true;
   } catch (error) {
     if (user !== activeUser) return false;
     const status = element('solve-editor-status');
     status.hidden = false;
-    status.textContent = error instanceof ApiError ? error.message : 'could not connect try again';
+    setText(status, error instanceof ApiError ? error.message : 'could not connect try again');
     if (error instanceof ApiError && (error.status === 401 || error.status === 409)) accounts.requireLogin();
     return false;
   } finally {
@@ -195,9 +208,15 @@ const eventSelect = element<HTMLSelectElement>('event-select');
 const cubeName = element<HTMLInputElement>('cube-name');
 const cubeValidation = element('cube-validation');
 bindShortText(cubeName, cubeValidation);
+const cubeSelector = new CubeSelector(cubeName, element<HTMLOutputElement>('cube-model'), element('cube-suggestions'), element('cube-model-warning'));
+const selectedEvent = () => organization.categories.find(item => String(item.id) === eventSelect.value)?.name ?? '';
 let user: User | null = null;
 let organization: Organization = { categories: [], cubes: [] };
-const preferencesKey = () => `namicubes settings ${user!.id}`;
+const preferencesKey = () => settingsKey(user!.id);
+function configureFixedTags(): void {
+  fixedTags.configure(user?.id ?? null, eventSelect.value ? Number(eventSelect.value) : null, fixedTagsEnabled.checked);
+}
+fixedTagsEnabled.addEventListener('change', configureFixedTags);
 function configureScrambles(): void {
   const event = organization.categories.find(item => String(item.id) === eventSelect.value)?.name ?? '';
   scrambles.configure(user?.id ?? null, event, scramblesEnabled.checked);
@@ -248,14 +267,14 @@ async function removeSolve(solve: DisplaySolve): Promise<void> {
     solveCount = Math.max(0, solveCount - 1);
     storageStatus.hidden = true;
     element('solve-action-status').hidden = true;
-    element('announcement').textContent = 'solve deleted';
+    setText(element('announcement'), 'solve deleted');
     removed = true;
   } catch (error) {
     if (user !== activeUser) return;
     storageStatus.hidden = false;
-    storageStatus.textContent = 'delete unavailable';
+    setText(storageStatus, 'delete unavailable');
     element('solve-action-status').hidden = false;
-    element('solve-action-status').textContent = 'delete unavailable';
+    setText(element('solve-action-status'), 'delete unavailable');
     if (error instanceof ApiError && (error.status === 401 || error.status === 409)) accounts.requireLogin();
   } finally {
     deleting = false;
@@ -284,7 +303,7 @@ async function syncSolves(): Promise<void> {
   try {
     if (pendingSolves(activeUser.id).length) {
       storageStatus.hidden = false;
-      storageStatus.textContent = 'saving';
+      setText(storageStatus, 'saving');
     }
     // Repeat if another solve was queued while a request was in flight.
     let page;
@@ -299,11 +318,6 @@ async function syncSolves(): Promise<void> {
     // A mutation started during this read; do not restore its stale result.
     if (revision !== solveRevision) return;
     organization = loadedOrganization;
-    element('cube-options').replaceChildren(...organization.cubes.map(cube => {
-      const option = document.createElement('option');
-      option.value = cube.name;
-      return option;
-    }));
     solves.splice(0, solves.length, ...page.items);
     if (lastSolve?.id && !pendingSolves(activeUser.id).some(item => item.id === lastSolve!.id)) {
       lastSolve = page.items.find(item => item.id === lastSolve!.id) ?? { ...lastSolve, pending: false };
@@ -314,7 +328,7 @@ async function syncSolves(): Promise<void> {
   } catch (error) {
     if (user !== activeUser) return;
     storageStatus.hidden = false;
-    storageStatus.textContent = 'connection unavailable';
+    setText(storageStatus, 'connection unavailable');
     if (error instanceof ApiError && (error.status === 401 || error.status === 409)) accounts.requireLogin();
   } finally {
     syncing = false;
@@ -330,7 +344,7 @@ bindControls(timer, area, (solve) => {
   solves.unshift(solve);
   solveCount += 1;
   renderSolves();
-  element('announcement').textContent = `solve ${formatTime(solve.duration_ms)}`;
+  element('announcement').textContent = `${t('solve')} ${formatTime(solve.duration_ms)}`;
   try {
     if (!user) throw new Error('sign in required');
     lastSolve = { ...queueSolve(solve, user.id, { ...startedLabels, scramble: startedScramble?.text ?? null }), pending: true };
@@ -339,18 +353,19 @@ bindControls(timer, area, (solve) => {
     void syncSolves();
   } catch {
     storageStatus.hidden = false;
-    storageStatus.textContent = 'save unavailable';
+    setText(storageStatus, 'save unavailable');
   }
   void scrambles.replace();
 }, {
   canPrepare: () => scrambles.canStart,
   onStart: () => {
     startedScramble = scrambles.capture();
-    startedLabels = Object.freeze({category_id:eventSelect.value ? Number(eventSelect.value) : null, cube_name:cubeName.value.trim().toLowerCase() || null});
+    startedLabels = Object.freeze({category_id:eventSelect.value ? Number(eventSelect.value) : null, cube_name:cubeName.value.trim().toLowerCase() || null, cube_model_id:cubeSelector.modelId, custom:fixedTags.value});
   },
 });
 const accounts = setupAccounts(async nextUser => {
   user = null;
+  fixedTags.configure(null, null, false);
   scrambles.configure(null, '', false);
   startedScramble = null;
   closeScramblePopup();
@@ -368,9 +383,13 @@ const accounts = setupAccounts(async nextUser => {
   renderSolves();
   eventSelect.replaceChildren();
   cubeName.value = '';
+  void cubeSelector.configure('');
   cubeValidation.hidden = true;
   hidden.checked = false;
   scramblesEnabled.checked = false;
+  fixedTagsEnabled.checked = false;
+  hideOutliers.checked = true;
+  setLanguage('en'); languageSelect.value = 'en';
   settings.open = false;
   element('account-name').textContent = nextUser?.username ?? '';
   if (!nextUser) return;
@@ -384,26 +403,39 @@ const accounts = setupAccounts(async nextUser => {
   }));
   user = nextUser;
   try {
+    setLanguage(languageForAccount(localStorage,user.id));
+    languageSelect.value = currentLanguage();
     const saved = JSON.parse(localStorage.getItem(preferencesKey()) ?? '{}');
     if (loaded.categories.some(event => String(event.id) === saved.event)) eventSelect.value = saved.event;
     cubeName.value = typeof saved.cube === 'string' ? saved.cube : '';
-    const aliases: Record<string, string> = {'dayan guhong pro+': 'guhongpro+', 'moyu rs3m 2020': 'rs3m 2020', 'moyu rs3m v5': 'rs3m v5'};
+    const aliases: Record<string, string> = {'guhongpro+': 'guhong pro+', 'dayan guhong pro+': 'guhong pro+', 'moyu rs3m 2020': 'rs3m 2020', 'moyu rs3m v5': 'rs3m v5'};
     const renamedCubes = Object.fromEntries(Object.entries(aliases).filter(([old, renamed]) => loaded.cubes.some(cube => cube.name === renamed) && !loaded.cubes.some(cube => cube.name === old)));
     renameQueuedCubes(user.id, renamedCubes);
     const renamed = aliases[cubeName.value];
     if (renamed && loaded.cubes.some(cube => cube.name === renamed) && !loaded.cubes.some(cube => cube.name === cubeName.value)) cubeName.value = renamed;
     validateShortText(cubeName, cubeValidation);
+    const catalogEvents: Record<string,string> = {'3bld':'3x3','3oh':'3x3','3mbld':'3x3','fmc':'3x3','4bld':'4x4','5bld':'5x5'};
+    const catalogEvent = catalogEvents[selectedEvent()] ?? selectedEvent();
+    // Restore a unique association already recorded on this account's owned cube.
+    // This is not a guess from shared catalog aliases.
+    const knownCubes = loaded.cubes.filter(cube => cube.name === cubeName.value && cube.catalog_event === catalogEvent && cube.catalog_model_id);
+    const selectedModel = typeof saved.cubeModel === 'string' ? saved.cubeModel : knownCubes.length === 1 ? knownCubes[0].catalog_model_id ?? null : null;
+    await cubeSelector.configure(selectedEvent(), selectedModel);
+    if (user !== nextUser) return;
     hidden.checked = saved.hidden === true;
     scramblesEnabled.checked = saved.scrambles === true;
+    fixedTagsEnabled.checked = saved.fixedTags === true;
+    hideOutliers.checked = saved.hideOutliers !== false;
     savePreferences();
     solves.push(...pendingSolves(user.id).sort((a, b) => b.started_at.localeCompare(a.started_at)).map(solve => ({ ...solve, pending: true })));
     solveCount = solves.length;
     renderSolves();
   } catch {
     storageStatus.hidden = false;
-    storageStatus.textContent = 'storage unavailable';
+    setText(storageStatus, 'storage unavailable');
   }
   configureScrambles();
+  configureFixedTags();
   void syncSolves();
 });
 
@@ -411,13 +443,20 @@ function savePreferences(): void {
   if (!user) return;
   try {
     cubeName.value = cubeName.value.toLowerCase();
-    localStorage.setItem(preferencesKey(), JSON.stringify({ event: eventSelect.value, cube: cubeName.value, hidden: hidden.checked, scrambles:scramblesEnabled.checked }));
+    localStorage.setItem(preferencesKey(), JSON.stringify({ event: eventSelect.value, cube: cubeName.value, hidden: hidden.checked, scrambles:scramblesEnabled.checked, fixedTags:fixedTagsEnabled.checked, hideOutliers:hideOutliers.checked, language:currentLanguage(), cubeModel:cubeSelector.modelId }));
   } catch {
     storageStatus.hidden = false;
-    storageStatus.textContent = 'settings unavailable';
+    setText(storageStatus, 'settings unavailable');
   }
 }
-eventSelect.addEventListener('change', () => { cubeName.value = ''; validateShortText(cubeName, cubeValidation); configureScrambles(); });
+
+languageSelect.addEventListener('change', () => {
+  setLanguage(languageSelect.value);
+  if (!user) return;
+  try { rememberLanguage(localStorage,user.id,languageSelect.value); }
+  catch { storageStatus.hidden = false; setText(storageStatus,'settings unavailable'); }
+});
+eventSelect.addEventListener('change', () => { configureFixedTags(); cubeName.value = ''; validateShortText(cubeName, cubeValidation); void cubeSelector.configure(selectedEvent()); configureScrambles(); });
 window.addEventListener('online', () => void syncSolves());
 window.setInterval(() => void syncSolves(), 15000);
 const timerTab = element<HTMLButtonElement>('timer-tab');
@@ -426,6 +465,7 @@ const settings = element<HTMLDetailsElement>('settings-panel');
 const history = element<HTMLDetailsElement>('history-panel');
 function closeSettings(): boolean {
   if (!settings.open) return true;
+  cubeSelector.close();
   savePreferences();
   settings.open = false;
   return true;
@@ -435,7 +475,7 @@ settings.addEventListener('toggle', () => {
     closeScramblePopup();
     if (editorSolve) { settings.open = false; void saveEditor().then(saved => { if (saved) settings.open = true; }); }
     else history.open = false;
-  } else savePreferences();
+  } else { cubeSelector.close(); savePreferences(); }
 });
 history.addEventListener('toggle', () => {
   if (!history.open) closeScramblePopup();
@@ -511,7 +551,8 @@ function render(): void {
   const hideActions = busy || timer.state !== 'STOPPED' || !lastSolve;
   if (actions.hidden !== hideActions) actions.hidden = hideActions;
   if (busy && editorSolve) closeEditor();
-  hidden.disabled = scramblesEnabled.disabled = analysisTab.disabled = eventSelect.disabled = cubeName.disabled = busy || !user;
+  hidden.disabled = scramblesEnabled.disabled = fixedTagsEnabled.disabled = hideOutliers.disabled = analysisTab.disabled = eventSelect.disabled = cubeName.disabled = busy || !user;
+  languageSelect.disabled = busy || !user;
   replaceScramble.disabled = busy || scrambles.status === 'loading' || !user;
   element<HTMLButtonElement>('logout').disabled = busy || syncing || deleting || editing;
   const labels = {
@@ -521,9 +562,9 @@ function render(): void {
     RUNNING: 'any key to stop',
     STOPPED: 'hold to start',
   };
-  hint.textContent = labels[timer.state];
+  hint.textContent = t(labels[timer.state]);
   if (timer.state !== lastState) {
-    if (timer.state === 'READY') element('announcement').textContent = 'release to start';
+    if (timer.state === 'READY') setText(element('announcement'), 'release to start');
     lastState = timer.state;
   }
   requestAnimationFrame(render);

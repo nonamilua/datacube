@@ -7,6 +7,14 @@ from sqlalchemy import CheckConstraint, Column, DateTime, Text
 from sqlmodel import Field, SQLModel
 
 
+def normalize_custom(value):
+    if isinstance(value, str):
+        if any(ord(character) < 32 or ord(character) == 127 for character in value):
+            raise ValueError("custom must be plain text")
+        return value.strip().lower()[:12] or None
+    return value
+
+
 class SolveCreate(SQLModel):
     model_config = ConfigDict(extra="forbid")
     id: UUID
@@ -14,9 +22,16 @@ class SolveCreate(SQLModel):
     started_at: AwareDatetime
     penalty: Literal["OK", "+2", "DNF"] = "OK"
     category_id: int | None = None
-    cube_name: str | None = Field(default=None, max_length=10)
+    cube_name: str | None = Field(default=None, max_length=12)
+    cube_model_id: str | None = Field(default=None, max_length=100)
+    custom: str | None = Field(default=None, max_length=12)
     # Room for long big-cube notation; preserve case, punctuation and whitespace.
     scramble: str | None = Field(default=None, max_length=4096)
+
+    @field_validator("custom", mode="before")
+    @classmethod
+    def normalize_custom(cls, value):
+        return normalize_custom(value)
 
     @field_validator("scramble")
     @classmethod
@@ -32,7 +47,7 @@ class SolveCreate(SQLModel):
         if isinstance(value, str):
             if any(ord(character) < 32 or ord(character) == 127 for character in value):
                 raise ValueError("cube must be plain text")
-            return value.strip().lower()[:10] or None
+            return value.strip().lower()[:12] or None
         return value
 
     @field_validator("started_at")
@@ -44,16 +59,12 @@ class SolveCreate(SQLModel):
 class SolveUpdate(SQLModel):
     model_config = ConfigDict(extra="forbid")
     penalty: Literal["OK", "+2", "DNF"]
-    custom: str | None = Field(default=None, max_length=10)
+    custom: str | None = Field(default=None, max_length=12)
 
     @field_validator("custom", mode="before")
     @classmethod
     def normalize_custom(cls, value):
-        if isinstance(value, str):
-            if any(ord(character) < 32 or ord(character) == 127 for character in value):
-                raise ValueError("custom must be plain text")
-            return value.strip().lower()[:10] or None
-        return value
+        return normalize_custom(value)
 
 
 class Solve(SQLModel, table=True):
@@ -61,7 +72,7 @@ class Solve(SQLModel, table=True):
     __table_args__ = (
         CheckConstraint("duration_ms >= 0", name="ck_solve_duration"),
         CheckConstraint("penalty IN ('OK', '+2', 'DNF')", name="ck_solve_penalty"),
-        CheckConstraint("custom IS NULL OR length(custom) <= 10", name="ck_solve_custom_length"),
+        CheckConstraint("custom IS NULL OR length(custom) <= 12", name="ck_solve_custom_length"),
         CheckConstraint("scramble IS NULL OR length(scramble) <= 4096", name="ck_solve_scramble_length"),
     )
     id: UUID = Field(primary_key=True)
@@ -71,7 +82,7 @@ class Solve(SQLModel, table=True):
     user_id: int | None = Field(default=None, foreign_key="users.id", index=True)
     cube_id: int | None = Field(default=None, foreign_key="cubes.id")
     category_id: int | None = Field(default=None, foreign_key="categories.id")
-    custom: str | None = Field(default=None, max_length=10)
+    custom: str | None = Field(default=None, max_length=12)
     scramble: str | None = Field(default=None, sa_column=Column(Text, nullable=True))
 
 

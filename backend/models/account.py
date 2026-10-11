@@ -23,10 +23,14 @@ class LoginSession(SQLModel, table=True):
 
 class Cube(SQLModel, table=True):
     __tablename__ = "cubes"
-    __table_args__ = (UniqueConstraint("user_id", "name", name="uq_cube_user_name"),)
+    __table_args__ = (UniqueConstraint("user_id", "name", "catalog_event", "catalog_model_id", name="uq_cube_user_model_name"),)
     id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="users.id", index=True)
     name: str
+
+    # References are validated against the separate read-only catalog on save.
+    catalog_event: str | None = None
+    catalog_model_id: str | None = None
 
 
 class Category(SQLModel, table=True):

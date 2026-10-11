@@ -1,0 +1,765 @@
+{
+  "schema_version": 2,
+  "research_date": "2026-10-06",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "gan-11-m",
+      "brand": "GAN",
+      "name": "11 M",
+      "aliases": [
+        "GAN11 M"
+      ]
+    },
+    {
+      "id": "gan-11-m-duo",
+      "brand": "GAN",
+      "name": "11 M Duo",
+      "aliases": [
+        "GAN11 M Duo"
+      ]
+    },
+    {
+      "id": "gan-11-m-pro",
+      "brand": "GAN",
+      "name": "11 M Pro",
+      "aliases": [
+        "GAN11 M Pro"
+      ]
+    },
+    {
+      "id": "gan-12-leap",
+      "brand": "GAN",
+      "name": "12 M Leap",
+      "aliases": [
+        "GAN12 Leap",
+        "GAN12 M Leap"
+      ]
+    },
+    {
+      "id": "gan-12-maglev",
+      "brand": "GAN",
+      "name": "12 Maglev",
+      "aliases": [
+        "GAN12 Maglev"
+      ]
+    },
+    {
+      "id": "gan-13-maglev",
+      "brand": "GAN",
+      "name": "13 Maglev",
+      "aliases": [
+        "GAN13 Maglev"
+      ]
+    },
+    {
+      "id": "gan-14-maglev",
+      "brand": "GAN",
+      "name": "14 Maglev",
+      "aliases": [
+        "GAN14 Maglev"
+      ]
+    },
+    {
+      "id": "gan-14-maglev-pro",
+      "brand": "GAN",
+      "name": "14 Maglev Pro",
+      "aliases": [
+        "GAN14 Maglev Pro"
+      ]
+    },
+    {
+      "id": "gan-15",
+      "brand": "GAN",
+      "name": "15 MagLev",
+      "aliases": [
+        "GAN15"
+      ]
+    },
+    {
+      "id": "gan-15-newblack",
+      "brand": "GAN",
+      "name": "15 NewBlack",
+      "aliases": [
+        "GAN15 New Black",
+        "15 New Black"
+      ]
+    },
+    {
+      "id": "gan-16-maglev",
+      "brand": "GAN",
+      "name": "16 Maglev",
+      "aliases": [
+        "GAN16 Maglev"
+      ]
+    },
+    {
+      "id": "gan-16-maglev-max",
+      "brand": "GAN",
+      "name": "16 Maglev MAX",
+      "aliases": [
+        "GAN16 Maglev MAX"
+      ]
+    },
+    {
+      "id": "gan-17-magdrive",
+      "brand": "GAN",
+      "name": "17 MagDrive",
+      "aliases": [
+        "GAN17",
+        "GAN 17",
+        "GAN17 Magdrive"
+      ]
+    },
+    {
+      "id": "gan-356-air-m",
+      "brand": "GAN",
+      "name": "356 Air M",
+      "aliases": [
+        "GAN356 Air M"
+      ]
+    },
+    {
+      "id": "gan-356-air-sm",
+      "brand": "GAN",
+      "name": "356 Air SM",
+      "aliases": [
+        "GAN356 AirSM",
+        "Air SM"
+      ]
+    },
+    {
+      "id": "gan-356-m",
+      "brand": "GAN",
+      "name": "356 M",
+      "aliases": [
+        "GAN356 M"
+      ]
+    },
+    {
+      "id": "gan-356-maglev",
+      "brand": "GAN",
+      "name": "356 Maglev",
+      "aliases": [
+        "GAN356 Maglev"
+      ]
+    },
+    {
+      "id": "gan-356-me",
+      "brand": "GAN",
+      "name": "356 Me",
+      "aliases": [
+        "GAN356 Me",
+        "GAN 356 M E"
+      ]
+    },
+    {
+      "id": "gan-356-rs",
+      "brand": "GAN",
+      "name": "356 RS",
+      "aliases": [
+        "GAN356 RS",
+        "GAN 356 R S"
+      ]
+    },
+    {
+      "id": "gan-356-rs2",
+      "brand": "GAN",
+      "name": "356 RS2",
+      "aliases": [
+        "GAN356 RS2",
+        "GAN 356 R S 2"
+      ]
+    },
+    {
+      "id": "gan-356-x",
+      "brand": "GAN",
+      "name": "356 X",
+      "aliases": [
+        "GAN356 X",
+        "GAN356 X V2"
+      ]
+    },
+    {
+      "id": "gan-356-xs",
+      "brand": "GAN",
+      "name": "356 XS",
+      "aliases": [
+        "GAN356 XS"
+      ]
+    },
+    {
+      "id": "gan-swift-355s",
+      "brand": "GAN",
+      "name": "Swift Block 355S",
+      "aliases": [
+        "Swift 355S",
+        "Swiftblock 355S",
+        "GAN Swift 355S"
+      ]
+    },
+    {
+      "id": "gan-swift-super",
+      "brand": "GAN",
+      "name": "Swift Block Super MagLev",
+      "aliases": [
+        "Swift Super",
+        "Swift 3x3 Super Maglev",
+        "Swift Block Super",
+        "Swiftblock Super"
+      ]
+    },
+    {
+      "id": "gan-v100-leap",
+      "brand": "GAN",
+      "name": "V100 Leap",
+      "aliases": [
+        "GAN V100 Leap"
+      ]
+    },
+    {
+      "id": "gan-v100",
+      "brand": "GAN",
+      "name": "V100 MagLev",
+      "aliases": [
+        "GAN V100",
+        "GANV100",
+        "V100 UV"
+      ]
+    },
+    {
+      "id": "moyu-aolong-v2",
+      "brand": "MoYu",
+      "name": "AoLong V2",
+      "aliases": [
+        "Aolong 2"
+      ]
+    },
+    {
+      "id": "moyu-aolong-v5",
+      "brand": "MoYu",
+      "name": "AoLong V5",
+      "aliases": [
+        "Aolong 5"
+      ]
+    },
+    {
+      "id": "mfjs-meilong-m",
+      "brand": "MoYu",
+      "name": "MeiLong M",
+      "aliases": [
+        "MFJS MeiLong M",
+        "Meilong M",
+        "MoFang JiaoShi MeiLong M"
+      ]
+    },
+    {
+      "id": "moyu-pb-wr",
+      "brand": "MoYu",
+      "name": "PB Cube WR",
+      "aliases": [
+        "PBCube WR",
+        "PB WR",
+        "MoYu PBCube WR"
+      ]
+    },
+    {
+      "id": "moyu-rs3m-2020",
+      "brand": "MoYu",
+      "name": "RS3 M 2020",
+      "aliases": [
+        "RS3M 2020",
+        "MFJS RS3 M 2020"
+      ]
+    },
+    {
+      "id": "moyu-rs3m-2021",
+      "brand": "MoYu",
+      "name": "RS3 M 2021 MagLev",
+      "aliases": [
+        "RS3M 2021",
+        "RS3M 2021 Maglev",
+        "MFJS RS3 M 2021 MagLev"
+      ]
+    },
+    {
+      "id": "moyu-rs3m-v5",
+      "brand": "MoYu",
+      "name": "RS3 M V5",
+      "aliases": [
+        "RS3M V5",
+        "MFJS RS3 M V5"
+      ]
+    },
+    {
+      "id": "moyu-rs3m-v5-ballcore",
+      "brand": "MoYu",
+      "name": "RS3 M V5 Ball-Core",
+      "aliases": [
+        "RS3M V5 BC",
+        "RS3M V5 Ballcore",
+        "RS3M V5 Ball Core UV",
+        "MFJS RS3 M V5 Ball-Core"
+      ]
+    },
+    {
+      "id": "moyu-super-aolong",
+      "brand": "MoYu",
+      "name": "Super AoLong",
+      "aliases": [
+        "Super Aolong UV",
+        "Super AoLong 19th Anniversary"
+      ]
+    },
+    {
+      "id": "moyu-super-rs3m",
+      "brand": "MoYu",
+      "name": "Super RS3 M 2022",
+      "aliases": [
+        "Super RS3M",
+        "Super RS3M V1",
+        "Super RS3 M 2022",
+        "MFJS Super RS3 M 2022"
+      ]
+    },
+    {
+      "id": "moyu-super-rs3m-v2",
+      "brand": "MoYu",
+      "name": "Super RS3 M V2",
+      "aliases": [
+        "Super RS3M V2",
+        "MFJS Super RS3 M V2"
+      ]
+    },
+    {
+      "id": "moyu-super-weilong",
+      "brand": "MoYu",
+      "name": "Super WeiLong",
+      "aliases": [
+        "Super Weilong V1",
+        "SW V1"
+      ]
+    },
+    {
+      "id": "moyu-super-weilong-v2",
+      "brand": "MoYu",
+      "name": "Super WeiLong V2",
+      "aliases": [
+        "Super Weilong V2 18th Anniversary",
+        "SW V2"
+      ]
+    },
+    {
+      "id": "moyu-ferrocore-v1",
+      "brand": "MoYu",
+      "name": "WeiLong Ferrocore V1",
+      "aliases": [
+        "Ferrocore",
+        "Ferro Core",
+        "Ferrocore V1",
+        "WeiLong V10 Ferrocore",
+        "WRM V10 Ferrocore"
+      ]
+    },
+    {
+      "id": "moyu-ferrocore-v2",
+      "brand": "MoYu",
+      "name": "WeiLong Ferrocore V2",
+      "aliases": [
+        "Ferrocore V2",
+        "Ferro Core V2",
+        "WeiLong V11 Ferrocore",
+        "FerYooCore V2"
+      ]
+    },
+    {
+      "id": "moyu-gts2m",
+      "brand": "MoYu",
+      "name": "WeiLong GTS2 M",
+      "aliases": [
+        "GTS2M",
+        "GTS2 M"
+      ]
+    },
+    {
+      "id": "moyu-gts3m",
+      "brand": "MoYu",
+      "name": "WeiLong GTS3 M",
+      "aliases": [
+        "GTS3M",
+        "GTS3 M"
+      ]
+    },
+    {
+      "id": "moyu-weilong-v11",
+      "brand": "MoYu",
+      "name": "WeiLong V11",
+      "aliases": [
+        "WRM V11",
+        "WeiLong WR M V11",
+        "Weilong WRM V11",
+        "V11"
+      ]
+    },
+    {
+      "id": "moyu-weilong-v11-picube",
+      "brand": "MoYu",
+      "name": "WeiLong V11 PiCube",
+      "aliases": [
+        "PiCube V11",
+        "Picube WeiLong V11",
+        "PiCube V11 SE"
+      ]
+    },
+    {
+      "id": "moyu-wrm-2019",
+      "brand": "MoYu",
+      "name": "WeiLong WR M 2019",
+      "aliases": [
+        "WRM 2019",
+        "WR M 2019"
+      ]
+    },
+    {
+      "id": "moyu-wrm-2021",
+      "brand": "MoYu",
+      "name": "WeiLong WR M 2021",
+      "aliases": [
+        "WRM 2021",
+        "WRM21",
+        "WeiLong WR M 2021 Lite",
+        "WRM 2021 MagLev"
+      ]
+    },
+    {
+      "id": "moyu-weilong-wrm-v10",
+      "brand": "MoYu",
+      "name": "WeiLong WR M V10",
+      "aliases": [
+        "WRM V10",
+        "WeiLong V10"
+      ]
+    },
+    {
+      "id": "moyu-wrm-v9",
+      "brand": "MoYu",
+      "name": "WeiLong WR M V9",
+      "aliases": [
+        "WRM V9",
+        "WeiLong V9",
+        "WRM 2023"
+      ]
+    },
+    {
+      "id": "moyu-ys3m",
+      "brand": "MoYu",
+      "name": "YS3 M",
+      "aliases": [
+        "YS3M",
+        "Huameng YS3M"
+      ]
+    },
+    {
+      "id": "dayan-guhong",
+      "brand": "DaYan",
+      "name": "GuHong",
+      "aliases": [
+        "Guhong Original",
+        "Guhong V1"
+      ]
+    },
+    {
+      "id": "dayan-guhong-pro",
+      "brand": "DaYan",
+      "name": "GuHong Pro",
+      "aliases": [
+        "Guhong Pro M"
+      ]
+    },
+    {
+      "id": "dayan-guhong-pro-plus",
+      "brand": "DaYan",
+      "name": "GuHong Pro+",
+      "aliases": [
+        "Guhong Pro+ M"
+      ]
+    },
+    {
+      "id": "dayan-guhong-v4",
+      "brand": "DaYan",
+      "name": "GuHong V4 M",
+      "aliases": [
+        "Guhong V4",
+        "Guhong V4M"
+      ]
+    },
+    {
+      "id": "dayan-tengyun",
+      "brand": "DaYan",
+      "name": "TengYun M",
+      "aliases": [
+        "TengYun V1",
+        "Tengyun"
+      ]
+    },
+    {
+      "id": "dayan-tengyun-v2",
+      "brand": "DaYan",
+      "name": "TengYun V2 M",
+      "aliases": []
+    },
+    {
+      "id": "dayan-tengyun-v3",
+      "brand": "DaYan",
+      "name": "TengYun V3 M",
+      "aliases": [
+        "Tengyun V3"
+      ]
+    },
+    {
+      "id": "dayan-zhanchi",
+      "brand": "DaYan",
+      "name": "ZhanChi",
+      "aliases": [
+        "Zhanchi Original",
+        "DaYan 5"
+      ]
+    },
+    {
+      "id": "dayan-zhanchi-pro",
+      "brand": "DaYan",
+      "name": "ZhanChi Pro M",
+      "aliases": [
+        "Zhanchi Pro"
+      ]
+    },
+    {
+      "id": "dayan-zhanchi-v5",
+      "brand": "DaYan",
+      "name": "ZhanChi V5 M",
+      "aliases": [
+        "Zhanchi V5",
+        "Zhanchi V5M"
+      ]
+    },
+    {
+      "id": "qiyi-mpro",
+      "brand": "QiYi",
+      "name": "M Pro",
+      "aliases": [
+        "QiYi MPro",
+        "M Pro V1"
+      ]
+    },
+    {
+      "id": "qiyi-mpro-v2",
+      "brand": "QiYi",
+      "name": "M Pro V2",
+      "aliases": [
+        "MPro V2",
+        "QiYi M Pro V2 Pioneer",
+        "QiYi M Pro V2 Flagship"
+      ]
+    },
+    {
+      "id": "qiyi-mpro-v3",
+      "brand": "QiYi",
+      "name": "M Pro V3",
+      "aliases": [
+        "MPro V3",
+        "QiYi M Pro V3 Flagship"
+      ]
+    },
+    {
+      "id": "qiyi-ms",
+      "brand": "QiYi",
+      "name": "MS",
+      "aliases": [
+        "QiYi MS 3x3"
+      ]
+    },
+    {
+      "id": "qiyi-thunderclap",
+      "brand": "QiYi",
+      "name": "Thunderclap",
+      "aliases": [
+        "Thunderclap V1"
+      ]
+    },
+    {
+      "id": "qiyi-tornado-v2",
+      "brand": "QiYi",
+      "name": "Tornado V2 M",
+      "aliases": [
+        "X-Man Tornado V2",
+        "Xman Tornado V2",
+        "TV2"
+      ]
+    },
+    {
+      "id": "xman-tornado-v3",
+      "brand": "QiYi",
+      "name": "Tornado V3 M",
+      "aliases": [
+        "Tornado V3",
+        "TV3",
+        "X-Man Tornado V3 M",
+        "Xman Tornado V3 M"
+      ]
+    },
+    {
+      "id": "xman-tornado-v3-premium",
+      "brand": "QiYi",
+      "name": "Tornado V3 Premium",
+      "aliases": [
+        "X-Man Tornado V3 Premium",
+        "Xman Tornado V3 Premium"
+      ]
+    },
+    {
+      "id": "xman-tornado-v4",
+      "brand": "QiYi",
+      "name": "Tornado V4",
+      "aliases": [
+        "TV4",
+        "X-Man Tornado V4",
+        "Xman Tornado V4"
+      ]
+    },
+    {
+      "id": "xman-tornado-v5",
+      "brand": "QiYi",
+      "name": "Tornado V5",
+      "aliases": [
+        "TV5",
+        "X-Man Tornado V5",
+        "Xman Tornado V5"
+      ]
+    },
+    {
+      "id": "qiyi-valk3",
+      "brand": "QiYi",
+      "name": "Valk 3",
+      "aliases": [
+        "The Valk 3",
+        "Valk3",
+        "Valk 3 M"
+      ]
+    },
+    {
+      "id": "qiyi-valk-elite",
+      "brand": "QiYi",
+      "name": "Valk 3 Elite M",
+      "aliases": [
+        "Valk Elite",
+        "Valk3 Elite"
+      ]
+    },
+    {
+      "id": "qiyi-warrior-m",
+      "brand": "QiYi",
+      "name": "Warrior M",
+      "aliases": [
+        "QiYi Warrior M",
+        "QiYi Warrior M 3x3"
+      ]
+    },
+    {
+      "id": "qiyi-warrior-s",
+      "brand": "QiYi",
+      "name": "Warrior S",
+      "aliases": [
+        "QiYi Warrior S",
+        "QiYi Warrior S 3x3"
+      ]
+    },
+    {
+      "id": "qiyi-warrior-w",
+      "brand": "QiYi",
+      "name": "Warrior W",
+      "aliases": [
+        "QiYi Warrior"
+      ]
+    },
+    {
+      "id": "other-haitun-waverider-v2",
+      "brand": "Other",
+      "name": "HaiTun WaveRider V2",
+      "aliases": [
+        "Haitun Waverider V2",
+        "Dolphin Surging Wave V2"
+      ]
+    },
+    {
+      "id": "other-moretry-tianma-super",
+      "brand": "Other",
+      "name": "MoreTry TianMa X3 Super",
+      "aliases": [
+        "Tianma X3 Super",
+        "MoreTry X3 Super"
+      ]
+    },
+    {
+      "id": "other-vin-nova",
+      "brand": "Other",
+      "name": "VIN Nova",
+      "aliases": [
+        "VIN3 Nova",
+        "Vin Cube Nova",
+        "VIN3 Flagship"
+      ]
+    },
+    {
+      "id": "other-yj-mgc-beta",
+      "brand": "Other",
+      "name": "YJ MGC Beta",
+      "aliases": [
+        "MGC Beta",
+        "MGC3 Beta"
+      ]
+    },
+    {
+      "id": "other-yj-mgc-elite",
+      "brand": "Other",
+      "name": "YJ MGC Elite",
+      "aliases": [
+        "MGC Elite",
+        "MGC3 Elite"
+      ]
+    },
+    {
+      "id": "other-yj-mgc-evo",
+      "brand": "Other",
+      "name": "YJ MGC EVO",
+      "aliases": [
+        "MGC EVO",
+        "MGC3 EVO"
+      ]
+    },
+    {
+      "id": "other-yj-mgc-meta",
+      "brand": "Other",
+      "name": "YJ MGC Meta",
+      "aliases": [
+        "MGC Meta",
+        "YJ Meta",
+        "Meta3"
+      ]
+    },
+    {
+      "id": "other-yuxin-little-magic",
+      "brand": "Other",
+      "name": "YuXin Little Magic",
+      "aliases": [
+        "Yuxin Little Magic 3x3",
+        "YLM"
+      ]
+    }
+  ]
+}

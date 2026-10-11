@@ -1,0 +1,126 @@
+{
+  "research_date": "2026-10-09",
+  "event": "fto",
+  "sources": [
+    {
+      "id": "retailer-list",
+      "title": "TheCubicle FTO collection",
+      "url": "https://www.thecubicle.com/collections/fto",
+      "type": "retailer",
+      "access_method": "web_collection_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "dayan",
+      "title": "DaYan FTO Magnetic Ball-Core product",
+      "url": "https://www.thecubicle.com/products/dayan-fto-magnetic-ball-core",
+      "type": "retailer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "ds-original",
+      "title": "DianSheng official Galaxy Clusters magnetic FTO",
+      "url": "https://en.dianshengtoys.com/m/products/show_73.html",
+      "type": "manufacturer",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "ds-neo",
+      "title": "DianSheng official product collection including NEO",
+      "url": "https://www.dianshengtoys.com/products/",
+      "type": "manufacturer",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "neo-retailer",
+      "title": "DianSheng FTO NEO Magnetic Ball-Core",
+      "url": "https://speedcubeshop.com/collections/face-turning-octahedron-fto/products/diansheng-fto-neo-magnetic-ball-core?variant=42535150878833",
+      "type": "retailer",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "qiyi-site",
+      "title": "QiYi official brand homepage",
+      "url": "https://www.qiyitoys.net/en/",
+      "type": "manufacturer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "reddit-current",
+      "title": "r/Cubers FTO hardware and resources August 21 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1vuhpf6/fto_megapost_links_to_all_the_best_tutorials_and/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "reddit-generations",
+      "title": "r/Cubers original DianSheng and NEO discussion",
+      "url": "https://www.reddit.com/r/Cubers/comments/1ufeolj/farewell_clock_and_hello_fto/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    }
+  ],
+  "entries": {
+    "fto-dayan-fto": {
+      "source_ids": [
+        "dayan",
+        "reddit-current"
+      ],
+      "evidence": "DaYan FTO is the recognizable product label. Magnetic ball-core, black/primary internals and SAOCube or other setup editions remain one entry."
+    },
+    "fto-other-diansheng-galaxy": {
+      "source_ids": [
+        "ds-original",
+        "retailer-list",
+        "reddit-generations"
+      ],
+      "evidence": "Original DianSheng Galaxy/ Galaxy Clusters magnetic FTO. Retained for existing owners as a distinct older generation, not a current recommendation over NEO."
+    },
+    "fto-other-diansheng-galaxy-neo": {
+      "source_ids": [
+        "ds-neo",
+        "neo-retailer",
+        "retailer-list",
+        "reddit-current"
+      ],
+      "evidence": "NEO is an actual named successor rather than a cosmetic SKU. Internal colors, limited editions and retailer modifications are grouped. DS abbreviates DianSheng to keep the alias readable within 12 characters."
+    },
+    "fto-qiyi-fto": {
+      "source_ids": [
+        "retailer-list",
+        "reddit-current"
+      ],
+      "evidence": "QiYi FTO is the recognizable family label. Magnetic and nonmagnetic tiled versions are grouped; the family reference does not imply magnetic hardware."
+    }
+  },
+  "curation_notes": [
+    "Four model families across the three requested manufacturers; named DianSheng generations remain separate.",
+    "ShengShou/SengSo and LanLan exist, but are excluded from this compact competitive-focused catalog.",
+    "Only conventional full-size FTO is covered. 2x2 FTO/skewb diamond, Master FTO and shape modifications are excluded.",
+    "No subjective Reddit ranking is stored as a hardware specification."
+  ],
+  "brand_site_checks": [
+    {
+      "brand": "DianSheng",
+      "url": "https://www.dianshengtoys.com/products/",
+      "result": "Official indexed content confirms NEO; direct fetch failed. English indexed product content confirms original Galaxy Clusters FTO."
+    },
+    {
+      "brand": "QiYi",
+      "url": "https://www.qiyitoys.net/en/",
+      "result": "Homepage read. Indexed 2x2 octahedron product was excluded because it is not the conventional FTO catalog event. Exact full-size models confirmed by retailer collection."
+    },
+    {
+      "brand": "DaYan",
+      "url": "https://www.dayancube.com/",
+      "result": "Direct fetch failed; retailer product page confirms model. No official verification claimed."
+    }
+  ]
+}

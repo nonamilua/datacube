@@ -1,0 +1,146 @@
+{
+  "research_date": "2026-10-09",
+  "event": "skewb",
+  "sources": [
+    {
+      "id": "r-budget",
+      "title": "r/Cubers budget hardware discussion June 22 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1ucbbdj/daily_discussion_thread_jun_22_2026/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "skewb-list",
+      "title": "TheCubicle Skewb collection",
+      "url": "https://www.thecubicle.com/collections/skewb",
+      "type": "retailer",
+      "access_method": "web_collection_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "gan-skewb",
+      "title": "GAN official Skewb M editions",
+      "url": "https://www.gancube.com/products/gan-skewb-m-magnetic-cube",
+      "type": "manufacturer",
+      "access_method": "web_product_page",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "wingy",
+      "title": "Original X-Man Wingy Skewb",
+      "url": "https://www.thecubicle.com/products/x-man-wingy-magnetic-skewb-concave",
+      "type": "retailer",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "aoyan",
+      "title": "MoYu AoYan Skewb listing",
+      "url": "https://www.thecubicle.com/en-it/products/moyu-aoyan-skewb",
+      "type": "retailer",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "r-skewb",
+      "title": "r/Cubers Skewb recommendations May 30 2026",
+      "url": "https://www.reddit.com/r/Cubers/comments/1ts3zq4/which_skweb_should_i_get/",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    },
+    {
+      "id": "r-skewb-classic",
+      "title": "r/Cubers established Skewb comparisons",
+      "url": "https://www.reddit.com/r/Cubers/comments/166fqyw",
+      "type": "community",
+      "access_method": "web_search_extract",
+      "checked_on": "2026-10-09"
+    }
+  ],
+  "entries": {
+    "skewb-gan-skewb-m-standard": {
+      "source_ids": [
+        "gan-skewb",
+        "skewb-list"
+      ],
+      "evidence": "Core Positioning standard edition; separate from Enhanced."
+    },
+    "skewb-gan-skewb-m-enhanced": {
+      "source_ids": [
+        "gan-skewb",
+        "r-skewb"
+      ],
+      "evidence": "Enhanced edition; UV/frosted and LBL modifications grouped."
+    },
+    "skewb-dayan-skewb-v2": {
+      "source_ids": [
+        "skewb-list",
+        "r-skewb"
+      ],
+      "evidence": "Named generation; spring/MagLev ball-core configurations grouped."
+    },
+    "skewb-moyu-rs-skewb-m": {
+      "source_ids": [
+        "skewb-list",
+        "r-budget"
+      ],
+      "evidence": "Budget family; spring/MagLev grouped."
+    },
+    "skewb-moyu-weilong-skewb": {
+      "source_ids": [
+        "skewb-list",
+        "r-skewb-classic"
+      ],
+      "evidence": "Recognizable competitive family; aftermarket cores and setups grouped."
+    },
+    "skewb-moyu-aoyan-skewb": {
+      "source_ids": [
+        "aoyan"
+      ],
+      "evidence": "Older magnetic classic for existing owned cubes."
+    },
+    "skewb-qiyi-wingy-m": {
+      "source_ids": [
+        "wingy"
+      ],
+      "evidence": "Original concave X-Man classic."
+    },
+    "skewb-qiyi-wingy-v2-m": {
+      "source_ids": [
+        "skewb-list",
+        "r-skewb-classic"
+      ],
+      "evidence": "Named second generation of X-Man Wingy."
+    },
+    "skewb-other-yuxin-kylin": {
+      "source_ids": [
+        "skewb-list"
+      ],
+      "evidence": "Established budget Skewb; not presented as a current flagship."
+    }
+  },
+  "limitations": [
+    "Curated autocomplete families, not an exhaustive SKU list or measured popularity ranking.",
+    "Official GAN and YJ pages were consulted. QiYi official homepage confirms X-Man belongs to QiYi but did not expose all exact model names. DaYan and MoYu official sites could not be fetched; specialist product listings supply model evidence.",
+    "Reddit discussion informs inclusion and is subjective; no mechanism or performance specification is inferred from model selection."
+  ],
+  "brand_site_checks": [
+    {
+      "brand": "QiYi",
+      "url": "https://www.qiyitoys.net/en/",
+      "result": "Homepage read; four sub-brands include X-MAN DESIGN; exact models supported by retailer sources."
+    },
+    {
+      "brand": "DaYan",
+      "url": "https://www.dayancube.com/",
+      "result": "Fetch failed; no official model verification claimed."
+    },
+    {
+      "brand": "MoYu",
+      "url": "https://www.moyucube.com/",
+      "result": "Fetch failed; no official model verification claimed."
+    }
+  ]
+}

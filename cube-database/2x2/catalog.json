@@ -1,0 +1,198 @@
+{
+  "schema_version": 2,
+  "event": "2x2",
+  "research_date": "2026-10-09",
+  "brands": [
+    "GAN",
+    "MoYu",
+    "DaYan",
+    "QiYi",
+    "Other"
+  ],
+  "cubes": [
+    {
+      "id": "2x2-gan-249-v2",
+      "brand": "GAN",
+      "name": "249 V2",
+      "aliases": [
+        "gan 249 v2"
+      ]
+    },
+    {
+      "id": "2x2-gan-251-m-air",
+      "brand": "GAN",
+      "name": "251 M Air",
+      "aliases": [
+        "gan 251 air"
+      ]
+    },
+    {
+      "id": "2x2-gan-251-m-leap",
+      "brand": "GAN",
+      "name": "251 M Leap",
+      "aliases": [
+        "gan 251 leap"
+      ]
+    },
+    {
+      "id": "2x2-gan-251-m-pro",
+      "brand": "GAN",
+      "name": "251 M Pro",
+      "aliases": [
+        "gan 251 pro"
+      ]
+    },
+    {
+      "id": "2x2-gan-251-v2",
+      "brand": "GAN",
+      "name": "251 V2",
+      "aliases": [
+        "gan 251 v2"
+      ]
+    },
+    {
+      "id": "2x2-moyu-meilong-m",
+      "brand": "MoYu",
+      "name": "MeiLong M",
+      "aliases": [
+        "meilong m"
+      ]
+    },
+    {
+      "id": "2x2-moyu-rs2m-evolution",
+      "brand": "MoYu",
+      "name": "RS2 M Evolution",
+      "aliases": [
+        "rs2m evo"
+      ]
+    },
+    {
+      "id": "2x2-moyu-weipo-v5",
+      "brand": "MoYu",
+      "name": "WeiPo V5",
+      "aliases": [
+        "weipo v5"
+      ]
+    },
+    {
+      "id": "2x2-moyu-weipo-wrm",
+      "brand": "MoYu",
+      "name": "WeiPo WR M",
+      "aliases": [
+        "weipo wrm"
+      ]
+    },
+    {
+      "id": "2x2-moyu-weipo-wrs",
+      "brand": "MoYu",
+      "name": "WeiPo WRS",
+      "aliases": [
+        "weipo wrs"
+      ]
+    },
+    {
+      "id": "2x2-dayan-tengyun-m",
+      "brand": "DaYan",
+      "name": "TengYun M",
+      "aliases": [
+        "tengyun m"
+      ]
+    },
+    {
+      "id": "2x2-dayan-tengyun-v2-m",
+      "brand": "DaYan",
+      "name": "TengYun V2 M",
+      "aliases": [
+        "tengyun v2 m"
+      ]
+    },
+    {
+      "id": "2x2-qiyi-flare-m",
+      "brand": "QiYi",
+      "name": "Flare M",
+      "aliases": [
+        "flare m"
+      ]
+    },
+    {
+      "id": "2x2-qiyi-m-pro",
+      "brand": "QiYi",
+      "name": "M Pro",
+      "aliases": [
+        "qiyi m pro"
+      ]
+    },
+    {
+      "id": "2x2-qiyi-ms",
+      "brand": "QiYi",
+      "name": "MS",
+      "aliases": [
+        "qiyi ms"
+      ]
+    },
+    {
+      "id": "2x2-qiyi-qidi-s2",
+      "brand": "QiYi",
+      "name": "QiDi S2",
+      "aliases": [
+        "qidi s2"
+      ]
+    },
+    {
+      "id": "2x2-qiyi-valk2-m",
+      "brand": "QiYi",
+      "name": "Valk 2 M",
+      "aliases": [
+        "valk 2 m"
+      ]
+    },
+    {
+      "id": "2x2-qiyi-warrior-m",
+      "brand": "QiYi",
+      "name": "Warrior M",
+      "aliases": [
+        "warrior m"
+      ]
+    },
+    {
+      "id": "2x2-other-vin2",
+      "brand": "Other",
+      "name": "VIN 2",
+      "aliases": [
+        "vin 2"
+      ]
+    },
+    {
+      "id": "2x2-other-yj-mgc",
+      "brand": "Other",
+      "name": "YJ MGC",
+      "aliases": [
+        "yj mgc"
+      ]
+    },
+    {
+      "id": "2x2-other-yj-mgc2-beta",
+      "brand": "Other",
+      "name": "YJ MGC2 Beta",
+      "aliases": [
+        "yj mgc2 beta"
+      ]
+    },
+    {
+      "id": "2x2-other-yj-mgc2-elite",
+      "brand": "Other",
+      "name": "YJ MGC2 Elite",
+      "aliases": [
+        "mgc2 elite"
+      ]
+    },
+    {
+      "id": "2x2-other-yuxin-little-magic-v2-m",
+      "brand": "Other",
+      "name": "YuXin Little Magic V2 M",
+      "aliases": [
+        "little magic"
+      ]
+    }
+  ]
+}

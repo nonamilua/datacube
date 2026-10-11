@@ -23,8 +23,8 @@ The current placeholder app name is `namicubes`. CubeApp remains the repository/
 - Keep the app minimalistic, modern and tech-like. Only retain necessary content and controls.
 - Prioritize mobile layouts while keeping desktop equally polished.
 - Use a dark theme exclusively. Do not add a light theme or theme switch.
-- Use Roboto Mono from Google Fonts throughout, with a monospace fallback.
-- All interface text must be lowercase, brief and free of punctuation. Numeric time formatting and the explicitly requested animated dots are exceptions. This rule applies to site content, not documentation or code identifiers.
+- Use Roboto Mono from Google Fonts throughout, with a monospace fallback. Only the current scramble text on the timer uses Iosevka Charon Mono at weight 400 with normal style. Keep the Shuffle icon smaller than header icons while retaining its 44px interaction target.
+- All interface text must be lowercase, brief and free of punctuation. Catalog cube model names and suggestions preserve their official uppercase spelling and punctuation as an explicit exception. Numeric time formatting and the explicitly requested animated dots are exceptions. This rule applies to site content, not documentation or code identifiers.
 - Do not add a footer, slogan, decorative introductory text, or unnecessary permanent settings.
 - Use the existing variables in `frontend/src/styles/main.css` under `:root` for colors and future elements. Keep palette changes centralized rather than introducing hard-coded colors in components.
 - Current color roles are `--bs-body-bg`, `--bs-body-color`, `--muted`, `--accent`, `--ready`, `--holding`, `--panel-bg`, `--panel-border`, `--list-border`, and `--checkbox-bg`. Read the CSS for their current values.
@@ -34,6 +34,7 @@ The current placeholder app name is `namicubes`. CubeApp remains the repository/
 - Active navigation uses `--accent`. The settings gear stays highlighted while its panel is open.
 - Settings is a larger panel below the header, on the right on desktop, constrained to the available width on mobile. Outside clicks, including timer or analysis navigation, close it.
 - Event selection, cube text, hidden timer preference and account controls belong in settings.
+- A language dropdown below the account divider and above the username and sign out row supports English by default, Brazilian Portuguese displayed as portuguese, and Spanish. Apply translations immediately and persist the choice separately per account in this browser for future logins. Preferences do not synchronize across devices. Keep interface translations in `frontend/src/i18n.ts`; preserve user-entered labels, event identifiers and scramble notation. Sign out uses `--accent` on hover for mouse devices.
 - Solve history opens from the history icon immediately to the left of settings. It is an expandable right sidebar on desktop and fills the viewport below the header on phones. It has its own scrollbar, includes every owned solve, and has no recent solves heading or total count. Do not display solve-number placeholders or empty columns.
 - Recent solve rows show result and available labels, with a trash icon in `--muted` replacing the clock timestamp. Keep timestamps in the database for future analysis.
 - Use `frontend/public/cube_logo3.png` as the placeholder favicon. Public assets belong under `frontend/public`.
@@ -165,7 +166,7 @@ Suggested fields:
 - user_id
 - name
 
-The cube UI is a free-text field, with suggestions from the user's previously saved cubes. Do not introduce separate brand or model fields. Cube names are trimmed and lowercased, and names are unique within each user's collection. New cube names and custom values are limited to 10 characters on the frontend; the backend caps submitted values to 10 characters after normalization. Prevent overlength typing and show a brief yellow message for rejected input. Settings commits preferences on close without an ok button, and changing the event clears the cube input. Preserve existing long names in other accounts rather than truncating stored records.
+Settings has an editable cube label field above a display-only model name field. Display selected model names as borderless text in `--checkbox-bg`, never as a text input. The handle searches full model names and aliases in the event's curated catalog under `cube-database/`. Explicit selection fills the full label and preferred alias and retains the model ID; typing after selection clears that ID. Unknown handles remain usable with a yellow warning and never modify the catalog. Owned cubes retain optional `catalog_event` and `catalog_model_id` references, validated independently on the backend. The same short handle can identify distinct catalog models or an unrecognized owned cube; never infer model identity from a handle or change existing cube associations automatically. Cube handles are trimmed and lowercased and reused within each account and catalog identity. New cube names and custom values are limited to 12 characters on the frontend; the backend caps submitted values to 12 characters after normalization. Prevent overlength typing and show a brief yellow message for rejected input. Settings commits preferences on close without an ok button, and changing the event clears the cube input. Preserve existing long names in other accounts rather than truncating stored records.
 
 ### categories
 
@@ -209,7 +210,7 @@ Suggested fields:
 - duration_ms
 - started_at
 - penalty
-- custom (optional categorical text up to 10 characters)
+- custom (optional categorical text up to 12 characters)
 - scramble (optional immutable text up to 4096 characters)
 
 Do NOT currently include:
@@ -229,7 +230,7 @@ Penalty should support at least:
 
 ### solve_fields
 
-The owner simplified phase 5 to one optional `solves.custom` text column. Edit it using the same pencil popup on the timer and history, alongside mutually exclusive +2 and dnf switches displayed side by side. Closing the editor saves changes and closes it after server confirmation; there is no ok button. Failed saves keep the editor open. Do not display custom values in solve rows or below the timer. Custom is available as an analytics filter and in the best custom card. Use ORM parameter binding for SQL safety and textContent or Option for UI rendering; never construct SQL or HTML from user input. Blank custom values become null; trim and lowercase categorical values, cap new submissions at 10 characters and reject control characters.
+The owner simplified phase 5 to one optional `solves.custom` text column. Edit it using the same pencil popup on the timer and history, alongside mutually exclusive +2 and dnf switches displayed side by side. Closing the editor saves changes and closes it after server confirmation; there is no ok button. Failed saves keep the editor open. Do not display custom values in solve rows or below the timer. Custom is available as an analytics filter and in the best custom card. Use ORM parameter binding for SQL safety and textContent or Option for UI rendering; never construct SQL or HTML from user input. Blank custom values become null; trim and lowercase categorical values, cap new submissions at 12 characters and reject control characters.
 
 The generic solve_fields table below is still a future extension and does not exist yet. Do not add it unless requested.
 
@@ -358,13 +359,15 @@ Keep the same unchangeable 400ms hold duration on desktop and mobile.
 
 Scrambles explicitly expand the original scope. The settings switch beside hide timer defaults off and persists separately per account on settings close. Use cubing.js 0.63.8 with an explicit mapping in frontend/src/scrambles.ts for all 18 app events. Blindfolded and fewest-moves events retain their dedicated identifiers. The 333mbf API does not take a cube count and returns one oriented 3x3 scramble per timed practice solve; multi-cube attempt scoring and batches remain deferred. Disable cubing.js automatic prefetching so generation is requested only on enable, event change, manual replacement or after a solve stops.
 
-Show current notation in muted text near the top of the timer with a Shuffle replacement icon. Preserve uppercase, primes, punctuation and whitespace as an explicit exception to interface text rules. Generation is asynchronous with account/event/request revision guards and retry feedback; never substitute random moves. A valid scramble is required before preparation and start while enabled. Keep the fixed 400ms hold. Capture an immutable scramble and event snapshot at actual timer start, immediately queue it on stop, then generate the next scramble. When disabled save null. Lock event/scramble controls during preparation and solving.
+Show current notation in muted text near the top of the timer with a Shuffle replacement icon. Match the analytics content gap below the header using the shared --content-top-gap variable: 16px on desktop and zero additional spacing after the mobile header padding. Position scrambles outside the timer layout so notation never moves the number, hint or hidden dots. Long notation scrolls within its own area when needed. Preserve uppercase, primes, punctuation and whitespace as an explicit exception to interface text rules. Generation is asynchronous with account/event/request revision guards and retry feedback; never substitute random moves. A valid scramble is required before preparation and start while enabled. Keep the fixed 400ms hold. Capture an immutable scramble and event snapshot at actual timer start, immediately queue it on stop, then generate the next scramble. When disabled save null. Lock event/scramble controls during preparation and solving.
 
 Migration 0004 adds nullable solves.scramble as SQL Text with a 4096-character validation/check limit, accommodating generated big-cube notation. Back up the local database before applying it; existing solves receive null and remain otherwise unchanged. Preserve notation exactly with parameterized ORM writes and textContent rendering. Older queued records without this field remain valid. Include scramble in duplicate-save consistency checks and reject scramble on the editing endpoint.
 
 History adds Dice5 before pencil/trash only when a scramble exists. It opens a small read-only popup anchored to the actual clicked button. Outside click and Escape dismiss it. Coordinate it with settings/history/editor and preserve dirty editor save-on-close. Keep long notation wrapped and all icon targets at least 44px. Browser QA must use temporary databases and test generation, event changes, regeneration, timer snapshot saving, refresh and saved-scramble viewing on desktop/mobile. Verify the live backend schemas after restarting it.
 
 ## Hidden Timer Mode
+
+The settings switch fixed tags appears on a separate row below hide timer and scrambles and defaults off. Persist only its enabled preference per account. When enabled, a confirmed custom-tag change in the timer/history editor for the active event seeds the next solves; clearing that tag clears the seed. Capture the seed at timer start and include custom in the immediate queued POST save. Never inherit penalties. Switching timer events, logout/account change or disabling the switch clears the in-memory seed, including stale asynchronous edit confirmations. Editing another event must not replace the active seed. Existing queued solves retain their captured tag and older requests without custom remain accepted. No schema migration is required because solves.custom already exists.
 
 The user must be able to hide the live timer while solving.
 
@@ -409,6 +412,16 @@ The app should look modern and clean on both desktop and mobile.
 
 Create a separate analytics tab.
 
+The custom filter includes none (nenhuma in Portuguese) for solves with an empty tag, separate from all. The Portuguese solve-count card reads total while graph titles retain tempos. Mobile selected range labels must fit within 14 characters; keep the full names in the opened native dropdown. Above 100 valid times after filtering, display time and best as points without connecting lines and use point symbols for those legend entries. Keep ao5 and ao12 as lines and restore the connected time/best display when filters reduce the count to 100 or fewer.
+
+Times-chart hover values use the timer's two-decimal formatting. Frame the y-axis with five-second boundaries where suitable (16–40.71 seconds gives bounds 15–45 and ticks 15, 25, 35, 45). All grid intervals must be equal: extend the upper bound to the next regular tick instead of appending a closer final tick. Smaller ranges may use finer intervals. Include finite visible times and rolling-average values when calculating bounds; DNF values must not affect them.
+
+Choose times-axis bounds by comparing regular and half-step grids with at most five ticks. Prefer the smallest enclosing span, then the smallest maximum gap at either end; do not always anchor the lower edge before choosing the grid. The 17.60–35.24 example must use 10, 20, 30, 40 rather than 15, 25, 35, 45. Recalculate both bounds from current visible series immediately when hide outliers changes, preserving uniform intervals.
+
+The hide outliers settings switch sits to the right of fixed tags, directly below scrambles. It defaults on and persists per account on settings close; preserve an explicitly saved off preference. For the times plot only, hide finite solve times above the current filtered mean plus three population standard deviations; retain lower outliers. Mask matching best points too, preserving original solve positions. Show the omitted count to the left of the DNF count using the existing outlier-count style. Statistics, rolling averages and saved data remain unchanged. The distribution always applies its existing two-sided outlier exclusion and is independent of this switch.
+
+Distribution tooltips show interval percentages to one decimal place rather than absolute counts. The denominator includes every finite filtered time, including omitted outliers, and excludes DNF. The y-axis retains absolute counts, targets roughly four divisions and prefers multiples of ten when useful. Keep its ceiling within ten percent of the tallest bar; tight framing takes priority over round numbers.
+
 The analytics interface should use the same underlying solve data rather than storing pre-grouped sessions.
 
 There is intentionally NO solve-grouping session concept in the data model. Authentication login sessions are separate and already implemented.
@@ -416,6 +429,8 @@ There is intentionally NO solve-grouping session concept in the data model. Auth
 ### Date filtering
 
 The analytics event selector always chooses one event and defaults to 3x3 after login or account change. Do not include an all-events option or mix event times in charts and basic statistics. The solve editor input is labeled custom tags; the dashboard filter and card continue to use custom.
+
+Analytics cube/custom options are derived from solves in the selected event and date/hour range, including DNF. Each list applies the other selection but excludes its own selection. Validate current cube and custom independently within event/date scope, clearing only invalid selections to all; if both remain individually valid but their combination is empty, reset both to all. Never restrict the event dropdown by cube/custom or dates. Empty event/date scope yields only all for cube/custom and the existing empty dashboard. Offer none only when blank tags match the current cube and scope. Reconcile options and selections after save/edit/delete data updates, including while analytics is hidden and as rolling hour windows advance. Keep account-reset isolation, statistics rules and the existing layout.
 
 Date filtering must be flexible.
 
@@ -427,7 +442,8 @@ Support:
   - Today
   - Last 7 days
   - Last 30 days
-  - Last 90 days
+  - Last 2 hours
+  - Last 4 hours
   - All time
 
 The architecture should allow time-of-day filtering later.
@@ -575,7 +591,7 @@ Add:
 - histogram
 - date-range filtering
 
-Analytics now has 18 cards. Group 1: solves, mean, median, std dev, +2 count, ao5, ao12, ao50, ao100. Group 2: best, best ao5, best ao12, best ao50, best ao100, worst, fav event, best cube, best custom. Desktop shows two rows of nine; mobile shows one group of nine at a time with a right chevron that cycles without animation. Fit text labels inside their cards, reducing font size for longer names and retaining a full title. Date filters use inclusive local calendar days over UTC timestamps; presets include today, 7, 30, 90 days and all time. Event, cube and custom filters apply only to analytics; history remains the entire account. DNF count appears beside times in the same style as the distribution outlier count; there is no penalty filter.
+Analytics now has 18 cards. Group 1: solves, mean, median, std dev, +2 count, ao5, ao12, ao50, ao100. Group 2: best, best ao5, best ao12, best ao50, best ao100, worst, fav event, best cube, best custom. Desktop shows two rows of nine; mobile shows one group of nine at a time with a right chevron that cycles without animation. Fit text labels inside their cards, reducing font size for longer names and retaining a full title. Date filters use inclusive local calendar days over UTC timestamps; presets include today, 7 and 30 days, all time, and rolling windows for the last 2 or 4 hours. Hour windows use exact timestamps and refresh every minute while analytics is visible. Event, cube and custom filters apply only to analytics; history remains the entire account. DNF count appears beside times in the same style as the distribution outlier count; there is no penalty filter.
 
 Favorite event is the event with the most solves, including DNF, ignoring the event filter while retaining other filters. Best cube ignores the cube filter and compares medians within the selected event. If no event is selected, derive its favorite-event fallback without the cube filter too. Best custom retains its filters and uses the selected event or favorite event. Exclude unlabeled groups and DNF from median comparisons, include +2 in effective times, and leave missing results blank. Ties use event list order for favorite event and alphabetic label order for best cube/custom.
 
@@ -641,3 +657,7 @@ Local development project path on Windows:
 `C:\dev\cubeapp`
 
 This path is informational only. Code should use relative paths inside the repository rather than hard-coded absolute paths.
+
+## Cube catalog integration
+
+`GET /api/cube-models?event=...` requires authentication and reads the separate curated JSON catalogs without writing to them. Follow `cube-database/EVENT_CATALOGS.md`. Events 3x3, 3bld, 3oh, 3mbld and fmc share the 3x3 catalog; 4bld and 5bld use 4x4 and 5x5. Clock has no catalog and must not receive unrelated suggestions. Search normalizes case, spaces and punctuation, ranks exact before prefix before contains, and displays at most eight full labels. Keep model selection in per-account settings and capture it with the handle at timer start so queued saves and retries preserve it. Migration 0006 adds optional references to owned cubes and preserves all existing solve links. Explicitly selecting a model links compatible same-label legacy records within the authenticated account and matching catalog event, preserving solve values. Ambiguous models and other events must not be merged. Older queued retries without a model ID remain valid after linking. Restore a model from an existing owned-cube association only when it is unique for the saved label and event. The local administrative command `python -m backend.reconcile_cubes username`, after a database backup, reconciles exact unambiguous legacy aliases for that account; it skips unknown and ambiguous labels. Browser checks must use an external computer browser, never the built-in browser, following the owner's crash-related request.

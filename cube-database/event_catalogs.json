@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "catalogs": {
+    "2x2": {
+      "catalog": "2x2/catalog.json",
+      "database": "2x2/cube_catalog.sqlite3"
+    },
+    "3x3": {
+      "catalog": "3x3/catalog.json",
+      "database": "3x3/cube_catalog.sqlite3"
+    },
+    "4x4": {
+      "catalog": "4x4/catalog.json",
+      "database": "4x4/cube_catalog.sqlite3"
+    },
+    "5x5": {
+      "catalog": "5x5/catalog.json",
+      "database": "5x5/cube_catalog.sqlite3"
+    },
+    "6x6": {
+      "catalog": "6x6/catalog.json",
+      "database": "6x6/cube_catalog.sqlite3"
+    },
+    "7x7": {
+      "catalog": "7x7/catalog.json",
+      "database": "7x7/cube_catalog.sqlite3"
+    },
+    "megaminx": {
+      "catalog": "megaminx/catalog.json",
+      "database": "megaminx/cube_catalog.sqlite3"
+    },
+    "pyraminx": {
+      "catalog": "pyraminx/catalog.json",
+      "database": "pyraminx/cube_catalog.sqlite3"
+    },
+    "skewb": {
+      "catalog": "skewb/catalog.json",
+      "database": "skewb/cube_catalog.sqlite3"
+    },
+    "square 1": {
+      "catalog": "square-1/catalog.json",
+      "database": "square-1/cube_catalog.sqlite3"
+    },
+    "fto": {
+      "catalog": "fto/catalog.json",
+      "database": "fto/cube_catalog.sqlite3"
+    }
+  }
+}
