@@ -11,6 +11,7 @@ import { editorAnchor } from './solve-editor';
 import { CubeSelector } from './cube-selector';
 import { Scrambles, type ScrambleSnapshot } from './scrambles';
 import { FixedTags } from './fixed-tags';
+import { setupEventIcon } from './event-icon';
 import { t, setText, setActionLabel, initializeTranslations, setLanguage, currentLanguage, onLanguageChange, settingsKey, languageForAccount, rememberLanguage } from './i18n';
 
 initializeTranslations();
@@ -212,6 +213,7 @@ const cubeSelector = new CubeSelector(cubeName, element<HTMLOutputElement>('cube
 const selectedEvent = () => organization.categories.find(item => String(item.id) === eventSelect.value)?.name ?? '';
 let user: User | null = null;
 let organization: Organization = { categories: [], cubes: [] };
+const eventIcon = setupEventIcon(eventSelect,element('selected-event-icon'),selectedEvent);
 const preferencesKey = () => settingsKey(user!.id);
 function configureFixedTags(): void {
   fixedTags.configure(user?.id ?? null, eventSelect.value ? Number(eventSelect.value) : null, fixedTagsEnabled.checked);
@@ -382,6 +384,7 @@ const accounts = setupAccounts(async nextUser => {
   organization = { categories: [], cubes: [] };
   renderSolves();
   eventSelect.replaceChildren();
+  eventIcon.update();
   cubeName.value = '';
   void cubeSelector.configure('');
   cubeValidation.hidden = true;
@@ -436,6 +439,7 @@ const accounts = setupAccounts(async nextUser => {
   }
   configureScrambles();
   configureFixedTags();
+  eventIcon.update();
   void syncSolves();
 });
 

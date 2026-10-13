@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, DateTime, UniqueConstraint
+from sqlalchemy import Boolean, Column, DateTime, UniqueConstraint, false
 from sqlmodel import Field, SQLModel
 
 EVENTS = ["3x3", "2x2", "4x4", "5x5", "6x6", "7x7", "3bld", "3oh", "clock", "megaminx", "pyraminx", "skewb", "square 1", "4bld", "5bld", "3mbld", "fmc", "fto"]
@@ -11,6 +11,7 @@ class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     username: str = Field(unique=True, index=True)
     password_hash: str
+    onboarding_acknowledged: bool = Field(default=False, sa_column=Column(Boolean, nullable=False, server_default=false()))
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), sa_column=Column(DateTime(timezone=True), nullable=False))
 
 

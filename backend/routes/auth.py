@@ -24,6 +24,7 @@ class Credentials(BaseModel):
 class UserRead(BaseModel):
     id: int
     username: str
+    onboarding_acknowledged: bool
 
 
 @router.post("/register", response_model=UserRead, status_code=201)
@@ -40,7 +41,7 @@ def register(data: Credentials, request: Request, response: Response, session: S
         raise HTTPException(409, "username unavailable")
     session.refresh(user)
     create_session(user, request, response, session)
-    return UserRead(id=user.id, username=user.username)
+    return UserRead(id=user.id, username=user.username, onboarding_acknowledged=user.onboarding_acknowledged)
 
 
 @router.post("/login", response_model=UserRead)
@@ -50,12 +51,21 @@ def login(data: Credentials, request: Request, response: Response, session: Sess
     if not user or not valid:
         raise HTTPException(401, "invalid credentials")
     create_session(user, request, response, session)
-    return UserRead(id=user.id, username=user.username)
+    return UserRead(id=user.id, username=user.username, onboarding_acknowledged=user.onboarding_acknowledged)
 
 
 @router.get("/me", response_model=UserRead)
 def me(user: User = Depends(current_user)):
-    return UserRead(id=user.id, username=user.username)
+    return UserRead(id=user.id, username=user.username, onboarding_acknowledged=user.onboarding_acknowledged)
+
+
+@router.post("/onboarding", status_code=204)
+def acknowledge_onboarding(request: Request, user: User = Depends(current_user), session: Session = Depends(get_session)):
+    if request.headers.get("X-Namicubes-Account") != str(user.id):
+        raise HTTPException(409, "account changed sign in again")
+    user.onboarding_acknowledged = True
+    session.add(user)
+    session.commit()
 
 
 @router.post("/logout", status_code=204)

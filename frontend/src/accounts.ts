@@ -1,5 +1,7 @@
 import { ApiError, request, type User } from './api/api';
 import { setText, onLanguageChange } from './i18n';
+import { setupLogoutConfirmation } from './logout-confirmation';
+import { setupOnboarding } from './onboarding';
 
 export function setupAccounts(onChange: (user: User | null) => Promise<void>): { requireLogin: () => void } {
   const dialog = document.getElementById('account-dialog') as HTMLDialogElement;
@@ -10,8 +12,14 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
   const toggle = document.getElementById('account-toggle') as HTMLButtonElement;
   const message = document.getElementById('account-message') as HTMLElement;
   let registering = false;
+  let revision = 0;
+  const onboarding = setupOnboarding(async user => {
+    const response = await fetch('/api/auth/onboarding', {method:'POST',headers:{'X-Namicubes-Request':'1','X-Namicubes-Account':String(user.id)},signal:AbortSignal.timeout(10000)});
+    if (!response.ok) throw new Error('acknowledgment failed');
+  });
   const showMessage = (text: string) => { message.hidden = false; setText(message,text); };
   const requireLogin = () => {
+    revision++; onboarding.reset();
     void onChange(null);
     if (!dialog.open) dialog.showModal();
   };
@@ -34,26 +42,27 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
     submit.disabled = toggle.disabled = true;
     message.hidden = true;
     try {
+      const currentRevision = ++revision;
       const user = await request<User>(`/api/auth/${registering ? 'register' : 'login'}`, { username: username.value, password: password.value });
       await onChange(user);
+      if (currentRevision !== revision) return;
       password.value = '';
       dialog.close();
+      onboarding.show(user);
     } catch (error) {
       showMessage(error instanceof ApiError ? error.message : 'connection unavailable');
     } finally {
       submit.disabled = toggle.disabled = false;
     }
   });
-  document.getElementById('logout')!.addEventListener('click', async () => {
-    try {
-      await request('/api/auth/logout', {});
-      requireLogin();
-    } catch {
-      document.getElementById('storage-status')!.hidden = false;
-      setText(document.getElementById('storage-status')!,'sign out unavailable');
-    }
-  });
-  void request<User>('/api/auth/me').then(onChange).catch(error => {
+  setupLogoutConfirmation(() => request<void>('/api/auth/logout', {}),requireLogin);
+  const initialRevision = revision;
+  void request<User>('/api/auth/me').then(async user => {
+    if (initialRevision !== revision) return;
+    await onChange(user);
+    if (initialRevision === revision) onboarding.show(user);
+  }).catch(error => {
+    if (initialRevision !== revision) return;
     requireLogin();
     if (!(error instanceof ApiError && error.status === 401)) showMessage('connection unavailable');
   });

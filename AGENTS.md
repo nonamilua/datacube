@@ -14,7 +14,7 @@ The application should run locally on the user's PC during development and shoul
 
 The user wants to understand the codebase and make manual changes, so prefer simple, explicit, readable implementations over overly abstract or highly automated solutions.
 
-The current placeholder app name is `namicubes`. CubeApp remains the repository/project name. Phases 1–4 are complete; phase 5 currently implements a simplified single custom field. Preserve the owner's manual visual edits. The preferences and implemented behavior documented below supersede earlier suggestions about configurable hold delays, light themes, recent solves on the timer page, and separate cube brand/model fields.
+The app name is `datacube`, displayed as two stacked words; Portuguese uses `dados` and `cubos` with an ampersand centered to their right. CubeApp remains the repository/project name. Phases 1–4 are complete; phase 5 currently implements a simplified single custom field. Preserve the owner's manual visual edits. The preferences and implemented behavior documented below supersede earlier suggestions about configurable hold delays, light themes, recent solves on the timer page, and separate cube brand/model fields.
 
 ---
 
@@ -23,12 +23,12 @@ The current placeholder app name is `namicubes`. CubeApp remains the repository/
 - Keep the app minimalistic, modern and tech-like. Only retain necessary content and controls.
 - Prioritize mobile layouts while keeping desktop equally polished.
 - Use a dark theme exclusively. Do not add a light theme or theme switch.
-- Use Roboto Mono from Google Fonts throughout, with a monospace fallback. Only the current scramble text on the timer uses Iosevka Charon Mono at weight 400 with normal style. Keep the Shuffle icon smaller than header icons while retaining its 44px interaction target.
+- Use Roboto Mono from Google Fonts throughout, with a monospace fallback. The current scramble text on the timer, including localized loading and generation error/retry messages, uses Roboto Mono at weight 400 with normal style, -0.6px letter spacing and -0.7px word spacing. Preserve notation and actual spaces exactly; apply spacing only through CSS. Keep the Shuffle icon smaller than header icons while retaining its 44px interaction target.
 - All interface text must be lowercase, brief and free of punctuation. Catalog cube model names and suggestions preserve their official uppercase spelling and punctuation as an explicit exception. Numeric time formatting and the explicitly requested animated dots are exceptions. This rule applies to site content, not documentation or code identifiers.
 - Do not add a footer, slogan, decorative introductory text, or unnecessary permanent settings.
 - Use the existing variables in `frontend/src/styles/main.css` under `:root` for colors and future elements. Keep palette changes centralized rather than introducing hard-coded colors in components.
 - Current color roles are `--bs-body-bg`, `--bs-body-color`, `--muted`, `--accent`, `--ready`, `--holding`, `--panel-bg`, `--panel-border`, `--list-border`, and `--checkbox-bg`. Read the CSS for their current values.
-- The brand is currently 22px. Keep it relatively prominent on mobile; do not reintroduce the old 15px narrow-screen override. Maintain space between the brand, clock and graph icons.
+- The header brand uses the nine-tiles logo to the left of a two-line wordmark in Roboto Mono and `--checkbox-bg`. Use responsive text sizing within a 44px brand height to preserve the header height and navigation spacing. Preserve existing namicubes storage keys and cookie names for compatibility.
 - Use Lucide SVG icons from `frontend/src/icons.ts` for a consistent minimal style. Import only required icons.
 - Navigation uses clock, graph and gear icons for timer, analysis and settings. Preserve accessible lowercase labels, keyboard behavior and at least 44px interaction targets.
 - Active navigation uses `--accent`. The settings gear stays highlighted while its panel is open.
@@ -37,7 +37,7 @@ The current placeholder app name is `namicubes`. CubeApp remains the repository/
 - A language dropdown below the account divider and above the username and sign out row supports English by default, Brazilian Portuguese displayed as portuguese, and Spanish. Apply translations immediately and persist the choice separately per account in this browser for future logins. Preferences do not synchronize across devices. Keep interface translations in `frontend/src/i18n.ts`; preserve user-entered labels, event identifiers and scramble notation. Sign out uses `--accent` on hover for mouse devices.
 - Solve history opens from the history icon immediately to the left of settings. It is an expandable right sidebar on desktop and fills the viewport below the header on phones. It has its own scrollbar, includes every owned solve, and has no recent solves heading or total count. Do not display solve-number placeholders or empty columns.
 - Recent solve rows show result and available labels, with a trash icon in `--muted` replacing the clock timestamp. Keep timestamps in the database for future analysis.
-- Use `frontend/public/cube_logo3.png` as the placeholder favicon. Public assets belong under `frontend/public`.
+- Use `frontend/public/logo-concepts/03-nine-tiles.svg` for the header logo and SVG favicon. The old cube_logo3.png was removed. Public assets belong under `frontend/public`.
 
 ---
 
@@ -105,7 +105,7 @@ cubeapp/
 │   ├── index.html
 │   ├── package.json
 │   ├── vite.config.ts
-│   ├── public/cube_logo3.png
+│   ├── public/logo-concepts/03-nine-tiles.svg
 │   ├── tests/
 │   └── src/
 │       ├── main.ts
@@ -152,6 +152,8 @@ Suggested fields:
 - username
 - password_hash
 - created_at
+
+New accounts have `users.onboarding_acknowledged=false`. After successful login/account initialization, show the brief localized onboarding modal once. All dismissal routes persist acknowledgment through authenticated `POST /api/auth/onboarding` with `X-Namicubes-Account`; do not mark acknowledgment in local storage. Failed writes retain the modal and permit retry. Open settings acknowledges before opening settings. Keep modal focus contained and never show it alongside sign-out confirmation. Migration 0007 sets existing accounts to acknowledged while preserving records.
 
 ### login_sessions
 
@@ -411,6 +413,12 @@ The app should look modern and clean on both desktop and mobile.
 ## Analytics
 
 Create a separate analytics tab.
+
+Overview remains the default. Compare shares its single event and date/range controls, including the anchored mobile custom-date popup, but keeps cube/custom multi-selections separate from overview. Both checkbox filters start with all available options selected. The all checkbox is checked for every option, indeterminate for a partial selection and unchecked for none; clicking an indeterminate checkbox selects everything. Empty selections mean no groups and show the existing empty chart. All-selected state includes newly available options automatically; partial selections retain only available matches, independently for each filter. Each checkbox popup matches its own filter control width and aligns directly below it, with the filters' 10px type, border and 4px radius. Use compact option/all rows (28px desktop and at least 44px mobile), internal scrolling, visually truncated full accessible labels, keyboard controls, outside-click and Escape dismissal; never overlap the adjacent filter. Cube selections apply only to the cube chart and custom selections only to the custom chart. Their options depend only on account/event/date scope, including DNF records; prune invalid selections independently on scope or solve changes. Neither list restricts event options or the other list. Reset comparison filters to all-selected and clear charts on account reset.
+
+Compare has two horizontal boxplots and no number cards. Calculate from all matching solves using effective +2 times and excluding DNF from numerical distributions. Exclude missing labels only from the relevant chart. Retain DNF-only groups with no valid times. Sort comparison rows by ascending effective-time median, breaking ties alphabetically and placing groups without valid times last; option lists remain alphabetical. Quartiles use Hyndman-Fan type 7 linear interpolation at `(n - 1) p`; whiskers are extreme observations inside the inclusive `q1 - 1.5 IQR` and `q3 + 1.5 IQR` fences, with every outside observation rendered as an outlier. A single valid time has equal quartiles and whiskers. Each chart has its own shared time scale and vertical scrollbar with fixed title and time-axis numbers. Use 40px rows with names above on mobile and 44px rows with names to the left on desktop. Mobile compare alone uses 4px vertical panel insets, no title bottom margin and an 18px axis canvas with no reserved plot space above its ticks and 1px clearance from the scrolling rows; overview and desktop spacing remain unchanged. Truncate chart names visually only and retain full names in accessible canvas labels. Chart.js events stay disabled; native pointer hit testing opens a compact tooltip only over the filled q1–q3 box, with a minimum 8px horizontal hit area for tiny boxes. Tooltips show only median in seconds to two decimals and valid solve count excluding DNF. Desktop hover dismisses on leaving unless clicked to pin; touch taps toggle or replace. Only one tooltip is open across both charts. Outside pointer presses, Escape, chart scrolling, filters/data updates, resizing and view changes dismiss it. Keep tooltips anchored near the box and contained within its panel without changing chart spacing or adding selection highlights. Keep the category scrolling area keyboard accessible. Use the local Chart.js drawing plugin in `boxplot-chart.ts` without new dependencies; keep pure calculations in `boxplots.ts`. The overview hide-outliers preference does not remove comparison observations. Comparison colors are centralized as `--compare-cyan` (the existing `--accent` cyan), `--compare-violet` and `--compare-pink`. Each box has a solid fill; interpolate cyan #71DBDB through violet #A59BFA to pink #E58DBD across the displayed valid boxes independently for each median-sorted chart, using cyan for one box. DNF-only rows have no fill and consume no palette step. Compare uses equal desktop columns and equal-height stacked mobile panels, independent of overview proportions. Titles are cubes comparison and custom comparison, localized in all languages.
+
+Overview/compare buttons keep independent filter state when switching views. Desktop keeps inline from/to fields; mobile replaces their slots with these buttons and uses an anchored calendar popup that remembers dates, supports reopening custom, preserves validation and closes once both dates form a valid range. Thin visible buttons retain a 44px mobile touch area.
 
 The custom filter includes none (nenhuma in Portuguese) for solves with an empty tag, separate from all. The Portuguese solve-count card reads total while graph titles retain tempos. Mobile selected range labels must fit within 14 characters; keep the full names in the opened native dropdown. Above 100 valid times after filtering, display time and best as points without connecting lines and use point symbols for those legend entries. Keep ao5 and ao12 as lines and restore the connected time/best display when filters reduce the count to 100 or fewer.
 

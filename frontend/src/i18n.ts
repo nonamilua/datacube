@@ -9,12 +9,23 @@ export const translations: Record<string, readonly [string, string]> = {
   'cube models unavailable':['modelos indisponíveis','modelos no disponibles'], 'no cube models for this event':['sem modelos para este evento','sin modelos para este evento'],
   'timer':['cronômetro','cronómetro'], 'analysis':['análise','análisis'], 'analytics':['análise','análisis'],
   'history':['histórico','historial'], 'settings':['configurações','ajustes'],
+  'choose your event and cube in settings':['escolha seu evento e cubo nas configurações','elige tu evento y cubo en ajustes'], 'later':['depois','después'], 'open settings':['abrir ajustes','abrir ajustes'],
   'solve history':['histórico de tempos','historial de tiempos'], 'solve timer':['cronômetro','cronómetro'],
-  'event':['evento','evento'], 'cube':['cubo','cubo'], 'custom':['tag','etiqueta'], 'custom tags':['tags','etiquetas'],
+  'event':['evento','evento'], 'cube':['cubo','cubo'], 'custom':['tag','etiqueta'], 'custom tags':['tags','etiquetas'], 'custom tag':['tag','etiqueta'],
   'hide timer':['ocultar tempo','ocultar tiempo'], 'scrambles':['embaralhamentos','mezclas'],
   'fixed tags':['tags fixas','etiquetas fijas'],
   'hide outliers':['ocultar outliers','ocultar atípicos'],
-  'sign out':['sair','salir'], 'sign in':['entrar','iniciar sesión'], 'create account':['criar conta','crear cuenta'],
+  'overview':['visão geral','resumen'], 'compare':['comparar','comparar'],
+  'cubes':['cubos','cubos'], 'selected':['selecionados','seleccionados'], 'selected short':['selec.','selec.'],
+  'cube comparison':['comparação de cubos','comparación de cubos'], 'custom comparison':['comparação de tags','comparación de etiquetas'],
+  'cubes comparison':['comparação de cubos','comparación de cubos'], 'tag comparison':['comparação de tags','comparación de etiquetas'], 'tag':['tag','etiqueta'],
+  'valid solves':['tempos válidos','tiempos válidos'], 'no valid times':['sem tempos válidos','sin tiempos válidos'],
+  'quartiles':['quartis','cuartiles'], 'whiskers':['limites','extremos'], 'small sample':['amostra pequena','muestra pequeña'],
+  'lower quartile':['quartil inferior','cuartil inferior'], 'upper quartile':['quartil superior','cuartil superior'],
+  'lower whisker':['limite inferior','extremo inferior'], 'upper whisker':['limite superior','extremo superior'],
+  'analytics view':['visualização','vista'], 'custom dates':['datas personalizadas','fechas personalizadas'],
+  'compare not available yet':['comparação ainda indisponível','comparación aún no disponible'],
+  'sign out':['sair','salir'], 'cancel':['cancelar','cancelar'], 'sign in':['entrar','iniciar sesión'], 'create account':['criar conta','crear cuenta'],
   'username':['usuário','usuario'], 'password':['senha','contraseña'],
   'no solves yet':['sem tempos','sin tiempos'], 'no solves':['sem tempos','sin tiempos'],
   'no completed times':['sem tempos válidos','sin tiempos válidos'],
@@ -24,7 +35,7 @@ export const translations: Record<string, readonly [string, string]> = {
   'from':['de','desde'], 'to':['até','hasta'], 'all':['todos','todos'],
   'none':['nenhuma','ninguna'], 'solve count':['total','tiempos'],
   'solves':['tempos','tiempos'], 'solve':['tempo','tiempo'], 'mean':['média','media'], 'median':['mediana','mediana'],
-  'std dev':['desvio','desviación'], '+2 count':['total +2','total +2'],
+  'std dev':['desvio','desviación'], '+2 count':['total +2','total +2'], 'count':['total','total'],
   'best':['melhor','mejor'], 'worst':['pior','peor'], 'fav event':['evento favorito','evento favorito'],
   'best cube':['melhor cubo','mejor cubo'], 'best custom':['melhor tag','mejor etiqueta'],
   'best ao5':['melhor ao5','mejor ao5'], 'best ao12':['melhor ao12','mejor ao12'],
@@ -101,7 +112,7 @@ export function initializeTranslations(root: Document = document): void {
   while (walker.nextNode()) {
     const node = walker.currentNode as Text;
     const key = node.data.trim();
-    if (translations[key] && !node.parentElement?.closest('script, style')) {
+    if (translations[key] && !node.parentElement?.closest('script, style, .brand-wordmark')) {
       const match = node.data.match(/^(\s*)(.*?)(\s*)$/s)!;
       texts.push({node,key,before:match[1],after:match[3]});
     }
@@ -114,6 +125,15 @@ export function initializeTranslations(root: Document = document): void {
   }
   const apply = () => {
     root.documentElement.lang = language;
+    const brand = root.querySelector<HTMLElement>('.brand');
+    if (brand) {
+      const portuguese = language === 'pt-BR';
+      brand.querySelector<HTMLElement>('.brand-top')!.textContent = portuguese ? 'dados' : 'data';
+      brand.querySelector<HTMLElement>('.brand-bottom')!.textContent = portuguese ? 'cubos' : 'cube';
+      brand.querySelector<HTMLElement>('.brand-ampersand')!.hidden = !portuguese;
+      brand.setAttribute('aria-label',portuguese ? 'dados e cubos' : 'datacube');
+      root.title = portuguese ? 'dados&cubos' : 'datacube';
+    }
     for (const {node,key,before,after} of texts) if (node.isConnected) node.data = before + t(key) + after;
     for (const {element,name,key} of attributes) element.setAttribute(name,t(key));
     for (const element of Array.from(root.querySelectorAll<HTMLElement>('[data-i18n]'))) element.textContent = t(element.dataset.i18n!);

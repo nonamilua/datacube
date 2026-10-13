@@ -12,6 +12,30 @@ from sqlalchemy.exc import IntegrityError
 import pytest
 
 
+def test_onboarding_migration_acknowledges_existing_users_and_preserves_data(tmp_path, monkeypatch):
+    engine = create_engine(f"sqlite:///{tmp_path / 'onboarding.db'}")
+    monkeypatch.setattr("backend.database.engine",engine)
+    config = Config(str(ROOT / "alembic.ini"))
+    command.upgrade(config,"0006")
+    with engine.begin() as connection:
+        connection.exec_driver_sql("INSERT INTO users (id,username,password_hash,created_at) VALUES (1,'existing','preserved hash','2026-10-04')")
+        connection.exec_driver_sql("INSERT INTO cubes (id,user_id,name) VALUES (1,1,'cube')")
+        connection.exec_driver_sql("INSERT INTO categories (id,user_id,name) VALUES (1,1,'3x3')")
+        connection.exec_driver_sql("INSERT INTO login_sessions (token_hash,user_id,expires_at) VALUES ('hash',1,'2030-01-01')")
+        connection.exec_driver_sql("INSERT INTO solves (id,user_id,cube_id,category_id,duration_ms,started_at,penalty,custom,scramble) VALUES ('existing',1,1,1,12345,'2026-10-04','+2','tag','R U')")
+        tables = ['cubes','categories','login_sessions','solves']
+        before = {table:connection.exec_driver_sql(f"SELECT * FROM {table}").fetchall() for table in tables}
+    command.upgrade(config,"head")
+    with engine.begin() as connection:
+        assert connection.exec_driver_sql("SELECT username,password_hash,created_at,onboarding_acknowledged FROM users WHERE id=1").one() == ('existing','preserved hash','2026-10-04',1)
+        assert before == {table:connection.exec_driver_sql(f"SELECT * FROM {table}").fetchall() for table in tables}
+        connection.exec_driver_sql("INSERT INTO users (username,password_hash,created_at) VALUES ('new','new hash','2026-10-12')")
+        assert connection.exec_driver_sql("SELECT onboarding_acknowledged FROM users WHERE username='new'").scalar() == 0
+        assert connection.exec_driver_sql("PRAGMA foreign_key_check").fetchall() == []
+    command.check(config)
+    engine.dispose()
+
+
 def test_phase_two_data_survives_migration(tmp_path, monkeypatch):
     engine = create_engine(f"sqlite:///{tmp_path / 'legacy.db'}")
     monkeypatch.setattr("backend.database.engine", engine)

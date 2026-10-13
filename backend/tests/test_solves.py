@@ -35,6 +35,27 @@ def payload(**changes):
     return {"id": str(uuid4()), "duration_ms": 12345, "started_at": "2026-10-04T12:00:00-03:00", **changes}
 
 
+def test_onboarding_persists_across_logins_browsers_and_isolates_accounts(client):
+    user = client.get("/api/auth/me").json()
+    assert user["onboarding_acknowledged"] is False
+    assert client.post("/api/auth/onboarding", headers={"X-Namicubes-Account":"99999"}).status_code == 409
+    assert client.get("/api/auth/me").json()["onboarding_acknowledged"] is False
+    assert client.post("/api/auth/onboarding").status_code == 204
+    assert client.post("/api/auth/onboarding").status_code == 204
+    with TestClient(app) as browser:
+        browser.headers["X-Namicubes-Request"] = "1"
+        assert browser.post("/api/auth/onboarding").status_code == 401
+        login = browser.post("/api/auth/login",json={"username":"tester","password":"test password"})
+        assert login.json()["onboarding_acknowledged"] is True
+        assert browser.get("/api/auth/me").json()["onboarding_acknowledged"] is True
+        other = browser.post("/api/auth/register",json={"username":"newaccount","password":"another password"})
+        assert other.json()["onboarding_acknowledged"] is False
+        browser.headers["X-Namicubes-Account"] = str(user["id"])
+        assert browser.post("/api/auth/onboarding").status_code == 409
+        assert browser.get("/api/auth/me").json()["onboarding_acknowledged"] is False
+    assert client.get("/api/auth/me").json()["onboarding_acknowledged"] is True
+
+
 def test_save_reload_and_retry(client):
     data = payload()
     response = client.post("/api/solves", json=data)
