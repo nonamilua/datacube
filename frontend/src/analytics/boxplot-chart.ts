@@ -1,9 +1,11 @@
 import { Chart, BarController, BarElement, LinearScale, CategoryScale, type Plugin } from 'chart.js';
 import type { ComparisonGroup } from './boxplots';
+import { comparisonPercentage } from './boxplots';
 import { comparisonColors } from './compare-colors';
 import { timeAxis } from './axes';
 import { t } from '../i18n';
 import { hitsBox, type BoxBounds } from './box-hit';
+import { chartScale, chartPixelRatio } from './presentation';
 Chart.register(BarController,BarElement,LinearScale,CategoryScale);
 
 let activeTooltip: {canvas:HTMLCanvasElement; close:()=>void} | null = null;
@@ -24,8 +26,10 @@ export function createBoxplotChart(root: HTMLElement) {
   const color = (name:string) => style.getPropertyValue(name).trim();
   const font = style.getPropertyValue('--bs-body-font-family').trim();
   let groups: ComparisonGroup[] = [];
+  let total = 0;
   let rowColors: string[] = [];
   let tickValues: number[] = [0,1];
+  let scale = chartScale();
   let rowHeight = 52;
   let narrow = window.innerWidth < 768;
   const tooltip = document.createElement('div');
@@ -37,12 +41,12 @@ export function createBoxplotChart(root: HTMLElement) {
     if (activeTooltip?.canvas === canvas) activeTooltip = null;
   }
   const axis = new Chart(axisCanvas,{
-    type:'bar',data:{datasets:[]},options:{responsive:true,maintainAspectRatio:false,animation:false,events:[],
+    type:'bar',data:{datasets:[]},options:{responsive:true,maintainAspectRatio:false,devicePixelRatio:chartPixelRatio(),animation:false,events:[],
       layout:{padding:{left:0,right:0}},plugins:{legend:{display:false},tooltip:{enabled:false}},
       scales:{x:{type:'linear',min:0,max:1,grid:{display:false},border:{color:color('--panel-border')},
         afterBuildTicks:scale => { scale.ticks = tickValues.map(value => ({value})); },
-        // This canvas contains only an axis; mobile needs no empty plot above it.
-        afterFit:scale => { if (narrow) scale.height = scale.chart.height; },
+        // This canvas contains only an axis; reserve no empty plot above it.
+        afterFit:scale => { scale.height = scale.chart.height; },
         ticks:{autoSkip:false,maxRotation:0,minRotation:0,color:color('--muted'),font:{family:font,size:9}}},y:{display:false}},
     },
   });
@@ -53,36 +57,36 @@ export function createBoxplotChart(root: HTMLElement) {
     ctx.save();
     for (const tick of tickValues) {
       const pixel = axis.scales.x.getPixelForValue(tick);
-      ctx.strokeStyle = color('--list-border'); ctx.lineWidth = 1;
+      ctx.strokeStyle = color('--list-border'); ctx.lineWidth = scale;
       ctx.beginPath(); ctx.moveTo(pixel,0); ctx.lineTo(pixel,chart.height); ctx.stroke();
     }
     groups.forEach((group,index) => {
       const top = index * rowHeight;
       const y = top + (narrow ? 25 : rowHeight / 2);
-      ctx.font = `10px ${font}`; ctx.fillStyle = color('--muted');
+      ctx.font = `${10 * scale}px ${font}`; ctx.fillStyle = color('--muted');
       let name = group.name;
-      const width = narrow ? chart.width - 12 : 112;
+      const width = narrow ? chart.width - 12 : 112 * scale;
       while (ctx.measureText(name).width > width && name.length > 1) name = name.slice(0,-1);
       if (name !== group.name) name = name.slice(0,-1) + '…';
-      ctx.fillText(name,4,narrow ? top + 11 : y + 3);
+      ctx.fillText(name,4 * scale,narrow ? top + 11 : y + 3 * scale);
       const box = group.box;
-      if (!box) { ctx.fillText(t('no valid times'),narrow ? 4 : 124,y + 4); return; }
+      if (!box) { ctx.fillText(t('no valid times'),narrow ? 4 : 124 * scale,y + 4 * scale); return; }
       const left = x(box.q1), right = x(box.q3);
-      ctx.strokeStyle = color('--muted'); ctx.lineWidth = 1;
+      ctx.strokeStyle = color('--muted'); ctx.lineWidth = scale;
       ctx.beginPath(); ctx.moveTo(x(box.low),y); ctx.lineTo(x(box.high),y);
-      for (const value of [box.low,box.high]) { ctx.moveTo(x(value),y-5); ctx.lineTo(x(value),y+5); }
+      for (const value of [box.low,box.high]) { ctx.moveTo(x(value),y-5 * scale); ctx.lineTo(x(value),y+5 * scale); }
       ctx.stroke();
-      ctx.fillStyle = rowColors[index]; ctx.fillRect(left,y-8,Math.max(1,right-left),16);
-      ctx.strokeStyle = color('--bs-body-color'); ctx.strokeRect(left,y-8,Math.max(1,right-left),16);
-      ctx.strokeStyle = color(box.q1 === box.q3 ? '--bs-body-color' : '--bs-body-bg'); ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(x(box.median),y-8); ctx.lineTo(x(box.median),y+8); ctx.stroke();
+      ctx.fillStyle = rowColors[index]; ctx.fillRect(left,y-8 * scale,Math.max(scale,right-left),16 * scale);
+      ctx.strokeStyle = color('--bs-body-color'); ctx.strokeRect(left,y-8 * scale,Math.max(scale,right-left),16 * scale);
+      ctx.strokeStyle = color(box.q1 === box.q3 ? '--bs-body-color' : '--bs-body-bg'); ctx.lineWidth = 2 * scale;
+      ctx.beginPath(); ctx.moveTo(x(box.median),y-8 * scale); ctx.lineTo(x(box.median),y+8 * scale); ctx.stroke();
       ctx.fillStyle = color('--bs-body-color');
-      for (const value of box.outliers) { ctx.beginPath(); ctx.arc(x(value),y,1.5,0,Math.PI*2); ctx.fill(); }
+      for (const value of box.outliers) { ctx.beginPath(); ctx.arc(x(value),y,1.5 * scale,0,Math.PI*2); ctx.fill(); }
     });
     ctx.restore();
   }};
   const chart = new Chart(canvas, {type:'bar',data:{datasets:[]},plugins:[plugin],
-    options:{responsive:true,maintainAspectRatio:false,animation:false,events:[],
+    options:{responsive:true,maintainAspectRatio:false,devicePixelRatio:chartPixelRatio(),animation:false,events:[],
       plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}},
     },
   });
@@ -91,7 +95,7 @@ export function createBoxplotChart(root: HTMLElement) {
     const box = groups[index].box!;
     const y = index * rowHeight + (narrow ? 25 : rowHeight / 2);
     const left = axis.scales.x.getPixelForValue(box.q1 / 1000);
-    return {left,right:Math.max(left + 1,axis.scales.x.getPixelForValue(box.q3 / 1000)),top:y-8,bottom:y+8};
+    return {left,right:Math.max(left + scale,axis.scales.x.getPixelForValue(box.q3 / 1000)),top:y-8 * scale,bottom:y+8 * scale};
   }
   function hit(event:MouseEvent):number {
     const rect = canvas.getBoundingClientRect();
@@ -105,15 +109,19 @@ export function createBoxplotChart(root: HTMLElement) {
     if (activeTooltip?.canvas !== canvas) dismissCompareTooltip();
     activeTooltip = {canvas,close:closeTooltip}; tooltipIndex = index; pinned = pin;
     const box = groups[index].box!;
-    tooltip.replaceChildren(...[`${t('median')} ${(box.median / 1000).toFixed(2)}`,`${t('count')} ${box.count}`].map(text => {
-      const line = document.createElement('div'); line.textContent = text; return line;
-    }));
+    const count = document.createElement('div'); count.className = 'compare-tooltip-count';
+    const marker = document.createElement('span'); marker.className = 'compare-tooltip-marker';
+    marker.style.backgroundColor = rowColors[index]; marker.setAttribute('aria-hidden','true');
+    count.append(marker,document.createTextNode(`${t('count')} ${box.count} (${comparisonPercentage(box.count,total)})`));
+    const median = document.createElement('div');
+    median.textContent = `${t('median')} ${(box.median / 1000).toFixed(2)}`;
+    tooltip.replaceChildren(count,median);
     tooltip.hidden = false;
     const area = root.getBoundingClientRect(), rect = canvas.getBoundingClientRect(), boxBounds = bounds(index);
     const left = rect.left - area.left + boxBounds.left * rect.width / chart.width;
     const top = rect.top - area.top + boxBounds.top * rect.height / chart.height;
     let y = top - tooltip.offsetHeight - 4;
-    if (y < 4) y = top + 16 + 4;
+    if (y < 4) y = top + 16 * scale + 4 * scale;
     tooltip.style.left = `${Math.max(4,Math.min(left,root.clientWidth - tooltip.offsetWidth - 4))}px`;
     tooltip.style.top = `${Math.max(4,Math.min(y,root.clientHeight - tooltip.offsetHeight - 4))}px`;
   }
@@ -133,18 +141,23 @@ export function createBoxplotChart(root: HTMLElement) {
   function resize() {
     dismissCompareTooltip();
     narrow = window.innerWidth < 768;
-    rowHeight = narrow ? 40 : 44;
+    scale = chartScale();
+    axis.options.devicePixelRatio = chart.options.devicePixelRatio = chartPixelRatio();
+    rowHeight = narrow ? 40 : 44 * scale;
     content.style.height = `${Math.max(1,groups.length) * rowHeight}px`;
     axisArea.style.width = `${content.clientWidth}px`;
-    axis.options.layout!.padding = {left:narrow ? 0 : 120,right:0};
-    axis.options.scales!.x!.ticks!.padding = narrow ? 1 : 3;
-    axis.options.scales!.x!.grid!.tickLength = narrow ? 4 : 8;
+    axis.options.layout!.padding = {left:narrow ? 0 : 120 * scale,right:0};
+    axis.options.scales!.x!.ticks!.padding = scale;
+    axis.options.scales!.x!.grid!.tickLength = 4 * scale;
+    axis.options.scales!.x!.ticks!.font = {family:font,size:9 * scale};
     axis.resize(); axis.update('none'); chart.resize(); chart.draw();
   }
+  window.matchMedia('(width > 1400px)').addEventListener('change', resize);
   return {
-    update(next:ComparisonGroup[], invalid:boolean) {
+    update(next:ComparisonGroup[], invalid:boolean, scopeTotal:number) {
       dismissCompareTooltip();
       groups = next;
+      total = scopeTotal;
       canvas.setAttribute('aria-label',`${t(root.id === 'cube-boxplot' ? 'cube comparison' : 'tag comparison')} ${groups.map(group => group.name).join(' ')}`);
       const palette = comparisonColors(groups.filter(group => group.box).length,color('--compare-cyan'),color('--compare-violet'),color('--compare-pink'));
       let colorIndex = 0;

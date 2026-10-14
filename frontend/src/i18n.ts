@@ -2,6 +2,26 @@ export type Language = 'en' | 'pt-BR' | 'es';
 
 // English keys keep interface copy easy to find in the code.
 export const translations: Record<string, readonly [string, string]> = {
+  'import':['importar','importar'], 'export':['exportar','exportar'], 'about':['sobre','acerca de'],
+  'version':['versão','versión'],
+  'close':['fechar','cerrar'], 'back':['voltar','volver'], 'next':['avançar','siguiente'],
+  'choose file':['escolher arquivo','elegir archivo'], 'choose event':['escolher evento','elegir evento'],
+  'configure sessions':['configurar sessões','configurar sesiones'], 'review':['revisar','revisar'],
+  'sessions':['sessões','sesiones'],
+  'select a session':['selecione uma sessão','selecciona una sesión'],
+  'choose an event for each selected session':['escolha um evento para cada sessão selecionada','elige un evento para cada sesión seleccionada'],
+  'comments and scrambles are not imported':['comentários e embaralhamentos não são importados','comentarios y mezclas no se importan'],
+  'assignments apply to every solve in each session':['as escolhas valem para todos os tempos da sessão','las opciones se aplican a todos los tiempos de la sesión'],
+  'separate mixed events in cstimer before exporting':['separe eventos diferentes no cstimer antes de exportar','separa eventos distintos en cstimer antes de exportar'],
+  'preview only importing is not available yet':['apenas prévia a importação ainda não está disponível','solo vista previa la importación aún no está disponible'],
+  'invalid cstimer file':['arquivo cstimer inválido','archivo cstimer inválido'],
+  'invalid solve data':['dados de tempos inválidos','datos de tiempos inválidos'],
+  'no solves in file':['arquivo sem tempos','archivo sin tiempos'],
+  'choose a txt or json file':['escolha um arquivo txt ou json','elige un archivo txt o json'],
+  'file exceeds 10 mib':['arquivo excede 10 mib','archivo supera 10 mib'],
+  'too many solves':['limite de 50000 tempos excedido','límite de 50000 tiempos superado'],
+  'file unavailable':['arquivo indisponível','archivo no disponible'],
+
   'english':['inglês','inglés'], 'portuguese':['português','portugués'], 'spanish':['espanhol','español'],
   'language':['idioma','idioma'], 'navigation':['navegação','navegación'],
   'model name':['nome do modelo','nombre del modelo'], 'cube label':['nome curto','nombre corto'], 'cube models':['modelos de cubos','modelos de cubos'],

@@ -91,7 +91,7 @@ export function setupCompareView(changed: () => void) {
       const invalid = Boolean(filters.start && filters.end && filters.start > filters.end);
       cubeChart ??= createBoxplotChart(document.getElementById('cube-boxplot')!);
       customChart ??= createBoxplotChart(document.getElementById('custom-boxplot')!);
-      cubeChart.update(data.cubeGroups,invalid); customChart.update(data.customGroups,invalid);
+      cubeChart.update(data.cubeGroups,invalid,data.cubeTotal); customChart.update(data.customGroups,invalid,data.customTotal);
     },
     show(visible:boolean) {
       dismissCompareTooltip();

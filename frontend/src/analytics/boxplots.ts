@@ -9,6 +9,10 @@ export interface BoxSummary {
 }
 export interface ComparisonGroup { value: string; name: string; box: BoxSummary | null }
 
+export function comparisonPercentage(count: number, total: number): string {
+  return `${total ? Number((count / total * 100).toFixed(1)) : 0}%`;
+}
+
 // Linear interpolation at (n - 1) p, also known as Hyndman-Fan type 7.
 // Times remain milliseconds here; only the renderer converts to seconds.
 export function boxSummary(values: number[]): BoxSummary | null {
@@ -35,6 +39,11 @@ export function comparisonData(solves: StoredSolve[], organization: Organization
     .map(name => ({value:name,name}));
   const alphabetical = (a: {name:string;value:string}, b: {name:string;value:string}) => a.name.localeCompare(b.name) || a.value.localeCompare(b.value);
   cubes.sort(alphabetical); custom.sort(alphabetical);
+  // Denominators use the full account/event/date scope, independent of checkbox selections.
+  const labeledCubes = new Set(cubes.map(cube => Number(cube.value)));
+  const valid = scoped.filter(solve => Number.isFinite(effectiveTime(solve)));
+  const cubeTotal = valid.filter(solve => solve.cube_id != null && labeledCubes.has(solve.cube_id)).length;
+  const customTotal = valid.filter(solve => solve.custom?.trim()).length;
   const cubeSelection = reconcileSelection(selectedCubes,cubes.map(cube => cube.value));
   const customSelection = reconcileSelection(selectedCustom,custom.map(tag => tag.value));
   const cubeGroups: ComparisonGroup[] = cubes.filter(cube => cubeSelection === null || cubeSelection.includes(cube.value))
@@ -44,5 +53,5 @@ export function comparisonData(solves: StoredSolve[], organization: Organization
   const byMedian = (a:ComparisonGroup,b:ComparisonGroup) =>
     (a.box?.median ?? Infinity) - (b.box?.median ?? Infinity) || alphabetical(a,b);
   cubeGroups.sort(byMedian); customGroups.sort(byMedian);
-  return {cubes,custom,cubeSelection,customSelection,cubeGroups,customGroups};
+  return {cubes,custom,cubeSelection,customSelection,cubeGroups,customGroups,cubeTotal,customTotal};
 }

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { boxSummary, comparisonData } from '../src/analytics/boxplots.ts';
+import { boxSummary, comparisonData, comparisonPercentage } from '../src/analytics/boxplots.ts';
 import { comparisonColors } from '../src/analytics/compare-colors.ts';
 import type { StoredSolve, Organization } from '../src/api/api';
 import type { Filters } from '../src/analytics/filters';
@@ -11,6 +11,54 @@ const filters: Filters = {start:'',end:'',event:'1',cube:'99',custom:'ignored'};
 const solve = (id:number, cube_id:number|null, custom:string|null, other:Partial<StoredSolve> = {}):StoredSolve =>
   ({id:String(id),duration_ms:10000,started_at:'2026-10-10T12:00:00Z',category_id:1,cube_id,custom,penalty:'OK',...other});
 const rows = [solve(1,1,'a'),solve(2,2,'b',{penalty:'+2'}),solve(3,3,'dnf',{penalty:'DNF'}),solve(4,null,'a'),solve(5,1,null)];
+
+test('tooltip denominators exclude DNF and missing labels independently and include +2', () => {
+  const data = comparisonData([...rows,solve(6,null,'  '),solve(7,null,null,{cube_id:undefined,custom:undefined})],organization,filters,null,null);
+  assert.equal(data.cubeTotal,3);
+  assert.equal(data.customTotal,3);
+  assert.equal(data.cubeGroups.find(group=>group.value==='2')!.box!.count,1);
+  assert.equal(data.customGroups.find(group=>group.value==='b')!.box!.median,12000);
+});
+
+test('unlabeled solves cannot dilute a sole labeled group percentage', () => {
+  const unlabeled = Array.from({length:100},(_,i)=>solve(100+i,null,null));
+  const data = comparisonData([solve(1,1,'tag'),...unlabeled],organization,filters,null,null);
+  assert.equal(comparisonPercentage(data.cubeGroups[0].box!.count,data.cubeTotal),'100%');
+  assert.equal(comparisonPercentage(data.customGroups[0].box!.count,data.customTotal),'100%');
+});
+
+test('tooltip denominators use only the supplied account and selected event date or hour scope', () => {
+  const scopedRows = [solve(1,1,'a'),solve(2,2,'b',{category_id:2}),
+    solve(3,1,'old',{started_at:'2026-10-09T12:00:00Z'}),
+    solve(4,1,'early',{started_at:'2026-10-10T08:00:00Z'}),
+    solve(5,1,'future',{started_at:'2026-10-11T12:00:00Z'})];
+  const dated = comparisonData(scopedRows,organization,{...filters,start:'2026-10-10',end:'2026-10-10'},null,null);
+  assert.equal(dated.cubeTotal,2); assert.equal(dated.customTotal,2);
+  const hourly = comparisonData(scopedRows,organization,{...filters,hours:2},null,null,new Date('2026-10-10T13:00:00Z'));
+  assert.equal(hourly.cubeTotal,1); assert.equal(hourly.customTotal,1);
+  const otherEvent = comparisonData(scopedRows,organization,{...filters,event:'2'},null,null);
+  assert.equal(otherEvent.cubeTotal,1); assert.equal(otherEvent.customTotal,1);
+  const otherAccount = comparisonData([solve(99,9,'other')],{categories:organization.categories,cubes:[{id:9,name:'other'}]},filters,null,null);
+  assert.equal(otherAccount.cubeTotal,1); assert.equal(otherAccount.customTotal,1);
+  assert.equal(comparisonData(scopedRows,organization,{...filters,event:''},null,null).cubeTotal,0);
+});
+
+test('checkbox selections never change either denominator or remaining group percentages', () => {
+  const all = comparisonData(rows,organization,filters,null,null);
+  for (const [cubes,tags] of [[['1'],['b']],[[],[]],[['2'],['a']]] as const) {
+    const selected = comparisonData(rows,organization,filters,[...cubes],[...tags]);
+    assert.equal(selected.cubeTotal,all.cubeTotal); assert.equal(selected.customTotal,all.customTotal);
+    for (const [groups,total,allGroups] of [[selected.cubeGroups,selected.cubeTotal,all.cubeGroups],[selected.customGroups,selected.customTotal,all.customGroups]] as const) {
+      for (const group of groups.filter(group=>group.box)) {
+        assert.equal(comparisonPercentage(group.box!.count,total),comparisonPercentage(allGroups.find(other=>other.value===group.value)!.box!.count,total));
+      }
+    }
+  }
+  assert.equal(comparisonPercentage(2,all.cubeTotal),'66.7%');
+  assert.equal(comparisonPercentage(1,all.customTotal),'33.3%');
+  assert.equal(comparisonPercentage(1,4),'25%');
+  assert.equal(comparisonPercentage(0,0),'0%');
+});
 
 test('type 7 quartiles interpolate even and odd samples without changing inputs',() => {
   const values = [4,1,3,2];

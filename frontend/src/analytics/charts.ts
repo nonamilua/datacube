@@ -4,6 +4,7 @@ import { histogram, intervalPercentage, timePlot, type statistics } from './stat
 import { solveCountTicks, timeAxis, distributionAxis } from './axes';
 import { formatTime } from '../timer/timer';
 import { t } from '../i18n';
+import { chartScale, symbolDimensions, chartPixelRatio } from './presentation';
 Chart.register(LineController, BarController, LineElement, PointElement, BarElement, LinearScale, CategoryScale, Tooltip, Legend);
 
 export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTMLCanvasElement) {
@@ -15,18 +16,25 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
   let solveTicks: number[] = [];
   let timeTicks: number[] = [];
   let dotsOnly = false;
-  // Canvas symbols preserve each marker's actual size without shortening legend lines.
+  let scale = chartScale();
+  let symbolRatio = chartPixelRatio();
+  // High-resolution sources with explicit logical dimensions avoid blurry or oversized symbols.
   function legendPoint(pointStyle: 'circle' | 'rectRot', radius: number, fill: string, borderWidth: number) {
+    const {logical, backing} = symbolDimensions(8, scale, chartPixelRatio());
     const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 8;
+    canvas.width = canvas.height = backing;
     const context = canvas.getContext('2d')!;
+    context.scale(backing / logical, backing / logical);
     context.fillStyle = context.strokeStyle = fill;
-    context.lineWidth = borderWidth;
-    drawPoint(context, { pointStyle, radius, borderWidth, rotation: 0 }, 4, 4);
-    return canvas;
+    context.lineWidth = borderWidth * scale;
+    drawPoint(context, {pointStyle, radius:radius * scale, borderWidth:borderWidth * scale, rotation:0}, logical / 2, logical / 2);
+    const image = new Image(logical, logical);
+    image.src = canvas.toDataURL();
+    image.onload = () => line.draw();
+    return image;
   }
-  const timeSymbol = legendPoint('circle', 1.2, color('--muted'), 0);
-  const bestSymbol = legendPoint('rectRot', 2, color('--ready'), 2);
+  let timeSymbol: HTMLImageElement;
+  let bestSymbol: HTMLImageElement;
   const line = new Chart<'line', {x: number; y: number | null}[]>(lineCanvas, {
     type: 'line', data: { labels: [], datasets: [
       // DNF values are null: omit them and connect the surrounding valid times.
@@ -36,7 +44,7 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       // Lower drawing order paints best points last, above overlapping time points.
       { label: 'best', data: [], borderColor: color('--ready'), backgroundColor: color('--ready'), borderWidth: 2, pointRadius: 2, pointStyle: 'rectRot', spanGaps: true, order: -1 },
     ] },
-    options: { responsive: true, maintainAspectRatio: false, animation: false,
+    options: { responsive: true, maintainAspectRatio: false, devicePixelRatio: chartPixelRatio(), animation: false,
       interaction: { mode: 'index', intersect: false },
       plugins: { legend: { position: 'bottom', labels: {
         boxWidth: 12, boxHeight: 8, padding: 8, usePointStyle: true,
@@ -63,7 +71,7 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
   let histogramTicks: number[] = [];
   const bars = new Chart<'bar', {x: number; y: number}[]>(histogramCanvas, {
     type: 'bar', data: { labels: [], datasets: [{ label: 'solves', data: [], backgroundColor: color('--accent'), categoryPercentage: 1, barPercentage: 1, borderWidth: 1, borderColor: color('--bs-body-bg') }] },
-    options: { responsive: true, maintainAspectRatio: false, animation: false,
+    options: { responsive: true, maintainAspectRatio: false, devicePixelRatio: chartPixelRatio(), animation: false,
       plugins: {
         legend: { display: false },
         tooltip: { callbacks: {
@@ -90,6 +98,43 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       },
     },
   });
+  function resizePresentation() {
+    scale = chartScale();
+    symbolRatio = chartPixelRatio();
+    timeSymbol = legendPoint('circle', 1.2, color('--muted'), 0);
+    bestSymbol = legendPoint('rectRot', 2, color('--ready'), 2);
+    for (const chart of [line, bars]) {
+      chart.options.devicePixelRatio = symbolRatio;
+      chart.options.font = {size:10 * scale};
+      for (const axis of Object.values(chart.options.scales!)) {
+        axis!.ticks!.font = {size:10 * scale};
+        axis!.ticks!.padding = 3 * scale;
+        axis!.grid!.tickLength = 8 * scale;
+        axis!.grid!.lineWidth = scale;
+      }
+      const tooltip = chart.options.plugins!.tooltip!;
+      tooltip.titleFont = {size:10 * scale}; tooltip.bodyFont = {size:10 * scale};
+      tooltip.padding = 6 * scale; tooltip.boxWidth = tooltip.boxHeight = 10 * scale;
+    }
+    bars.options.scales!.x!.ticks!.font = {size:9 * scale};
+    bars.data.datasets[0].borderWidth = scale;
+    const labels = line.options.plugins!.legend!.labels!;
+    labels.font = {size:10 * scale}; labels.boxWidth = 12 * scale;
+    labels.boxHeight = 8 * scale; labels.padding = 8 * scale;
+    for (const [index,dataset] of line.data.datasets.entries()) {
+      dataset.borderWidth = (index === 0 ? 1 : 2) * scale;
+      dataset.pointRadius = index === 3 ? 2 * scale : index === 0 && dotsOnly ? 1.2 * scale : 0;
+      dataset.pointBorderWidth = index === 0 ? 0 : scale;
+      dataset.pointHitRadius = (index === 0 ? 8 : 1) * scale;
+      dataset.pointHoverRadius = 4 * scale;
+    }
+    line.resize(); bars.resize(); line.update('none'); bars.update('none');
+  }
+  resizePresentation();
+  window.matchMedia('(width > 1400px)').addEventListener('change', resizePresentation);
+  window.addEventListener('resize', () => {
+    if (symbolRatio !== chartPixelRatio()) resizePresentation();
+  });
   return {
     update(stats: ReturnType<typeof statistics>, hideOutliers = false) {
       const plot = timePlot(stats, hideOutliers);
@@ -103,7 +148,7 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       for (const index of [0,3]) {
         line.data.datasets[index].showLine = !dotsOnly;
       }
-      line.data.datasets[0].pointRadius = dotsOnly ? 1.2 : 0;
+      line.data.datasets[0].pointRadius = dotsOnly ? 1.2 * scale : 0;
       // Keep charts light on mobile while statistics always use every solve.
       const stride = Math.max(1, Math.ceil(stats.times.length / 600));
       const indexes = stats.times.map((_, index) => index).filter(index => index % stride === 0 || index === stats.times.length - 1 || stats.bestProgression[index] !== null);
@@ -135,6 +180,6 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       }));
       line.update('none'); bars.update('none');
     },
-    resize() { line.resize(); bars.resize(); },
+    resize() { resizePresentation(); },
   };
 }

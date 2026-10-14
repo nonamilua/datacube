@@ -149,7 +149,14 @@ export function setupDashboard() {
   range.addEventListener('change', () => {
     // A distinct command option lets selecting custom fire change repeatedly on mobile.
     if (range.value === 'custom-picker') range.value = 'custom';
-    if (range.value === 'custom') openDates();
+    if (range.value === 'custom') {
+      if (mobile.matches) openDates();
+      else {
+        start.focus({preventScroll:true});
+        try { start.showPicker?.(); }
+        catch { /* Focus remains the fallback when the browser cannot open the picker. */ }
+      }
+    }
     if (range.value !== 'custom') {
       const hourly = range.value === '2h' || range.value === '4h';
       const dates = presetDates(range.value && !hourly ? Number(range.value) : null);

@@ -28,9 +28,11 @@ export class CubeSelector {
   private model: HTMLOutputElement;
   private list: HTMLElement;
   private warning: HTMLElement;
+  private validation: HTMLElement | null;
 
-  constructor(handle: HTMLInputElement, model: HTMLOutputElement, list: HTMLElement, warning: HTMLElement) {
+  constructor(handle: HTMLInputElement, model: HTMLOutputElement, list: HTMLElement, warning: HTMLElement, validation?: HTMLElement) {
     this.handle = handle; this.model = model; this.list = list; this.warning = warning;
+    this.validation = validation ?? document.getElementById('cube-validation');
     handle.addEventListener('input', () => { this.clear(); this.showSuggestions(); });
     handle.addEventListener('focus', () => this.showSuggestions());
     handle.addEventListener('keydown', event => {
@@ -86,12 +88,12 @@ export class CubeSelector {
   private select(model: CubeModel): void {
     this.modelId = model.id; this.model.value = model.label; this.handle.value = model.aliases[0];
     this.handle.setAttribute('aria-invalid','false');
-    document.getElementById('cube-validation')!.hidden = true;
+    if (this.validation) this.validation.hidden = true;
     this.close(); this.renderWarning(); this.handle.focus({preventScroll:true}); this.close();
   }
   private renderActive(): void {
     Array.from(this.list.children).forEach((child,index) => child.setAttribute('aria-selected',String(index === this.active)));
-    this.handle.setAttribute('aria-activedescendant', `cube-suggestion-${this.active}`);
+    this.handle.setAttribute('aria-activedescendant', `${this.list.id || 'cube'}-suggestion-${this.active}`);
     this.list.children[this.active]?.scrollIntoView({block:'nearest'});
   }
   private showSuggestions(): void {
@@ -100,7 +102,7 @@ export class CubeSelector {
     this.suggestions = suggestModels(this.models,this.handle.value);
     this.list.replaceChildren(...this.suggestions.map((model,index) => {
       const button = document.createElement('button'); button.type = 'button'; button.role = 'option';
-      button.id = `cube-suggestion-${index}`; button.setAttribute('aria-selected','false'); button.textContent = model.label;
+      button.id = `${this.list.id || 'cube'}-suggestion-${index}`; button.setAttribute('aria-selected','false'); button.textContent = model.label;
       button.addEventListener('pointerdown', event => event.preventDefault());
       button.addEventListener('click', () => this.select(model));
       return button;

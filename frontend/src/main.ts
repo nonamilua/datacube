@@ -12,6 +12,7 @@ import { CubeSelector } from './cube-selector';
 import { Scrambles, type ScrambleSnapshot } from './scrambles';
 import { FixedTags } from './fixed-tags';
 import { setupEventIcon } from './event-icon';
+import { setupAccountTools } from './import/interface';
 import { t, setText, setActionLabel, initializeTranslations, setLanguage, currentLanguage, onLanguageChange, settingsKey, languageForAccount, rememberLanguage } from './i18n';
 
 initializeTranslations();
@@ -22,6 +23,7 @@ function element<T extends HTMLElement>(id: string): T {
   return found as T;
 }
 const timer = new SolveTimer();
+const accountTools = setupAccountTools(()=>timer.state === 'IDLE' || timer.state === 'STOPPED');
 const area = element<HTMLButtonElement>('timer-area');
 const value = element('timer-value');
 const hint = element('timer-hint');
@@ -366,6 +368,7 @@ bindControls(timer, area, (solve) => {
   },
 });
 const accounts = setupAccounts(async nextUser => {
+  accountTools.reset();
   user = null;
   fixedTags.configure(null, null, false);
   scrambles.configure(null, '', false);

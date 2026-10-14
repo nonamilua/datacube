@@ -83,6 +83,7 @@
               </div>
             </div>
             <div class="account-settings">
+              <div class="account-file-controls">
               <label class="setting-field" for="language-select">language
                 <select id="language-select">
                   <option value="en">english</option>
@@ -90,9 +91,15 @@
                   <option value="es">spanish</option>
                 </select>
               </label>
+                <button id="open-import" class="outlined-icon icon-button" type="button" aria-label="import" title="import"></button>
+                <button id="export-placeholder" class="outlined-icon icon-button" type="button" aria-label="export" title="export" disabled></button>
+              </div>
               <div class="account-controls">
                 <span id="account-name"></span>
+                <div class="account-actions">
                 <button id="logout" class="nav-button" type="button">sign out</button>
+                  <button id="open-about" class="outlined-icon icon-button" type="button" aria-label="about" title="about"></button>
+                </div>
               </div>
             </div>
           </div>
@@ -298,6 +305,31 @@
       <div class="compare-options"></div>
     </dialog>
     <p id="announcement" class="visually-hidden" role="status" aria-live="polite"></p>
+    <dialog id="about-dialog" class="logout-confirmation about-dialog" aria-labelledby="about-heading" tabindex="-1">
+      <div class="import-heading"><span id="about-heading">about</span></div>
+      <a href="https://github.com/nonamilua" target="_blank" rel="noopener noreferrer">https://github.com/nonamilua</a>
+      <a href="mailto:nardilua@gmail.com">nardilua@gmail.com</a>
+      <p class="about-version"><span>version</span>: beta 0.85</p>
+    </dialog>
+    <dialog id="import-dialog" class="logout-confirmation import-dialog" aria-labelledby="import-heading" tabindex="-1">
+      <div class="import-heading"><span id="import-heading">import</span></div>
+      <div class="import-content">
+        <h2 id="import-step-heading"></h2>
+        <p id="import-filename" class="import-filename" hidden></p>
+        <section id="import-file-step">
+          <label class="setting-field" for="import-file">choose file<input id="import-file" type="file" accept=".txt,.json,text/plain,application/json" /></label>
+          <p class="import-note">comments and scrambles are not imported</p>
+        </section>
+        <section id="import-config-step" hidden>
+          <p class="import-note">assignments apply to every solve in each session</p>
+          <p class="import-note">separate mixed events in cstimer before exporting</p>
+          <div id="import-sessions"></div>
+        </section>
+        <section id="import-review-step" hidden><p id="import-total"></p><div id="import-review"></div><p class="import-note">preview only importing is not available yet</p></section>
+        <p id="import-message" class="validation-message" role="status" hidden></p>
+      </div>
+      <div class="logout-actions import-navigation"><button id="import-back" type="button">back</button><button id="import-next" type="button">next</button><button id="import-final" type="button" disabled hidden>import</button></div>
+    </dialog>
     <dialog id="onboarding-dialog" class="logout-confirmation" aria-labelledby="onboarding-heading" tabindex="-1">
       <p id="onboarding-heading">choose your event and cube in settings</p>
       <div class="logout-actions">
