@@ -4,6 +4,7 @@ import { SolveTimer, formatTime, type Solve } from './timer/timer';
 import { bindControls } from './timer/controls';
 import { ApiError, deleteSolve, updateSolve, loadSolves, pendingSolves, queueSolve, renameQueuedCubes, request, savePendingSolves, type Organization, type StoredSolve, type User } from './api/api';
 import { setupAccounts } from './accounts';
+import { displayUsername } from './account-validation';
 import { icon } from './icons';
 import { setupDashboard } from './analytics/dashboard';
 import { bindShortText, validateShortText } from './text-fields';
@@ -13,6 +14,7 @@ import { Scrambles, type ScrambleSnapshot } from './scrambles';
 import { FixedTags } from './fixed-tags';
 import { setupEventIcon } from './event-icon';
 import { setupAccountTools } from './import/interface';
+import { setupHistory } from './history/interface';
 import { t, setText, setActionLabel, initializeTranslations, setLanguage, currentLanguage, onLanguageChange, settingsKey, languageForAccount, rememberLanguage } from './i18n';
 
 initializeTranslations();
@@ -55,9 +57,32 @@ function closeScramblePopup(): void {
 
 function positionScramblePopup(): void {
   if (scramblePopup.hidden || !scrambleButton?.isConnected) return;
-  const rect = scrambleButton.getBoundingClientRect();
-  scramblePopup.style.left = `${Math.max(16, Math.min(rect.left, innerWidth - scramblePopup.offsetWidth - 16))}px`;
-  scramblePopup.style.top = `${Math.max(16, Math.min(rect.bottom + 8, innerHeight - scramblePopup.offsetHeight - 16))}px`;
+  positionSolvePopup(scramblePopup, scrambleButton);
+}
+
+function positionSolvePopup(popup: HTMLElement, button: HTMLButtonElement): void {
+  const panel = button.closest<HTMLElement>('.history-content');
+  const row = button.closest('li');
+  const list = panel?.querySelector<HTMLElement>('.solve-list');
+  if (panel && row && list) {
+    const bounds = panel.getBoundingClientRect();
+    const listBounds = list.getBoundingClientRect();
+    const top = Math.max(0, panel.querySelector('.history-header')?.getBoundingClientRect().bottom ?? bounds.top + panel.clientTop);
+    const bottom = Math.min(innerHeight, bounds.top + panel.clientTop + panel.clientHeight);
+    popup.style.maxWidth = `${listBounds.width}px`;
+    popup.style.maxHeight = `${Math.max(0, bottom - top)}px`;
+    popup.style.overflowY = 'auto';
+    popup.style.left = `${listBounds.right - popup.offsetWidth}px`;
+    popup.style.top = `${Math.max(top, Math.min(row.getBoundingClientRect().bottom, bottom - popup.offsetHeight))}px`;
+    // These body-level fixed popups stay in place while the history list scrolls.
+    return;
+  }
+  popup.style.removeProperty('max-width');
+  popup.style.removeProperty('max-height');
+  popup.style.removeProperty('overflow-y');
+  const rect = button.getBoundingClientRect();
+  popup.style.left = `${Math.max(16, Math.min(rect.left, innerWidth - popup.offsetWidth - 16))}px`;
+  popup.style.top = `${Math.max(16, Math.min(rect.bottom + 8, innerHeight - popup.offsetHeight - 16))}px`;
 }
 
 async function openScramblePopup(solve: DisplaySolve, button: HTMLButtonElement): Promise<void> {
@@ -75,7 +100,8 @@ const dashboard = setupDashboard();
 type DisplaySolve = Solve & Partial<StoredSolve> & { pending?: boolean };
 const solves: DisplaySolve[] = [];
 let solveCount = 0;
-let syncing = false;
+let syncingAccount: User | null = null;
+let savingSolves = false;
 let deleting = false;
 let editing = false;
 let editorSave: Promise<boolean> | null = null;
@@ -123,9 +149,7 @@ async function openEditor(solve: DisplaySolve, button: HTMLButtonElement): Promi
 
 function positionEditor(): void {
   if (editor.hidden || !editorButton?.isConnected) return;
-  const rect = editorButton.getBoundingClientRect();
-  editor.style.left = `${Math.max(16, Math.min(rect.left, innerWidth - editor.offsetWidth - 16))}px`;
-  editor.style.top = `${Math.max(16, Math.min(rect.bottom + 8, innerHeight - editor.offsetHeight - 16))}px`;
+  positionSolvePopup(editor, editorButton);
 }
 
 function solveActions(solve: DisplaySolve, historyRow = false): HTMLDivElement {
@@ -180,10 +204,13 @@ async function persistEditor(): Promise<boolean> {
     const updated = await updateSolve(solve.id, activeUser.id, penalty, customValue);
     if (user !== activeUser) return false;
     if (customChanged) fixedTags.remember(updated.category_id, updated.custom, tagVersion);
-    Object.assign(solve, updated);
+    Object.assign(solve, updated, {pending:false});
     const row = solves.find(item => item.id === solve.id);
     if (row) Object.assign(row, updated);
     if (lastSolve?.id === solve.id) Object.assign(lastSolve, updated);
+    updateAnalytics();
+    historyView.store.upsert({...updated,pending:false});
+    void historyView.store.refreshLatest();
     element('solve-editor-status').hidden = true;
     setText(element('announcement'), 'solve updated');
     closeEditor();
@@ -214,6 +241,7 @@ bindShortText(cubeName, cubeValidation);
 const cubeSelector = new CubeSelector(cubeName, element<HTMLOutputElement>('cube-model'), element('cube-suggestions'), element('cube-model-warning'));
 const selectedEvent = () => organization.categories.find(item => String(item.id) === eventSelect.value)?.name ?? '';
 let user: User | null = null;
+let accountInitialization = 0;
 let organization: Organization = { categories: [], cubes: [] };
 const eventIcon = setupEventIcon(eventSelect,element('selected-event-icon'),selectedEvent);
 const preferencesKey = () => settingsKey(user!.id);
@@ -235,8 +263,12 @@ element('analysis-tab').append(icon('analysis'));
 element('settings-panel').querySelector('summary')!.append(icon('settings'));
 element('history-panel').querySelector('summary')!.append(icon('history'));
 
+const historyRecords = new WeakMap<HTMLLIElement,DisplaySolve>();
 function solveRow(solve: DisplaySolve): HTMLLIElement {
   const row = document.createElement('li');
+  solve = {...solve};
+  historyRecords.set(row,solve);
+  row.dataset.solveId = solve.id;
   const result = document.createElement('strong');
   result.textContent = solveResult(solve) + (solve.penalty === '+2' ? ' +2' : '');
   const remove = solveActions(solve, true);
@@ -253,6 +285,29 @@ function solveRow(solve: DisplaySolve): HTMLLIElement {
   return row;
 }
 
+function updateHistoryRow(row: HTMLLIElement, updated: StoredSolve): void {
+  const solve = historyRecords.get(row)!;
+  Object.assign(solve,updated,{pending:Boolean((updated as DisplaySolve).pending)});
+  const event = organization.categories.find(item => item.id === solve.category_id)?.name;
+  const cube = (solve as StoredSolve & {cube_name?: string}).cube_name ?? organization.cubes.find(item => item.id === solve.cube_id)?.name;
+  const snapshot = JSON.stringify([solve,event,cube,deleting,editing,currentLanguage()]);
+  if (row.dataset.rendered === snapshot) return;
+  row.dataset.rendered = snapshot;
+  row.querySelector('strong')!.textContent = solveResult(solve) + (solve.penalty === '+2' ? ' +2' : '');
+  let labels = row.querySelector<HTMLElement>('.solve-labels');
+  if (!labels && (event || cube)) { labels = document.createElement('span'); labels.className = 'solve-labels'; row.insertBefore(labels,row.querySelector('.solve-actions')); }
+  if (labels) labels.textContent = [event,cube].filter(Boolean).join(' ');
+  for (const button of Array.from(row.querySelectorAll<HTMLButtonElement>('.solve-action'))) {
+    const scramble = button.getAttribute('aria-controls') === 'scramble-popup';
+    button.disabled = deleting || editing || (!scramble && Boolean(solve.pending));
+    setActionLabel(button,scramble ? 'view scramble' : button.getAttribute('aria-controls') === 'solve-editor' ? 'edit solve' : 'delete solve',` ${solveResult(solve)}`);
+  }
+}
+const historyView = setupHistory(solveRow,updateHistoryRow,async () => {
+  if (!await saveEditor()) return false;
+  closeScramblePopup(); return true;
+});
+
 async function removeSolve(solve: DisplaySolve): Promise<void> {
   if (!solve.id || solve.pending || !user || deleting || editing) return;
   closeEditor();
@@ -267,7 +322,10 @@ async function removeSolve(solve: DisplaySolve): Promise<void> {
     if (user !== activeUser) return;
     const index = solves.findIndex(item => item.id === solve.id);
     if (index !== -1) solves.splice(index, 1);
+    updateAnalytics();
     if (lastSolve?.id === solve.id) { lastSolve = null; timer.reset(); }
+    historyView.store.remove(solve.id);
+    void historyView.store.refreshLatest();
     solveCount = Math.max(0, solveCount - 1);
     storageStatus.hidden = true;
     element('solve-action-status').hidden = true;
@@ -287,22 +345,24 @@ async function removeSolve(solve: DisplaySolve): Promise<void> {
   if (removed) void syncSolves();
 }
 
-function renderSolves(): void {
+function updateAnalytics(): void {
   dashboard.update(solves.filter((solve): solve is StoredSolve => Boolean(solve.id) && !solve.pending), organization);
-  const snapshot = JSON.stringify([lastSolve, solves, solveCount, organization, deleting, editing]);
+}
+
+function renderSolves(): void {
+  historyView.render();
+  const snapshot = JSON.stringify([lastSolve, deleting, editing]);
   if (snapshot === renderedSolves) return;
   renderedSolves = snapshot;
   const actions = element('last-solve-actions');
   actions.replaceChildren(...(lastSolve ? [solveActions(lastSolve)] : []));
-  element('empty-message').hidden = solveCount > 0;
-  element('recent-solves').replaceChildren(...solves.map(solveRow));
 }
 
 async function syncSolves(): Promise<void> {
-  if (syncing || deleting || editing || editorSolve || !scramblePopup.hidden || !user) return;
+  if (!user || syncingAccount === user || deleting || editing || editorSolve || !scramblePopup.hidden) return;
   const activeUser = user;
   const revision = solveRevision;
-  syncing = true;
+  syncingAccount = activeUser;
   renderSolves();
   try {
     if (pendingSolves(activeUser.id).length) {
@@ -312,8 +372,11 @@ async function syncSolves(): Promise<void> {
     // Repeat if another solve was queued while a request was in flight.
     let page;
     do {
+      // Polling is read-only; only pending solve writes need to lock sign out.
+      savingSolves = pendingSolves(activeUser.id).length > 0;
       await savePendingSolves(activeUser.id);
       if (user !== activeUser) return;
+      savingSolves = false;
       page = await loadSolves();
       if (user !== activeUser) return;
     } while (pendingSolves(activeUser.id).length);
@@ -321,8 +384,20 @@ async function syncSolves(): Promise<void> {
     if (user !== activeUser) return;
     // A mutation started during this read; do not restore its stale result.
     if (revision !== solveRevision) return;
+    const organizationChanged = JSON.stringify(organization) !== JSON.stringify(loadedOrganization);
     organization = loadedOrganization;
+    const historyChanged = JSON.stringify(page.items) !== JSON.stringify(solves.filter(solve => !solve.pending));
+    if (historyChanged) {
+      const records = new Map(page.items.map(solve => [solve.id,solve]));
+      for (const known of new Map([...historyView.store.cache,...historyView.store.rows].map(solve => [solve.id,solve])).values()) {
+        const updated = records.get(known.id);
+        if (!updated) historyView.store.remove(known.id);
+        else if (JSON.stringify(updated) !== JSON.stringify(known)) historyView.store.upsert({...updated,pending:false});
+      }
+      if (JSON.stringify(page.items.slice(0,50)) !== JSON.stringify(historyView.store.cache)) void historyView.store.refreshLatest();
+    }
     solves.splice(0, solves.length, ...page.items);
+    if (historyChanged || organizationChanged) updateAnalytics();
     if (lastSolve?.id && !pendingSolves(activeUser.id).some(item => item.id === lastSolve!.id)) {
       lastSolve = page.items.find(item => item.id === lastSolve!.id) ?? { ...lastSolve, pending: false };
     }
@@ -335,7 +410,7 @@ async function syncSolves(): Promise<void> {
     setText(storageStatus, 'connection unavailable');
     if (error instanceof ApiError && (error.status === 401 || error.status === 409)) accounts.requireLogin();
   } finally {
-    syncing = false;
+    if (syncingAccount === activeUser) { syncingAccount = null; savingSolves = false; }
     if (user === activeUser) renderSolves();
   }
 }
@@ -353,6 +428,7 @@ bindControls(timer, area, (solve) => {
     if (!user) throw new Error('sign in required');
     lastSolve = { ...queueSolve(solve, user.id, { ...startedLabels, scramble: startedScramble?.text ?? null }), pending: true };
     solves[0] = lastSolve;
+    historyView.store.upsert(lastSolve as StoredSolve & {pending:true});
     renderSolves();
     void syncSolves();
   } catch {
@@ -368,14 +444,17 @@ bindControls(timer, area, (solve) => {
   },
 });
 const accounts = setupAccounts(async nextUser => {
+  const initialization = ++accountInitialization;
   accountTools.reset();
   user = null;
+  savingSolves = false;
+  historyView.store.setAccount(null);
   fixedTags.configure(null, null, false);
   scrambles.configure(null, '', false);
   startedScramble = null;
   closeScramblePopup();
   dashboard.reset();
-  history.open = false;
+  closeHistory();
   closeEditor();
   lastSolve = null;
   element('solve-action-status').hidden = true;
@@ -397,9 +476,13 @@ const accounts = setupAccounts(async nextUser => {
   hideOutliers.checked = true;
   setLanguage('en'); languageSelect.value = 'en';
   settings.open = false;
-  element('account-name').textContent = nextUser?.username ?? '';
+  const accountName = nextUser?.username ?? '';
+  element('account-name-text').textContent = displayUsername(accountName);
+  element('account-name-full').textContent = accountName;
+  element('account-name').title = accountName;
   if (!nextUser) return;
   const loaded = await request<Organization>('/api/organization');
+  if (initialization !== accountInitialization) return;
   organization = loaded;
   eventSelect.replaceChildren(...loaded.categories.map(event => {
     const option = document.createElement('option');
@@ -408,6 +491,9 @@ const accounts = setupAccounts(async nextUser => {
     return option;
   }));
   user = nextUser;
+  updateAnalytics();
+  historyView.store.setAccount(nextUser.id);
+  const historyReady = historyView.store.refreshLatest();
   try {
     setLanguage(languageForAccount(localStorage,user.id));
     languageSelect.value = currentLanguage();
@@ -443,6 +529,9 @@ const accounts = setupAccounts(async nextUser => {
   configureScrambles();
   configureFixedTags();
   eventIcon.update();
+  await historyReady;
+  if (user !== nextUser) return;
+  for (const pending of pendingSolves(nextUser.id)) historyView.store.upsert({...pending,pending:true});
   void syncSolves();
 });
 
@@ -470,6 +559,11 @@ const timerTab = element<HTMLButtonElement>('timer-tab');
 const analysisTab = element<HTMLButtonElement>('analysis-tab');
 const settings = element<HTMLDetailsElement>('settings-panel');
 const history = element<HTMLDetailsElement>('history-panel');
+function closeHistory(): void {
+  if (!history.open) return;
+  history.open = false;
+  historyView.close();
+}
 function closeSettings(): boolean {
   if (!settings.open) return true;
   cubeSelector.close();
@@ -481,17 +575,22 @@ settings.addEventListener('toggle', () => {
   if (settings.open) {
     closeScramblePopup();
     if (editorSolve) { settings.open = false; void saveEditor().then(saved => { if (saved) settings.open = true; }); }
-    else history.open = false;
+    else closeHistory();
   } else { cubeSelector.close(); savePreferences(); }
 });
+history.querySelector('summary')!.addEventListener('click', () => {
+  // Prepare/reset before the native details toggle can paint a previous day.
+  if (history.open) historyView.close();
+  else if (!editorSolve) historyView.open();
+});
 history.addEventListener('toggle', () => {
-  if (!history.open) closeScramblePopup();
+  if (!history.open) { closeScramblePopup(); historyView.close(); }
   if (history.open) {
     if (!closeSettings()) { history.open = false; return; }
     if (editorSolve) {
       history.open = false;
       void saveEditor().then(saved => { if (saved) history.open = true; });
-    }
+    } else if (!historyView.store.opened) historyView.open();
   }
 });
 const header = document.querySelector<HTMLElement>('.app-header')!;
@@ -503,22 +602,24 @@ window.addEventListener('resize', updateTimerTarget);
 updateTimerTarget();
 document.addEventListener('click', (event) => {
   if (event.target instanceof Node && !settings.contains(event.target)) closeSettings();
-  if (!event.composedPath().includes(history) && !event.composedPath().includes(editor) && !event.composedPath().includes(scramblePopup)) history.open = false;
+  if (!event.composedPath().includes(history) && !event.composedPath().includes(editor) && !event.composedPath().includes(scramblePopup)) closeHistory();
   if (event.target instanceof Node && !scramblePopup.contains(event.target) && !scrambleButton?.contains(event.target)) closeScramblePopup();
   if (event.target instanceof Node && !editor.contains(event.target) && !editorButton?.contains(event.target) && !(event.target instanceof Element && event.target.closest('[aria-controls="scramble-popup"]'))) void saveEditor();
 });
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') {
+    // Let the native picker close before dismissing its settings panel.
+    if (event.target instanceof Element && event.target.closest('.settings-select-control select')?.matches(':open')) return;
     if (!scramblePopup.hidden) { closeScramblePopup(); return; }
     if (editorSolve) void saveEditor();
-    else { history.open = false; closeSettings(); }
+    else { closeHistory(); closeSettings(); }
   }
 });
 window.addEventListener('resize', positionEditor);
 window.addEventListener('resize', positionScramblePopup);
 async function showPanel(analysis: boolean): Promise<void> {
   if (!closeSettings() || !await saveEditor()) return;
-  history.open = false;
+  closeHistory();
   closeScramblePopup();
   timer.cancelPreparation();
   element('timer-panel').hidden = analysis;
@@ -529,6 +630,7 @@ async function showPanel(analysis: boolean): Promise<void> {
   inactive.removeAttribute('aria-current');
   if (analysis) dashboard.show();
   else {
+    dashboard.hide();
     // Panel closing can finish before the next frame enables the timer.
     area.disabled = !user || editing || deleting || !scrambles.canStart;
     if (!area.disabled) area.focus({ preventScroll: true });
@@ -561,7 +663,9 @@ function render(): void {
   hidden.disabled = scramblesEnabled.disabled = fixedTagsEnabled.disabled = hideOutliers.disabled = analysisTab.disabled = eventSelect.disabled = cubeName.disabled = busy || !user;
   languageSelect.disabled = busy || !user;
   replaceScramble.disabled = busy || scrambles.status === 'loading' || !user;
-  element<HTMLButtonElement>('logout').disabled = busy || syncing || deleting || editing;
+  const logout = element<HTMLButtonElement>('logout');
+  const logoutDisabled = busy || savingSolves || deleting || editing;
+  if (logout.disabled !== logoutDisabled) logout.disabled = logoutDisabled;
   const labels = {
     IDLE: 'hold to start',
     HOLDING: 'hold',

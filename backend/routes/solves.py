@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
-from sqlalchemy import func
+from datetime import timezone
+from pydantic import AwareDatetime
+from sqlalchemy import and_, func, or_
 from uuid import UUID
 from sqlmodel import Session, select
 
 from backend.database import get_session
-from backend.models.solve import Solve, SolveCreate, SolvePage, SolveRead, SolveUpdate
+from backend.models.solve import HistoryCursor, HistoryPage, Solve, SolveCreate, SolvePage, SolveRead, SolveUpdate
 from backend.models.account import Category, Cube, User
 from backend.services.auth import current_user
 from backend.services.cube_catalog import catalog_event, find_model
@@ -61,6 +63,34 @@ def list_solves(limit: int = Query(10, ge=1, le=100), offset: int = Query(0, ge=
 def all_solves(user: User = Depends(current_user), session: Session = Depends(get_session)):
     solves = session.exec(select(Solve).where(Solve.user_id == user.id).order_by(Solve.started_at.desc(), Solve.id.desc())).all()
     return SolvePage(items=[SolveRead.model_validate(solve) for solve in solves], total=len(solves))
+
+
+@router.get("/history", response_model=HistoryPage)
+def history_solves(
+    limit: int = Query(50, ge=1, le=50),
+    cursor_started_at: AwareDatetime | None = None,
+    cursor_id: UUID | None = None,
+    started_from: AwareDatetime | None = None,
+    started_before: AwareDatetime | None = None,
+    user: User = Depends(current_user),
+    session: Session = Depends(get_session),
+):
+    if (cursor_started_at is None) != (cursor_id is None):
+        raise HTTPException(422, "invalid history cursor")
+    if started_from and started_before and started_from >= started_before:
+        raise HTTPException(422, "check dates")
+    query = select(Solve).where(Solve.user_id == user.id)
+    if started_from:
+        query = query.where(Solve.started_at >= started_from.astimezone(timezone.utc))
+    if started_before:
+        query = query.where(Solve.started_at < started_before.astimezone(timezone.utc))
+    if cursor_started_at:
+        timestamp = cursor_started_at.astimezone(timezone.utc)
+        query = query.where(or_(Solve.started_at < timestamp, and_(Solve.started_at == timestamp, Solve.id < cursor_id)))
+    records = session.exec(query.order_by(Solve.started_at.desc(), Solve.id.desc()).limit(limit + 1)).all()
+    items = [SolveRead.model_validate(solve) for solve in records[:limit]]
+    cursor = HistoryCursor(started_at=items[-1].started_at, id=items[-1].id) if len(records) > limit else None
+    return HistoryPage(items=items, next_cursor=cursor)
 
 
 @router.delete("/{solve_id}", status_code=204)

@@ -107,6 +107,8 @@ export class CubeSelector {
       button.addEventListener('click', () => this.select(model));
       return button;
     }));
-    this.list.hidden = !this.suggestions.length; this.handle.setAttribute('aria-expanded',String(!this.list.hidden));
+    this.list.hidden = !this.suggestions.length;
+    this.list.scrollTop = 0;
+    this.handle.setAttribute('aria-expanded',String(!this.list.hidden));
   }
 }

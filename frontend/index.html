@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="datacube is a minimal speedcubing timer with solve history and interactive analytics" />
   <meta name="theme-color" content="#0b0d10" />
   <link rel="icon" type="image/svg+xml" href="%BASE_URL%logo-concepts/03-nine-tiles.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,9 +37,20 @@
         <details id="history-panel" class="history-panel">
           <summary class="icon-button" aria-label="history" title="history"></summary>
           <div class="history-content" role="region" aria-label="solve history">
+            <div class="history-header">
+              <button id="history-filter" class="history-filter outlined-icon icon-button" type="button" aria-label="filter history"></button>
+              <span id="history-day-label">all</span>
+              <input id="history-date" class="history-date" type="date" tabindex="-1" aria-label="filter history" />
+              <button id="history-clear" class="history-clear" type="button" aria-label="clear" title="clear" hidden></button>
+            </div>
             <p id="storage-status" class="storage-note" role="status" hidden></p>
             <p id="empty-message" class="empty-message">no solves yet</p>
             <ol id="recent-solves" class="solve-list"></ol>
+            <div id="history-status" class="history-status" role="status" aria-live="polite" hidden>
+              <span id="history-spinner" class="history-spinner" aria-hidden="true" hidden></span>
+              <span id="history-status-text"></span>
+              <button id="history-retry" type="button" hidden>retry</button>
+            </div>
           </div>
         </details>
         <details id="settings-panel" class="settings-panel">
@@ -46,15 +58,15 @@
           <div class="settings-content">
             <label class="setting-field" for="event-select">event
               <span class="settings-event-row">
-                <select id="event-select"></select>
+                <span class="settings-control settings-event-control settings-select-control"><select id="event-select"></select></span>
                 <span id="selected-event-icon" class="selected-event-icon" aria-hidden="true" hidden></span>
               </span>
             </label>
             <div class="cube-handle-field">
               <label class="setting-field" for="cube-name">cube label
-                <input id="cube-name" type="text" maxlength="12" autocomplete="off" role="combobox"
+                <span class="settings-control settings-cube-control"><input id="cube-name" type="text" maxlength="12" autocomplete="off" role="combobox"
                   aria-autocomplete="list" aria-expanded="false" aria-controls="cube-suggestions"
-                  aria-describedby="cube-validation cube-model-warning" />
+                  aria-describedby="cube-validation cube-model-warning" /></span>
               </label>
               <div id="cube-suggestions" class="cube-suggestions" role="listbox" aria-label="cube models" hidden></div>
             </div>
@@ -83,21 +95,29 @@
               </div>
             </div>
             <div class="account-settings">
-              <div class="account-file-controls">
               <label class="setting-field" for="language-select">language
-                <select id="language-select">
+                <span class="settings-control settings-language-control settings-select-control"><select id="language-select">
                   <option value="en">english</option>
                   <option value="pt-BR">portuguese</option>
                   <option value="es">spanish</option>
-                </select>
+                </select></span>
               </label>
-                <button id="open-import" class="outlined-icon icon-button" type="button" aria-label="import" title="import"></button>
-                <button id="export-placeholder" class="outlined-icon icon-button" type="button" aria-label="export" title="export" disabled></button>
+              <div class="setting-field account-tool-field">
+                <span id="account-file-label">file</span>
+                <div class="account-file-controls" role="group" aria-labelledby="account-file-label">
+                  <button id="open-import" class="outlined-icon icon-button" type="button" aria-label="import" title="import"></button>
+                  <button id="export-placeholder" class="outlined-icon icon-button" type="button" aria-label="export" title="export" disabled></button>
+                </div>
               </div>
-              <div class="account-controls">
-                <span id="account-name"></span>
+              <div class="setting-field account-tool-field">
+                <span id="account-controls-label">account</span>
                 <div class="account-actions">
-                <button id="logout" class="nav-button" type="button">sign out</button>
+                  <button id="logout" class="outlined-icon icon-button" type="button">sign out</button>
+                </div>
+              </div>
+              <div class="setting-field account-tool-field">
+                <span>about</span>
+                <div class="account-actions">
                   <button id="open-about" class="outlined-icon icon-button" type="button" aria-label="about" title="about"></button>
                 </div>
               </div>
@@ -309,7 +329,7 @@
       <div class="import-heading"><span id="about-heading">about</span></div>
       <a href="https://github.com/nonamilua" target="_blank" rel="noopener noreferrer">https://github.com/nonamilua</a>
       <a href="mailto:nardilua@gmail.com">nardilua@gmail.com</a>
-      <p class="about-version"><span>version</span>: beta 0.85</p>
+      <p class="about-version"><span>version</span>: beta 0.86</p>
     </dialog>
     <dialog id="import-dialog" class="logout-confirmation import-dialog" aria-labelledby="import-heading" tabindex="-1">
       <div class="import-heading"><span id="import-heading">import</span></div>
@@ -338,8 +358,8 @@
       </div>
       <p id="onboarding-message" class="validation-message" role="alert" hidden></p>
     </dialog>
-    <dialog id="logout-confirmation" class="logout-confirmation" aria-labelledby="logout-heading" tabindex="-1">
-      <p id="logout-heading">sign out</p>
+    <dialog id="logout-confirmation" class="logout-confirmation" aria-labelledby="logout-account" tabindex="-1">
+      <p id="logout-account" class="logout-account"><span>logged in as</span><span id="account-name"><span id="account-name-text" class="account-name-text" aria-hidden="true"></span><span id="account-name-full" class="visually-hidden"></span></span></p>
       <div class="logout-actions">
         <button id="logout-cancel" type="button" autofocus>cancel</button>
         <button id="logout-confirm" type="button">sign out</button>
@@ -347,15 +367,15 @@
       <p id="logout-message" class="validation-message" role="alert" hidden></p>
     </dialog>
     <dialog id="account-dialog" class="account-dialog" aria-labelledby="account-heading">
-      <form id="account-form">
+      <form id="account-form" novalidate>
         <h1 id="account-heading">sign in</h1>
         <label class="setting-field" for="username">username
           <input id="username" name="username" autocomplete="username" minlength="3" maxlength="32"
-            pattern="[a-zA-Z0-9_]+" required />
+            pattern="[a-zA-Z0-9_]+" aria-describedby="account-message" required />
         </label>
         <label class="setting-field" for="password">password
           <input id="password" name="password" type="password" autocomplete="current-password" minlength="8"
-            maxlength="128" required />
+            maxlength="128" aria-describedby="account-message" required />
         </label>
         <p id="account-message" class="storage-note" role="status" hidden></p>
         <button id="account-submit" class="account-button" type="submit">sign in</button>

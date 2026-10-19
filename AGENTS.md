@@ -21,6 +21,7 @@ The app name is `datacube`, displayed as two stacked words; Portuguese uses `dad
 ## Visual Identity and Interface Rules
 
 - Keep the app minimalistic, modern and tech-like. Only retain necessary content and controls.
+- Follow the owner's compact, borderless aesthetic for new panels, modals, buttons and plots. Use palette backgrounds and rounded corners for separation instead of unnecessary outlines or divider lines. Button backgrounds should fit closer to their content while retaining at least 44px interaction targets and visible keyboard focus. History's sticky divider is inset to its content gutters on desktop and spans the full panel width when history fills the mobile screen.
 - Prioritize mobile layouts while keeping desktop equally polished.
 - Use a dark theme exclusively. Do not add a light theme or theme switch.
 - Use Roboto Mono from Google Fonts throughout, with a monospace fallback. The current scramble text on the timer, including localized loading and generation error/retry messages, uses Roboto Mono at weight 400 with normal style, -0.6px letter spacing and -0.7px word spacing. Preserve notation and actual spaces exactly; apply spacing only through CSS. Keep the Shuffle icon smaller than header icons while retaining its 44px interaction target.

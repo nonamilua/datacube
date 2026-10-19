@@ -1,6 +1,6 @@
 import { Chart, BarController, BarElement, LinearScale, CategoryScale, type Plugin } from 'chart.js';
 import type { ComparisonGroup } from './boxplots';
-import { comparisonPercentage } from './boxplots';
+import { comparisonPercentage, boxFullRange } from './boxplots';
 import { comparisonColors } from './compare-colors';
 import { timeAxis } from './axes';
 import { t } from '../i18n';
@@ -15,7 +15,7 @@ document.addEventListener('pointerdown',event => {
   if (activeTooltip && event.target !== activeTooltip.canvas) dismissCompareTooltip();
 });
 
-export function createBoxplotChart(root: HTMLElement) {
+export function createBoxplotChart(root: HTMLElement, isVisible: () => boolean) {
   const scroll = root.querySelector<HTMLElement>('.compare-scroll')!;
   const content = root.querySelector<HTMLElement>('.compare-canvas')!;
   const canvas = content.querySelector('canvas')!;
@@ -112,10 +112,20 @@ export function createBoxplotChart(root: HTMLElement) {
     const count = document.createElement('div'); count.className = 'compare-tooltip-count';
     const marker = document.createElement('span'); marker.className = 'compare-tooltip-marker';
     marker.style.backgroundColor = rowColors[index]; marker.setAttribute('aria-hidden','true');
-    count.append(marker,document.createTextNode(`${t('count')} ${box.count} (${comparisonPercentage(box.count,total)})`));
-    const median = document.createElement('div');
-    median.textContent = `${t('median')} ${(box.median / 1000).toFixed(2)}`;
-    tooltip.replaceChildren(count,median);
+    const row = (label: string, value: string) => {
+      const element = document.createElement('div');
+      const caption = document.createElement('span');
+      caption.className = 'compare-tooltip-label'; caption.textContent = `${t(label)} `;
+      element.append(caption,document.createTextNode(value));
+      return element;
+    };
+    const seconds = (value: number) => (value / 1000).toFixed(2);
+    const range = (low: number, high: number) => `${seconds(low)}–${seconds(high)}`;
+    count.append(marker,row('count',`${box.count} (${comparisonPercentage(box.count,total)})`));
+    const middle = row('middle 50%',range(box.q1,box.q3));
+    middle.className = 'compare-tooltip-details';
+    const [best,worst] = boxFullRange(box);
+    tooltip.replaceChildren(count,row('median',seconds(box.median)),middle,row('best–worst',range(best,worst)));
     tooltip.hidden = false;
     const area = root.getBoundingClientRect(), rect = canvas.getBoundingClientRect(), boxBounds = bounds(index);
     const left = rect.left - area.left + boxBounds.left * rect.width / chart.width;
@@ -140,6 +150,7 @@ export function createBoxplotChart(root: HTMLElement) {
   resizeObserver.observe(scroll);
   function resize() {
     dismissCompareTooltip();
+    if (!isVisible()) return;
     narrow = window.innerWidth < 768;
     scale = chartScale();
     axis.options.devicePixelRatio = chart.options.devicePixelRatio = chartPixelRatio();
@@ -172,6 +183,11 @@ export function createBoxplotChart(root: HTMLElement) {
       resize();
     },
     resize,
-    clear() { dismissCompareTooltip(); groups = []; canvas.setAttribute('aria-label',t(root.id === 'cube-boxplot' ? 'cube comparison' : 'tag comparison')); chart.clear(); },
+    clear() {
+      dismissCompareTooltip(); groups = []; rowColors = []; tickValues = []; total = 0;
+      canvas.setAttribute('aria-label',t(root.id === 'cube-boxplot' ? 'cube comparison' : 'tag comparison'));
+      empty.hidden = false; empty.textContent = t('no solves'); scroll.hidden = axisArea.hidden = true;
+      chart.clear(); axis.clear();
+    },
   };
 }

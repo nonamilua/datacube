@@ -9,6 +9,14 @@ export interface BoxSummary {
 }
 export interface ComparisonGroup { value: string; name: string; box: BoxSummary | null }
 
+export function boxFullRange(box: BoxSummary): [number, number] {
+  // Whiskers exclude outliers; tooltip extremes must include both tails.
+  return box.outliers.reduce<[number, number]>(
+    ([low, high], value) => [Math.min(low, value), Math.max(high, value)],
+    [box.low, box.high],
+  );
+}
+
 export function comparisonPercentage(count: number, total: number): string {
   return `${total ? Number((count / total * 100).toFixed(1)) : 0}%`;
 }

@@ -4,10 +4,11 @@ import { histogram, intervalPercentage, timePlot, type statistics } from './stat
 import { solveCountTicks, timeAxis, distributionAxis } from './axes';
 import { formatTime } from '../timer/timer';
 import { t } from '../i18n';
+import { solveDateTitle } from './solve-tooltip';
 import { chartScale, symbolDimensions, chartPixelRatio } from './presentation';
 Chart.register(LineController, BarController, LineElement, PointElement, BarElement, LinearScale, CategoryScale, Tooltip, Legend);
 
-export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTMLCanvasElement) {
+export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTMLCanvasElement, isVisible: () => boolean) {
   const style = getComputedStyle(document.documentElement);
   const color = (name: string) => style.getPropertyValue(name).trim();
   Chart.defaults.font.family = style.getPropertyValue('--bs-body-font-family').trim();
@@ -16,6 +17,7 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
   let solveTicks: number[] = [];
   let timeTicks: number[] = [];
   let dotsOnly = false;
+  let solveTimestamps: readonly string[] = [];
   let scale = chartScale();
   let symbolRatio = chartPixelRatio();
   // High-resolution sources with explicit logical dimensions avoid blurry or oversized symbols.
@@ -30,7 +32,7 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
     drawPoint(context, {pointStyle, radius:radius * scale, borderWidth:borderWidth * scale, rotation:0}, logical / 2, logical / 2);
     const image = new Image(logical, logical);
     image.src = canvas.toDataURL();
-    image.onload = () => line.draw();
+    image.onload = () => { if (isVisible()) line.draw(); };
     return image;
   }
   let timeSymbol: HTMLImageElement;
@@ -51,8 +53,14 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
         generateLabels: chart => Chart.defaults.plugins.legend.labels.generateLabels(chart).sort((a, b) => a.datasetIndex! - b.datasetIndex!).map(item => ({
           ...item, pointStyle: dotsOnly && item.datasetIndex === 3 ? bestSymbol : dotsOnly && item.datasetIndex === 0 ? timeSymbol : 'line',
         })),
-      } }, tooltip: { callbacks: {
-        label: item => `${item.dataset.label} ${formatTime(Math.round(item.parsed.y! * 1000))}`,
+      } }, tooltip: { titleColor: color('--muted'), callbacks: {
+        title: items => solveDateTitle(items[0]?.parsed.x ?? undefined, solveTimestamps),
+        label: item => formatTime(Math.round(item.parsed.y! * 1000)),
+        labelColor: item => ({
+          backgroundColor: item.dataset.borderColor as string,
+          borderColor: item.dataset.borderColor as string,
+          borderWidth: 0,
+        }),
       } } },
       scales: {
         x: { type: 'linear', min: 1, max: 2, grid: { display: false },
@@ -74,12 +82,12 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
     options: { responsive: true, maintainAspectRatio: false, devicePixelRatio: chartPixelRatio(), animation: false,
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: {
+        tooltip: { displayColors: false, callbacks: {
           title: items => {
-            const index = items[0]?.dataIndex;
-            return index === undefined ? '' : `${histogramBoundaries[index].toFixed(1)} ⊢ ${histogramBoundaries[index + 1].toFixed(1)}`;
+            const count = items[0]?.parsed.y;
+            return count == null ? '' : `${t('count')} ${count} (${intervalPercentage(count, histogramTotal)})`;
           },
-          label: item => intervalPercentage(item.parsed.y!, histogramTotal),
+          label: item => `${histogramBoundaries[item.dataIndex].toFixed(1)} ⊢ ${histogramBoundaries[item.dataIndex + 1].toFixed(1)}`,
         } },
       },
       scales: {
@@ -98,7 +106,8 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       },
     },
   });
-  function resizePresentation() {
+  function resizePresentation(redraw = true) {
+    if (!isVisible()) return;
     scale = chartScale();
     symbolRatio = chartPixelRatio();
     timeSymbol = legendPoint('circle', 1.2, color('--muted'), 0);
@@ -113,7 +122,7 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
         axis!.grid!.lineWidth = scale;
       }
       const tooltip = chart.options.plugins!.tooltip!;
-      tooltip.titleFont = {size:10 * scale}; tooltip.bodyFont = {size:10 * scale};
+      tooltip.titleFont = {size:10 * scale, weight:400}; tooltip.bodyFont = {size:10 * scale, weight:400};
       tooltip.padding = 6 * scale; tooltip.boxWidth = tooltip.boxHeight = 10 * scale;
     }
     bars.options.scales!.x!.ticks!.font = {size:9 * scale};
@@ -128,15 +137,18 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       dataset.pointHitRadius = (index === 0 ? 8 : 1) * scale;
       dataset.pointHoverRadius = 4 * scale;
     }
-    line.resize(); bars.resize(); line.update('none'); bars.update('none');
+    line.resize(); bars.resize();
+    if (redraw) { line.update('none'); bars.update('none'); }
   }
   resizePresentation();
-  window.matchMedia('(width > 1400px)').addEventListener('change', resizePresentation);
+  window.matchMedia('(width > 1400px)').addEventListener('change', () => resizePresentation());
   window.addEventListener('resize', () => {
     if (symbolRatio !== chartPixelRatio()) resizePresentation();
   });
   return {
-    update(stats: ReturnType<typeof statistics>, hideOutliers = false) {
+    update(stats: ReturnType<typeof statistics>, hideOutliers = false, timestamps: readonly string[] = []) {
+      solveTimestamps = timestamps;
+      if (scale !== chartScale() || symbolRatio !== chartPixelRatio()) resizePresentation(false);
       const plot = timePlot(stats, hideOutliers);
       const outliers = document.getElementById('time-outliers')!;
       outliers.hidden = plot.omitted === 0;
@@ -181,5 +193,10 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       line.update('none'); bars.update('none');
     },
     resize() { resizePresentation(); },
+    clear() {
+      solveTimestamps = [];
+      solveTicks = []; timeTicks = []; histogramTicks = []; histogramBoundaries = []; histogramTotal = 0;
+      for (const chart of [line,bars]) { for (const dataset of chart.data.datasets) dataset.data = []; chart.clear(); }
+    },
   };
 }

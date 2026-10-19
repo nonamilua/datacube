@@ -25,7 +25,7 @@ test('selection fills the model and handle editing clears it and stale event req
   const models = [{id:'gan15',brand:'GAN',name:'15 MagLev',label:'GAN 15 MagLev',aliases:['gan 15']}];
   function control() {
     const callbacks: Record<string, (event?: any) => void> = {};
-    return {value:'',hidden:false,disabled:false,dataset:{},children:[] as any[],textContent:'',
+    return {value:'',hidden:false,disabled:false,dataset:{},children:[] as any[],textContent:'',scrollTop:0,
       addEventListener:(event:string,callback:(event?:any)=>void)=>{callbacks[event]=callback;},
       setAttribute:()=>{},removeAttribute:()=>{},focus:()=>callbacks.focus?.(),
       replaceChildren(...children:any[]){this.children=children;}, callbacks};
@@ -38,6 +38,9 @@ test('selection fills the model and handle editing clears it and stale event req
     await selector.configure('3x3');
     handle.value='gan15'; handle.callbacks.input();
     assert.equal(model.value,''); assert.equal(list.children[0].textContent,'GAN 15 MagLev');
+    list.scrollTop=150;
+    handle.callbacks.input();
+    assert.equal(list.scrollTop,0);
     list.children[0].callbacks.click();
     assert.equal(handle.value,'gan 15'); assert.equal(model.value,'GAN 15 MagLev');
     assert.equal(selector.modelId,'gan15'); assert.equal(warning.hidden,true);

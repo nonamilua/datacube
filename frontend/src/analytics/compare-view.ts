@@ -5,7 +5,7 @@ import { createBoxplotChart, dismissCompareTooltip } from './boxplot-chart';
 import { currentLanguage, t } from '../i18n';
 import { reconcileSelection, type CompareSelection } from './compare-selection';
 
-export function setupCompareView(changed: () => void) {
+export function setupCompareView(changed: () => void, isVisible: () => boolean) {
   const panel = document.getElementById('compare-charts')!;
   let selectedCubes: CompareSelection = null, selectedCustom: CompareSelection = null;
   let cubeChart: ReturnType<typeof createBoxplotChart> | null = null;
@@ -83,14 +83,13 @@ export function setupCompareView(changed: () => void) {
   const cube = selectionControl('cube'), custom = selectionControl('custom');
   window.addEventListener('resize',() => { cube.close(); custom.close(); cube.refreshLabel(); custom.refreshLabel(); });
   return {
-    update(solves:StoredSolve[], organization:Organization, filters:Filters, visible:boolean) {
-      const data = comparisonData(solves,organization,filters,selectedCubes,selectedCustom);
+    update(solves:StoredSolve[], organization:Organization, filters:Filters, now = new Date()) {
+      const data = comparisonData(solves,organization,filters,selectedCubes,selectedCustom,now);
       selectedCubes = data.cubeSelection; selectedCustom = data.customSelection;
       cube.update(data.cubes); custom.update(data.custom);
-      if (!visible) return;
       const invalid = Boolean(filters.start && filters.end && filters.start > filters.end);
-      cubeChart ??= createBoxplotChart(document.getElementById('cube-boxplot')!);
-      customChart ??= createBoxplotChart(document.getElementById('custom-boxplot')!);
+      cubeChart ??= createBoxplotChart(document.getElementById('cube-boxplot')!,isVisible);
+      customChart ??= createBoxplotChart(document.getElementById('custom-boxplot')!,isVisible);
       cubeChart.update(data.cubeGroups,invalid,data.cubeTotal); customChart.update(data.customGroups,invalid,data.customTotal);
     },
     show(visible:boolean) {
@@ -103,6 +102,7 @@ export function setupCompareView(changed: () => void) {
       if (!visible) { cube.close(); custom.close(); }
     },
     resize() { cubeChart?.resize(); customChart?.resize(); },
-    reset() { selectedCubes = null; selectedCustom = null; cube.close(); custom.close(); cubeChart?.clear(); customChart?.clear(); this.show(false); },
+    close() { dismissCompareTooltip(); cube.close(); custom.close(); },
+    reset() { selectedCubes = null; selectedCustom = null; cube.close(); custom.close(); cube.update([]); custom.update([]); cubeChart?.clear(); customChart?.clear(); this.show(false); },
   };
 }

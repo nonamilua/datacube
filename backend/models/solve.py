@@ -106,3 +106,13 @@ class SolveRead(SQLModel):
 class SolvePage(SQLModel):
     items: list[SolveRead]
     total: int
+
+
+class HistoryCursor(SQLModel):
+    started_at: datetime
+    id: UUID
+
+
+class HistoryPage(SQLModel):
+    items: list[SolveRead]
+    next_cursor: HistoryCursor | None = None

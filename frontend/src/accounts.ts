@@ -2,6 +2,7 @@ import { ApiError, request, type User } from './api/api';
 import { setText, onLanguageChange } from './i18n';
 import { setupLogoutConfirmation } from './logout-confirmation';
 import { setupOnboarding } from './onboarding';
+import { USERNAME_LIMITS, usernameError, passwordError } from './account-validation';
 
 export function setupAccounts(onChange: (user: User | null) => Promise<void>): { requireLogin: () => void } {
   const dialog = document.getElementById('account-dialog') as HTMLDialogElement;
@@ -18,6 +19,40 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
     if (!response.ok) throw new Error('acknowledgment failed');
   });
   const showMessage = (text: string) => { message.hidden = false; setText(message,text); };
+  let validationMessage = false;
+  function validate(input:HTMLInputElement):string {
+    const error = input === username ? usernameError(input.value,registering) : passwordError(input.value);
+    input.setAttribute('aria-invalid',String(Boolean(error)));
+    return error;
+  }
+  for (const input of [username,password]) {
+    input.addEventListener('blur',()=> {
+      if (!input.value) return;
+      const error = validate(input);
+      if (error) { validationMessage = true; showMessage(error); }
+    });
+    input.addEventListener('input',()=> {
+      const error = validate(input);
+      if (validationMessage) {
+        if (error) showMessage(error);
+        else { message.hidden = true; validationMessage = false; }
+      }
+    });
+    function rejectLongInput(text:string|null) {
+      if (!text) return false;
+      const length = input.value.length - ((input.selectionEnd ?? 0) - (input.selectionStart ?? 0)) + text.length;
+      if (length <= input.maxLength) return false;
+      validationMessage = true;
+      showMessage(input === username ? registering ? 'username must contain 3 to 16 characters' : 'username must contain 3 to 32 characters' : 'password must contain 8 to 128 characters');
+      return true;
+    }
+    input.addEventListener('beforeinput',event=> {
+      if (!event.inputType.startsWith('delete') && rejectLongInput(event.data)) event.preventDefault();
+    });
+    input.addEventListener('paste',event=> {
+      if (rejectLongInput(event.clipboardData?.getData('text/plain') ?? null)) event.preventDefault();
+    });
+  }
   const requireLogin = () => {
     revision++; onboarding.reset();
     void onChange(null);
@@ -30,15 +65,25 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
     setText(submit,label);
     setText(toggle,registering ? 'sign in' : 'create account');
     password.autocomplete = registering ? 'new-password' : 'current-password';
+    username.maxLength = registering ? USERNAME_LIMITS.registration : USERNAME_LIMITS.login;
   };
   onLanguageChange(updateMode);
   toggle.addEventListener('click', () => {
     registering = !registering;
     updateMode();
     message.hidden = true;
+    validationMessage = false;
+    username.removeAttribute('aria-invalid'); password.removeAttribute('aria-invalid');
   });
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    const nameError = validate(username), secretError = validate(password);
+    if (nameError || secretError) {
+      validationMessage = true; showMessage(nameError || secretError);
+      (nameError ? username : password).focus();
+      return;
+    }
+    validationMessage = false;
     submit.disabled = toggle.disabled = true;
     message.hidden = true;
     try {

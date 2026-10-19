@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { boxSummary, comparisonData, comparisonPercentage } from '../src/analytics/boxplots.ts';
+import { boxSummary, boxFullRange, comparisonData, comparisonPercentage } from '../src/analytics/boxplots.ts';
 import { comparisonColors } from '../src/analytics/compare-colors.ts';
 import type { StoredSolve, Organization } from '../src/api/api';
 import type { Filters } from '../src/analytics/filters';
@@ -11,6 +11,14 @@ const filters: Filters = {start:'',end:'',event:'1',cube:'99',custom:'ignored'};
 const solve = (id:number, cube_id:number|null, custom:string|null, other:Partial<StoredSolve> = {}):StoredSolve =>
   ({id:String(id),duration_ms:10000,started_at:'2026-10-10T12:00:00Z',category_id:1,cube_id,custom,penalty:'OK',...other});
 const rows = [solve(1,1,'a'),solve(2,2,'b',{penalty:'+2'}),solve(3,3,'dnf',{penalty:'DNF'}),solve(4,null,'a'),solve(5,1,null)];
+
+test('tooltip full range includes both outlier tails while the middle half retains quartiles', () => {
+  const box = boxSummary([1000,10000,11000,12000,13000,14000,15000,16000,17000,100000,Infinity])!;
+  assert.deepEqual(boxFullRange(box),[1000,100000]);
+  assert.equal(box.q1,11250); assert.equal(box.q3,15750);
+  assert.equal(box.count,10);
+  assert.deepEqual(boxFullRange(boxSummary([21900])!),[21900,21900]);
+});
 
 test('tooltip denominators exclude DNF and missing labels independently and include +2', () => {
   const data = comparisonData([...rows,solve(6,null,'  '),solve(7,null,null,{cube_id:undefined,custom:undefined})],organization,filters,null,null);

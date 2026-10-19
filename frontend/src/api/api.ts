@@ -4,6 +4,17 @@ export interface StoredSolve extends Solve { id: string; penalty: 'OK' | '+2' | 
 export interface SolveLabels { category_id: number | null; cube_name: string | null; cube_model_id?: string | null; scramble?: string | null; custom?: string | null }
 export interface PendingSolve extends StoredSolve { category_id: number | null; cube_name: string | null }
 export interface SolvePage { items: StoredSolve[]; total: number }
+export interface HistoryCursor { started_at: string; id: string }
+export interface HistoryPage { items: StoredSolve[]; next_cursor: HistoryCursor | null }
+
+export async function loadHistory(cursor: HistoryCursor | null, interval: {start: string; end: string} | null, signal: AbortSignal): Promise<HistoryPage> {
+  const query = new URLSearchParams({limit:'50'});
+  if (cursor) { query.set('cursor_started_at',cursor.started_at); query.set('cursor_id',cursor.id); }
+  if (interval) { query.set('started_from',interval.start); query.set('started_before',interval.end); }
+  const response = await fetch(`/api/solves/history?${query}`, {signal:AbortSignal.any([signal,AbortSignal.timeout(10000)])});
+  if (!response.ok) throw new ApiError(response.status,'history unavailable');
+  return response.json() as Promise<HistoryPage>;
+}
 export interface User { id: number; username: string; onboarding_acknowledged: boolean }
 export interface NamedItem { id: number; name: string }
 export interface OwnedCube extends NamedItem { catalog_event?: string | null; catalog_model_id?: string | null }

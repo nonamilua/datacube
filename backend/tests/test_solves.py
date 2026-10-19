@@ -35,6 +35,60 @@ def payload(**changes):
     return {"id": str(uuid4()), "duration_ms": 12345, "started_at": "2026-10-04T12:00:00-03:00", **changes}
 
 
+def test_history_cursor_batches_survive_equal_timestamps_insertions_and_deletions(client):
+    from datetime import datetime, timezone
+    from uuid import UUID
+    from backend.database import engine
+    from backend.models.solve import Solve
+
+    owner = client.get('/api/auth/me').json()['id']
+    with Session(engine) as session:
+        session.add_all([Solve(id=UUID(int=i),user_id=owner,duration_ms=i,started_at=datetime(2026,10,1,tzinfo=timezone.utc)) for i in range(1,128)])
+        session.commit()
+    first = client.get('/api/solves/history').json()
+    assert len(first['items']) == 50
+    assert [item['id'] for item in first['items']] == [str(UUID(int=i)) for i in range(127,77,-1)]
+    # The cursor does not depend on the boundary row continuing to exist.
+    assert client.delete('/api/solves/' + first['items'][-1]['id']).status_code == 204
+    assert client.delete('/api/solves/' + str(UUID(int=60))).status_code == 204
+    assert client.post('/api/solves',json=payload(started_at='2026-10-02T00:00:00Z')).status_code == 201
+    seen = [item['id'] for item in first['items']]
+    cursor = first['next_cursor']
+    sizes = []
+    while cursor:
+        response = client.get('/api/solves/history',params={'cursor_started_at':cursor['started_at'],'cursor_id':cursor['id']})
+        assert response.status_code == 200
+        page = response.json()
+        sizes.append(len(page['items']))
+        seen.extend(item['id'] for item in page['items'])
+        cursor = page['next_cursor']
+    assert sizes == [50,26]
+    assert len(seen) == len(set(seen)) == 126
+    assert set(seen) == {str(UUID(int=i)) for i in range(1,128) if i != 60}
+    assert len(client.get('/api/solves/all').json()['items']) == 126  # Analytics remains complete.
+
+
+def test_history_day_is_half_open_utc_interval_and_owned(client):
+    for timestamp in ['2026-10-04T02:59:59.999Z','2026-10-04T03:00:00Z','2026-10-05T02:59:59.999Z','2026-10-05T03:00:00Z']:
+        assert client.post('/api/solves',json=payload(started_at=timestamp)).status_code == 201
+    params = {'started_from':'2026-10-04T00:00:00-03:00','started_before':'2026-10-05T00:00:00-03:00'}
+    page = client.get('/api/solves/history',params=params).json()
+    assert len(page['items']) == 2
+    assert page['next_cursor'] is None
+    assert client.get('/api/solves/history',params={'started_from':'2028-01-01T00:00:00Z'}).json() == {'items':[],'next_cursor':None}
+    assert client.get('/api/solves/history',params={'cursor_id':str(uuid4())}).status_code == 422
+    assert client.get('/api/solves/history',params={'cursor_started_at':'2026-01-01T00:00:00Z'}).status_code == 422
+    assert client.get('/api/solves/history',params={'started_from':params['started_before'],'started_before':params['started_from']}).status_code == 422
+    assert client.get('/api/solves/history',params={'started_from':'2026-10-04T00:00:00'}).status_code == 422
+    assert client.get('/api/solves/history',params={'limit':51}).status_code == 422
+    # A new session cannot select another account via query parameters.
+    original = client.get('/api/auth/me').json()['id']
+    assert client.post('/api/auth/register',json={'username':'historyother','password':'another password'}).status_code == 201
+    assert client.get('/api/solves/history',params={'user_id':original}).json() == {'items':[],'next_cursor':None}
+    client.post('/api/auth/logout')
+    assert client.get('/api/solves/history').status_code == 401
+
+
 def test_onboarding_persists_across_logins_browsers_and_isolates_accounts(client):
     user = client.get("/api/auth/me").json()
     assert user["onboarding_acknowledged"] is False
