@@ -3,6 +3,29 @@ export type Language = 'en' | 'pt-BR' | 'es';
 // English keys keep interface copy easy to find in the code.
 export const translations: Record<string, readonly [string, string]> = {
   'import':['importar','importar'], 'export':['exportar','exportar'], 'about':['sobre','acerca de'],
+  'export {account} solves?':['exportar os tempos de {account}?','¿exportar los tiempos de {account}?'],
+  'download':['baixar','descargar'], 'export unavailable try again':['falha ao exportar tente novamente','error al exportar intenta de nuevo'],
+  'datacube backup':['backup datacube','respaldo de datacube'],
+  'invalid datacube backup':['backup datacube inválido','respaldo de datacube inválido'],
+  'to add':['para adicionar','por añadir'], 'added':['adicionados','añadidos'],
+  'to skip':['para ignorar','por omitir'],
+  'duplicate IDs will be skipped':['ids duplicados serão ignorados','se omitirán los ids duplicados'],
+  'import solves':['importar tempos','importar tiempos'], 'review import':['revisar importação','revisar importación'],
+  'importing solves':['importando tempos','importando tiempos'], 'import complete':['importação concluída','importación completada'],
+  'imported':['importados','importados'], 'skipped':['ignorados','omitidos'], 'done':['concluir','listo'],
+  'existing solves are kept duplicates are skipped':['tempos existentes são mantidos duplicados são ignorados','se conservan los tiempos existentes y se omiten los duplicados'],
+  'invalid import data':['dados de importação inválidos','datos de importación inválidos'],
+  'import unavailable try again':['falha ao importar tente novamente','error al importar intenta de nuevo'],
+  'warning':['aviso','aviso'],
+  'too many requests try again shortly':['muitas tentativas tente novamente em instantes','demasiados intentos inténtalo de nuevo en unos instantes'],
+  'too many requests try again in 1 second':['muitas tentativas tente novamente em 1 segundo','demasiados intentos inténtalo de nuevo en 1 segundo'],
+  'too many requests try again in {seconds} seconds':['muitas tentativas tente novamente em {seconds} segundos','demasiados intentos inténtalo de nuevo en {seconds} segundos'],
+  'each account can save up to {limit} solves':['cada conta pode salvar até {limit} tempos','cada cuenta puede guardar hasta {limit} tiempos'],
+  'solve limit reached':['limite de tempos atingido','límite de tiempos alcanzado'],
+  'delete saved solves and try the import again':['exclua tempos salvos e tente importar de novo','elimina tiempos guardados e intenta importar de nuevo'],
+  'free space in history to save pending solves automatically':['libere espaço no histórico para salvar os tempos pendentes automaticamente','libera espacio en el historial para guardar automáticamente los tiempos pendientes'],
+  'solve limit reached pending solves will retry when you free space in history':['limite de tempos atingido libere espaço no histórico para salvar os tempos pendentes automaticamente','límite de tiempos alcanzado libera espacio en el historial para guardar automáticamente los tiempos pendientes'],
+  'cube model unavailable':['modelo indisponível','modelo no disponible'],
   'version':['versão','versión'],
   'account':['conta','cuenta'], 'file':['arquivo','archivo'],
   'logged in as':['conectado como','sesión iniciada como'],
@@ -11,12 +34,14 @@ export const translations: Record<string, readonly [string, string]> = {
   'use only letters numbers and underscores':['use apenas letras números e sublinhados','usa solo letras números y guiones bajos'],
   'password must contain 8 to 128 characters':['a senha deve ter de 8 a 128 caracteres','la contraseña debe tener de 8 a 128 caracteres'],
   'close':['fechar','cerrar'], 'back':['voltar','volver'], 'next':['avançar','siguiente'],
-  'choose file':['escolher arquivo','elegir archivo'], 'choose event':['escolher evento','elegir evento'],
+  'choose':['escolher','elegir'], 'choose file':['escolher arquivo','elegir archivo'], 'choose event':['escolher evento','elegir evento'],
   'configure sessions':['configurar sessões','configurar sesiones'], 'review':['revisar','revisar'],
-  'sessions':['sessões','sesiones'],
+  'session':['sessão','sesión'], 'sessions':['sessões','sesiones'],
   'select a session':['selecione uma sessão','selecciona una sesión'],
+  'include in import':['incluir na importação','incluir en la importación'],
+  'excluded from import':['fora da importação','fuera de la importación'],
   'choose an event for each selected session':['escolha um evento para cada sessão selecionada','elige un evento para cada sesión seleccionada'],
-  'comments and scrambles are not imported':['comentários e embaralhamentos não são importados','comentarios y mezclas no se importan'],
+  'cstimer comments and scrambles are not imported':['comentários e embaralhamentos do cstimer não são importados','los comentarios y mezclas de cstimer no se importan'],
   'assignments apply to every solve in each session':['as escolhas valem para todos os tempos da sessão','las opciones se aplican a todos los tiempos de la sesión'],
   'separate mixed events in cstimer before exporting':['separe eventos diferentes no cstimer antes de exportar','separa eventos distintos en cstimer antes de exportar'],
   'preview only importing is not available yet':['apenas prévia a importação ainda não está disponível','solo vista previa la importación aún no está disponible'],
@@ -30,7 +55,7 @@ export const translations: Record<string, readonly [string, string]> = {
 
   'english':['inglês','inglés'], 'portuguese':['português','portugués'], 'spanish':['espanhol','español'],
   'language':['idioma','idioma'], 'navigation':['navegação','navegación'],
-  'model name':['nome do modelo','nombre del modelo'], 'cube label':['nome curto','nombre corto'], 'cube models':['modelos de cubos','modelos de cubos'],
+  'model name':['nome do modelo','nombre del modelo'], 'cube label':['nome curto','nombre corto'], 'cube model':['modelo do cubo','modelo del cubo'], 'cube models':['modelos de cubos','modelos de cubos'],
   'choose a cube model':['selecione um modelo','selecciona un modelo'], 'cube model not recognized':['modelo não reconhecido','modelo no reconocido'],
   'cube models unavailable':['modelos indisponíveis','modelos no disponibles'], 'no cube models for this event':['sem modelos para este evento','sin modelos para este evento'],
   'timer':['cronômetro','cronómetro'], 'analysis':['análise','análisis'], 'analytics':['análise','análisis'],
@@ -43,6 +68,10 @@ export const translations: Record<string, readonly [string, string]> = {
   'hide timer':['ocultar tempo','ocultar tiempo'], 'scrambles':['embaralhamentos','mezclas'],
   'fixed tags':['tags fixas','etiquetas fijas'],
   'hide outliers':['ocultar outliers','ocultar atípicos'],
+  'hide the running timer while solving':['oculta o tempo enquanto resolve o cubo','oculta el tiempo mientras resuelves el cubo'],
+  'generate a scramble before each solve':['gera um embaralhamento antes de cada tentativa','genera una mezcla antes de cada intento'],
+  'reuse the last tag for new solves in the same event':['repete a última tag nos próximos tempos do mesmo evento','reutiliza la última etiqueta en nuevos tiempos del mismo evento'],
+  'hide unusually slow solves only in the times chart':['oculta tempos muito altos apenas no gráfico de tempos','oculta tiempos inusualmente altos solo en el gráfico de tiempos'],
   'overview':['visão geral','resumen'], 'compare':['comparar','comparar'],
   'cubes':['cubos','cubos'], 'selected':['selecionados','seleccionados'], 'selected short':['selec.','selec.'],
   'cube comparison':['comparação de cubos','comparación de cubos'], 'custom comparison':['comparação de tags','comparación de etiquetas'],
@@ -97,6 +126,11 @@ export const translations: Record<string, readonly [string, string]> = {
   'edit rejected refresh and try again':['atualize e tente novamente','actualiza e intenta de nuevo'],
   'check your details':['confira seus dados','revisa tus datos'], 'username unavailable':['usuário indisponível','usuario no disponible'],
   'invalid credentials':['dados inválidos','datos incorrectos'], 'account changed sign in again':['conta alterada entre novamente','cuenta cambiada inicia sesión de nuevo'],
+  'loading security check':['carregando verificação de segurança','cargando verificación de seguridad'],
+  'complete the security check':['conclua a verificação de segurança','completa la verificación de seguridad'],
+  'security check rejected try again':['verificação de segurança recusada tente novamente','verificación de seguridad rechazada inténtalo de nuevo'],
+  'security check expired or already used try again':['verificação de segurança expirada ou já usada tente novamente','verificación de seguridad vencida o ya usada inténtalo de nuevo'],
+  'security check unavailable try again':['verificação de segurança indisponível tente novamente','verificación de seguridad no disponible inténtalo de nuevo'],
 };
 
 let language: Language = 'en';
@@ -114,7 +148,10 @@ export function rememberLanguage(storage: Pick<Storage, 'getItem' | 'setItem'>, 
   storage.setItem(settingsKey(accountId),JSON.stringify({...settings,language:normalizeLanguage(value)}));
 }
 export function t(key: string): string { return language === 'en' ? (key === 'custom range' ? 'custom' : key === 'solve count' ? 'solves' : key) : translations[key]?.[language === 'pt-BR' ? 0 : 1] ?? key; }
-export function onLanguageChange(listener: () => void): void { listeners.add(listener); }
+export function onLanguageChange(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => { listeners.delete(listener); };
+}
 export function setLanguage(value: unknown): void {
   const next = normalizeLanguage(value);
   if (next === language) return;

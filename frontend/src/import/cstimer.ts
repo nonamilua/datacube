@@ -26,13 +26,23 @@ function decode(value:unknown):unknown {
   if (typeof value !== 'string') return value;
   try { return JSON.parse(value); } catch { throw new ImportError('invalid cstimer file'); }
 }
-export function validateImportFile(name:string, size:number):void {
+export function validateImportFilename(name:string):void {
   if (!/\.(txt|json)$/i.test(name)) throw new ImportError('choose a txt or json file');
+}
+export function validateImportFile(name:string, size:number):void {
+  validateImportFilename(name);
   if (size > IMPORT_LIMITS.fileBytes) throw new ImportError('file exceeds 10 mib');
 }
-export function parseCstimer(text:string):ImportSession[] {
+export function decodeImportFile(text:string):unknown {
   if (new TextEncoder().encode(text).byteLength > IMPORT_LIMITS.fileBytes) throw new ImportError('file exceeds 10 mib');
-  const data = decode(text.replace(/^\uFEFF/,''));
+  return decode(text.replace(/^\uFEFF/,''));
+}
+
+export function parseCstimer(text:string):ImportSession[] {
+  return parseCstimerData(decodeImportFile(text));
+}
+
+export function parseCstimerData(data:unknown):ImportSession[] {
   if (!object(data)) throw new ImportError('invalid cstimer file');
   const keys = Object.keys(data).filter(key=>/^session[1-9]\d*$/.test(key));
   if (!keys.length) throw new ImportError('invalid cstimer file');
@@ -56,7 +66,7 @@ export function parseCstimer(text:string):ImportSession[] {
       const [penalty,duration] = record[0];
       const timestamp = record[3];
       if (![0,2000,-1].includes(penalty) || !Number.isSafeInteger(duration) || duration < 0 ||
-          !Number.isSafeInteger(timestamp) || timestamp < 0 || !Number.isFinite(new Date(timestamp * 1000).getTime())) throw new ImportError('invalid solve data');
+          !Number.isSafeInteger(timestamp) || timestamp < 0 || timestamp >= 253402300800 || !Number.isFinite(new Date(timestamp * 1000).getTime())) throw new ImportError('invalid solve data');
       // Extra phases, scramble, comment and extensions never enter the preview.
       return {duration_ms:duration,penalty:penalty === -1 ? 'DNF' : penalty === 2000 ? '+2' : 'OK',started_at:new Date(timestamp * 1000).toISOString()};
     });

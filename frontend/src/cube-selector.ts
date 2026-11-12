@@ -30,7 +30,7 @@ export class CubeSelector {
   private warning: HTMLElement;
   private validation: HTMLElement | null;
 
-  constructor(handle: HTMLInputElement, model: HTMLOutputElement, list: HTMLElement, warning: HTMLElement, validation?: HTMLElement) {
+  constructor(handle: HTMLInputElement, model: HTMLOutputElement, list: HTMLElement, warning: HTMLElement, validation?: HTMLElement, signal?: AbortSignal) {
     this.handle = handle; this.model = model; this.list = list; this.warning = warning;
     this.validation = validation ?? document.getElementById('cube-validation');
     handle.addEventListener('input', () => { this.clear(); this.showSuggestions(); });
@@ -50,8 +50,9 @@ export class CubeSelector {
     });
     document.addEventListener('click', event => {
       if (event.target instanceof Node && event.target !== handle && !list.contains(event.target)) this.close();
-    });
-    onLanguageChange(() => this.renderWarning());
+    }, {signal});
+    const unsubscribe = onLanguageChange(() => this.renderWarning());
+    signal?.addEventListener('abort', () => { this.revision++; unsubscribe(); }, {once:true});
     this.renderWarning();
   }
 

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { pendingSolves, queueSolve, renameQueuedCubes, savePendingSolves } from '../src/api/api.ts';
+import { pendingSolves, queueSolve, renameQueuedCubes, savePendingSolves, SOLVE_LIMIT_REACHED } from '../src/api/api.ts';
 
 test('failed saves survive reload and retry with the same id', async () => {
   const storage = new Map<string, string>();
@@ -21,6 +21,9 @@ test('failed saves survive reload and retry with the same id', async () => {
     await assert.rejects(savePendingSolves(1));
     assert.deepEqual(pendingSolves(1), [queued]);
     assert.deepEqual(pendingSolves(2), []);
+    globalThis.fetch = async () => Response.json({detail:SOLVE_LIMIT_REACHED},{status:422,headers:{'X-Datacube-Solve-Limit':'2'}});
+    await assert.rejects(savePendingSolves(1),{status:422,message:SOLVE_LIMIT_REACHED,solveLimit:'2'});
+    assert.deepEqual(pendingSolves(1), [queued]);
     renameQueuedCubes(1, {'gan 12':'gan12'});
     assert.deepEqual(pendingSolves(1), [{...queued,cube_name:'gan12'}]);
     renameQueuedCubes(1, {'gan12':'gan 12'});

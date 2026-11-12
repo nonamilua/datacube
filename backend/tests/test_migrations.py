@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid import NAMESPACE_URL, uuid4, uuid5
 
 from alembic import command
 from alembic.config import Config
@@ -24,11 +24,13 @@ def test_onboarding_migration_acknowledges_existing_users_and_preserves_data(tmp
         connection.exec_driver_sql("INSERT INTO login_sessions (token_hash,user_id,expires_at) VALUES ('hash',1,'2030-01-01')")
         connection.exec_driver_sql("INSERT INTO solves (id,user_id,cube_id,category_id,duration_ms,started_at,penalty,custom,scramble) VALUES ('existing',1,1,1,12345,'2026-10-04','+2','tag','R U')")
         tables = ['cubes','categories','login_sessions','solves']
-        before = {table:connection.exec_driver_sql(f"SELECT * FROM {table}").fetchall() for table in tables}
+        fields = {table: '*' for table in tables}
+        fields['solves'] = 'id,user_id,cube_id,category_id,duration_ms,started_at,penalty,custom,scramble'
+        before = {table:connection.exec_driver_sql(f"SELECT {fields[table]} FROM {table}").fetchall() for table in tables}
     command.upgrade(config,"head")
     with engine.begin() as connection:
         assert connection.exec_driver_sql("SELECT username,password_hash,created_at,onboarding_acknowledged FROM users WHERE id=1").one() == ('existing','preserved hash','2026-10-04',1)
-        assert before == {table:connection.exec_driver_sql(f"SELECT * FROM {table}").fetchall() for table in tables}
+        assert before == {table:connection.exec_driver_sql(f"SELECT {fields[table]} FROM {table}").fetchall() for table in tables}
         connection.exec_driver_sql("INSERT INTO users (username,password_hash,created_at) VALUES ('new','new hash','2026-10-12')")
         assert connection.exec_driver_sql("SELECT onboarding_acknowledged FROM users WHERE username='new'").scalar() == 0
         assert connection.exec_driver_sql("PRAGMA foreign_key_check").fetchall() == []
@@ -47,6 +49,7 @@ def test_phase_two_data_survives_migration(tmp_path, monkeypatch):
     command.upgrade(config, "head")
     with Session(engine) as session:
         solve = session.get(Solve, solve_id)
+        assert solve.portable_id == solve_id
         assert solve.duration_ms == 12345
         assert solve.user_id is None
         assert solve.cube_id is None
@@ -57,6 +60,24 @@ def test_phase_two_data_survives_migration(tmp_path, monkeypatch):
         session.commit()
         assert user.password_hash.startswith("$argon2id$")
         assert passwords.verify("a secure password", user.password_hash)
+    command.check(config)
+    engine.dispose()
+
+
+def test_existing_deterministic_import_gets_an_independent_portable_id(tmp_path, monkeypatch):
+    engine = create_engine(f"sqlite:///{tmp_path / 'portable.db'}")
+    monkeypatch.setattr("backend.database.engine", engine)
+    config = Config(str(ROOT / "alembic.ini"))
+    command.upgrade(config, "0007")
+    solve_id = uuid5(NAMESPACE_URL, "old import")
+    with engine.begin() as connection:
+        connection.exec_driver_sql("INSERT INTO solves (id, duration_ms, started_at, penalty) VALUES (?, ?, ?, ?)",
+                                   (solve_id.hex, 12345, "2026-10-04 15:00:00.123456", "OK"))
+    command.upgrade(config, "head")
+    with Session(engine) as session:
+        solve = session.get(Solve, solve_id)
+        assert solve.portable_id.version == 4
+        assert solve.started_at.microsecond == 123456
     command.check(config)
     engine.dispose()
 

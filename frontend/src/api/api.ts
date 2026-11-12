@@ -20,12 +20,18 @@ export interface NamedItem { id: number; name: string }
 export interface OwnedCube extends NamedItem { catalog_event?: string | null; catalog_model_id?: string | null }
 export interface Organization { categories: NamedItem[]; cubes: OwnedCube[] }
 const queueKey = (userId: number) => `namicubes pending solves ${userId}`;
+export const SOLVE_LIMIT_REACHED = 'solve limit reached';
 
 export class ApiError extends Error {
   status: number;
-  constructor(status: number, message: string) {
+  solveLimit: string | null;
+  retryAfter: number | null;
+  constructor(status: number, message: string, headers?: Headers) {
     super(message);
     this.status = status;
+    this.solveLimit = headers?.get('X-Datacube-Solve-Limit') ?? null;
+    const delay = Number(headers?.get('Retry-After'));
+    this.retryAfter = Number.isSafeInteger(delay) && delay > 0 ? delay : null;
   }
 }
 
@@ -38,7 +44,7 @@ export async function request<T>(url: string, data?: unknown): Promise<T> {
   });
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    throw new ApiError(response.status, typeof body.detail === 'string' ? body.detail : 'check your details');
+    throw new ApiError(response.status, typeof body.detail === 'string' ? body.detail : 'check your details', response.headers);
   }
   return response.status === 204 ? undefined as T : response.json() as Promise<T>;
 }
@@ -85,7 +91,10 @@ export async function savePendingSolves(userId: number): Promise<void> {
       keepalive: true,
       signal: AbortSignal.timeout(10000),
     });
-    if (!response.ok) throw new ApiError(response.status, 'save failed');
+    if (!response.ok) {
+      const problem = response.status === 422 ? await response.json().catch(() => null) : null;
+      throw new ApiError(response.status, problem?.detail === SOLVE_LIMIT_REACHED ? SOLVE_LIMIT_REACHED : 'save failed', response.headers);
+    }
     localStorage.setItem(queueKey(userId), JSON.stringify(pendingSolves(userId).filter(item => item.id !== solve.id)));
   }
 }

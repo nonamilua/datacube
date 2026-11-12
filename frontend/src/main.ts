@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/main.css';
 import { SolveTimer, formatTime, type Solve } from './timer/timer';
 import { bindControls } from './timer/controls';
-import { ApiError, deleteSolve, updateSolve, loadSolves, pendingSolves, queueSolve, renameQueuedCubes, request, savePendingSolves, type Organization, type StoredSolve, type User } from './api/api';
+import { ApiError, SOLVE_LIMIT_REACHED, deleteSolve, updateSolve, loadSolves, pendingSolves, queueSolve, renameQueuedCubes, request, savePendingSolves, type Organization, type StoredSolve, type User } from './api/api';
 import { setupAccounts } from './accounts';
 import { displayUsername } from './account-validation';
 import { icon } from './icons';
@@ -15,9 +15,11 @@ import { FixedTags } from './fixed-tags';
 import { setupEventIcon } from './event-icon';
 import { setupAccountTools } from './import/interface';
 import { setupHistory } from './history/interface';
+import { setupRateLimitWarning } from './rate-limit-warning';
 import { t, setText, setActionLabel, initializeTranslations, setLanguage, currentLanguage, onLanguageChange, settingsKey, languageForAccount, rememberLanguage } from './i18n';
 
 initializeTranslations();
+setupRateLimitWarning();
 
 function element<T extends HTMLElement>(id: string): T {
   const found = document.getElementById(id);
@@ -25,7 +27,12 @@ function element<T extends HTMLElement>(id: string): T {
   return found as T;
 }
 const timer = new SolveTimer();
-const accountTools = setupAccountTools(()=>timer.state === 'IDLE' || timer.state === 'STOPPED');
+const accountTools = setupAccountTools(()=>Boolean(user) && (timer.state === 'IDLE' || timer.state === 'STOPPED'),()=>user,async accountId => {
+  if (user?.id !== accountId) return;
+  solveRevision++;
+  if (syncingAccount === user) refreshAfterImport = accountId;
+  else await syncSolves();
+});
 const area = element<HTMLButtonElement>('timer-area');
 const value = element('timer-value');
 const hint = element('timer-hint');
@@ -61,13 +68,13 @@ function positionScramblePopup(): void {
 }
 
 function positionSolvePopup(popup: HTMLElement, button: HTMLButtonElement): void {
-  const panel = button.closest<HTMLElement>('.history-content');
+  const panel = button.closest<HTMLElement>('.history-scroll');
   const row = button.closest('li');
   const list = panel?.querySelector<HTMLElement>('.solve-list');
   if (panel && row && list) {
     const bounds = panel.getBoundingClientRect();
     const listBounds = list.getBoundingClientRect();
-    const top = Math.max(0, panel.querySelector('.history-header')?.getBoundingClientRect().bottom ?? bounds.top + panel.clientTop);
+    const top = Math.max(0, bounds.top + panel.clientTop);
     const bottom = Math.min(innerHeight, bounds.top + panel.clientTop + panel.clientHeight);
     popup.style.maxWidth = `${listBounds.width}px`;
     popup.style.maxHeight = `${Math.max(0, bottom - top)}px`;
@@ -98,10 +105,11 @@ async function openScramblePopup(solve: DisplaySolve, button: HTMLButtonElement)
 }
 const dashboard = setupDashboard();
 type DisplaySolve = Solve & Partial<StoredSolve> & { pending?: boolean };
-const solves: DisplaySolve[] = [];
+let solves: DisplaySolve[] = [];
 let solveCount = 0;
 let syncingAccount: User | null = null;
 let savingSolves = false;
+let refreshAfterImport: number | null = null;
 let deleting = false;
 let editing = false;
 let editorSave: Promise<boolean> | null = null;
@@ -137,6 +145,7 @@ async function openEditor(solve: DisplaySolve, button: HTMLButtonElement): Promi
   editorSolve = solve;
   const currentButton = editorAnchor(button, Array.from(document.querySelectorAll<HTMLButtonElement>('.solve-action[aria-controls="solve-editor"]')), solve.id!);
   editorButton = currentButton;
+  editor.dataset.context = currentButton.closest('.history-content') ? 'history' : 'timer';
   currentButton.setAttribute('aria-expanded', 'true');
   plusTwo.checked = solve.penalty === '+2';
   dnf.checked = solve.penalty === 'DNF';
@@ -234,6 +243,9 @@ plusTwo.addEventListener('change', () => { if (plusTwo.checked) dnf.checked = fa
 dnf.addEventListener('change', () => { if (dnf.checked) plusTwo.checked = false; });
 custom.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); void saveEditor(); } });
 const storageStatus = element('storage-status');
+const solveActionStatus = element('solve-action-status');
+const pendingQuotaMessage = 'solve limit reached pending solves will retry when you free space in history';
+let quotaWarningShown = false;
 const eventSelect = element<HTMLSelectElement>('event-select');
 const cubeName = element<HTMLInputElement>('cube-name');
 const cubeValidation = element('cube-validation');
@@ -364,8 +376,10 @@ async function syncSolves(): Promise<void> {
   const revision = solveRevision;
   syncingAccount = activeUser;
   renderSolves();
+  let quotaBlocked = false;
+  let quotaLimit:string|null = null;
   try {
-    if (pendingSolves(activeUser.id).length) {
+    if (pendingSolves(activeUser.id).length && (storageStatus.hidden || storageStatus.dataset.i18n !== pendingQuotaMessage)) {
       storageStatus.hidden = false;
       setText(storageStatus, 'saving');
     }
@@ -374,44 +388,68 @@ async function syncSolves(): Promise<void> {
     do {
       // Polling is read-only; only pending solve writes need to lock sign out.
       savingSolves = pendingSolves(activeUser.id).length > 0;
-      await savePendingSolves(activeUser.id);
+      try {
+        await savePendingSolves(activeUser.id);
+      } catch (error) {
+        if (!(error instanceof ApiError && error.status === 422 && error.message === SOLVE_LIMIT_REACHED)) throw error;
+        quotaBlocked = true;
+        quotaLimit = error.solveLimit;
+      }
       if (user !== activeUser) return;
       savingSolves = false;
+      if (quotaBlocked) {
+        for (const status of [storageStatus, solveActionStatus]) {
+          if (status.dataset.i18n !== pendingQuotaMessage) setText(status, pendingQuotaMessage);
+          status.hidden = false;
+        }
+        if (!quotaWarningShown) quotaWarningShown = accountTools.showTimerQuota(quotaLimit);
+      } else {
+        quotaWarningShown = false;
+        if (solveActionStatus.dataset.i18n === pendingQuotaMessage) solveActionStatus.hidden = true;
+      }
       page = await loadSolves();
       if (user !== activeUser) return;
-    } while (pendingSolves(activeUser.id).length);
+    } while (!quotaBlocked && pendingSolves(activeUser.id).length);
     const loadedOrganization = await request<Organization>('/api/organization');
     if (user !== activeUser) return;
     // A mutation started during this read; do not restore its stale result.
     if (revision !== solveRevision) return;
     const organizationChanged = JSON.stringify(organization) !== JSON.stringify(loadedOrganization);
     organization = loadedOrganization;
+    const queued = pendingSolves(activeUser.id);
+    const queuedIds = new Set(queued.map(item => item.id));
     const historyChanged = JSON.stringify(page.items) !== JSON.stringify(solves.filter(solve => !solve.pending));
     if (historyChanged) {
       const records = new Map(page.items.map(solve => [solve.id,solve]));
       for (const known of new Map([...historyView.store.cache,...historyView.store.rows].map(solve => [solve.id,solve])).values()) {
         const updated = records.get(known.id);
-        if (!updated) historyView.store.remove(known.id);
-        else if (JSON.stringify(updated) !== JSON.stringify(known)) historyView.store.upsert({...updated,pending:false});
+        if (!updated && !queuedIds.has(known.id)) historyView.store.remove(known.id);
+        else if (updated && JSON.stringify(updated) !== JSON.stringify(known)) historyView.store.upsert({...updated,pending:false});
       }
       if (JSON.stringify(page.items.slice(0,50)) !== JSON.stringify(historyView.store.cache)) void historyView.store.refreshLatest();
     }
-    solves.splice(0, solves.length, ...page.items);
+    solves = [...page.items, ...queued.map(solve => ({ ...solve, pending: true }))];
     if (historyChanged || organizationChanged) updateAnalytics();
-    if (lastSolve?.id && !pendingSolves(activeUser.id).some(item => item.id === lastSolve!.id)) {
+    if (lastSolve?.id && !queuedIds.has(lastSolve.id)) {
       lastSolve = page.items.find(item => item.id === lastSolve!.id) ?? { ...lastSolve, pending: false };
     }
     solveCount = page.total;
     renderSolves();
-    storageStatus.hidden = true;
+    storageStatus.hidden = !quotaBlocked;
   } catch (error) {
     if (user !== activeUser) return;
-    storageStatus.hidden = false;
-    setText(storageStatus, 'connection unavailable');
+    if (!quotaBlocked) {
+      storageStatus.hidden = false;
+      setText(storageStatus, 'connection unavailable');
+    }
     if (error instanceof ApiError && (error.status === 401 || error.status === 409)) accounts.requireLogin();
   } finally {
     if (syncingAccount === activeUser) { syncingAccount = null; savingSolves = false; }
     if (user === activeUser) renderSolves();
+    if (user === activeUser && refreshAfterImport === activeUser.id) {
+      refreshAfterImport = null;
+      void syncSolves();
+    }
   }
 }
 
@@ -446,8 +484,10 @@ bindControls(timer, area, (solve) => {
 const accounts = setupAccounts(async nextUser => {
   const initialization = ++accountInitialization;
   accountTools.reset();
+  refreshAfterImport = null;
   user = null;
   savingSolves = false;
+  quotaWarningShown = false;
   historyView.store.setAccount(null);
   fixedTags.configure(null, null, false);
   scrambles.configure(null, '', false);
@@ -457,6 +497,7 @@ const accounts = setupAccounts(async nextUser => {
   closeHistory();
   closeEditor();
   lastSolve = null;
+  storageStatus.hidden = true;
   element('solve-action-status').hidden = true;
   timer.reset();
   value.getAnimations().forEach(animation => animation.cancel());
@@ -664,7 +705,7 @@ function render(): void {
   languageSelect.disabled = busy || !user;
   replaceScramble.disabled = busy || scrambles.status === 'loading' || !user;
   const logout = element<HTMLButtonElement>('logout');
-  const logoutDisabled = busy || savingSolves || deleting || editing;
+  const logoutDisabled = busy || savingSolves || deleting || editing || accountTools.busy;
   if (logout.disabled !== logoutDisabled) logout.disabled = logoutDisabled;
   const labels = {
     IDLE: 'hold to start',

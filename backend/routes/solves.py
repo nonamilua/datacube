@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from datetime import timezone
 from pydantic import AwareDatetime
 from sqlalchemy import and_, func, or_
+from sqlalchemy.exc import OperationalError
 from uuid import UUID
 from sqlmodel import Session, select
 
@@ -11,6 +12,7 @@ from backend.models.account import Category, Cube, User
 from backend.services.auth import current_user
 from backend.services.cube_catalog import catalog_event, find_model
 from backend.services.owned_cubes import resolve_cube
+from backend.services.solve_quota import lock_solve_additions, require_solve_capacity
 
 router = APIRouter(prefix="/api/solves", tags=["solves"])
 
@@ -20,10 +22,19 @@ def save_solve(data: SolveCreate, request: Request, response: Response, user: Us
     # This is only a stale-account guard; ownership always comes from the session.
     if request.headers.get("x-namicubes-account") != str(user.id):
         raise HTTPException(409, "account changed sign in again")
+    try:
+        lock_solve_additions(session, user.id)
+        return save_owned_solve(data, response, user.id, session)
+    except OperationalError:
+        session.rollback()
+        raise HTTPException(503, "save unavailable") from None
+
+
+def save_owned_solve(data: SolveCreate, response: Response, user_id: int, session: Session) -> SolveRead:
     category = None
     if data.category_id is not None:
         category = session.get(Category, data.category_id)
-        if not category or category.user_id != user.id:
+        if not category or category.user_id != user_id:
             raise HTTPException(404, "event unavailable")
     cube_name = (data.cube_name or "").strip().lower()
     model_event = None
@@ -32,8 +43,10 @@ def save_solve(data: SolveCreate, request: Request, response: Response, user: Us
             raise HTTPException(422, "cube model unavailable")
         model_event = catalog_event(category.name)
     existing = session.get(Solve, data.id)
+    if not existing:
+        existing = session.exec(select(Solve).where(Solve.user_id == user_id, Solve.portable_id == data.id)).first()
     if existing:
-        if existing.user_id != user.id:
+        if existing.user_id != user_id:
             raise HTTPException(409, "solve id already used")
         cube = session.get(Cube, existing.cube_id) if existing.cube_id else None
         saved = SolveRead.model_validate(existing)
@@ -44,8 +57,9 @@ def save_solve(data: SolveCreate, request: Request, response: Response, user: Us
             raise HTTPException(409, "solve id already used")
         response.status_code = 200
         return saved
-    cube = resolve_cube(session,user.id,cube_name,model_event,data.cube_model_id) if cube_name else None
-    solve = Solve(id=data.id, duration_ms=data.duration_ms, started_at=data.started_at, penalty=data.penalty, user_id=user.id, category_id=data.category_id, cube_id=cube.id if cube else None, scramble=data.scramble, custom=data.custom)
+    require_solve_capacity(session, user_id, 1)
+    cube = resolve_cube(session,user_id,cube_name,model_event,data.cube_model_id) if cube_name else None
+    solve = Solve(id=data.id, portable_id=data.id, duration_ms=data.duration_ms, started_at=data.started_at, penalty=data.penalty, user_id=user_id, category_id=data.category_id, cube_id=cube.id if cube else None, scramble=data.scramble, custom=data.custom)
     session.add(solve)
     session.commit()
     session.refresh(solve)

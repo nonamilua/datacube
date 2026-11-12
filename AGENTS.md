@@ -21,7 +21,7 @@ The app name is `datacube`, displayed as two stacked words; Portuguese uses `dad
 ## Visual Identity and Interface Rules
 
 - Keep the app minimalistic, modern and tech-like. Only retain necessary content and controls.
-- Follow the owner's compact, borderless aesthetic for new panels, modals, buttons and plots. Use palette backgrounds and rounded corners for separation instead of unnecessary outlines or divider lines. Button backgrounds should fit closer to their content while retaining at least 44px interaction targets and visible keyboard focus. History's sticky divider is inset to its content gutters on desktop and spans the full panel width when history fills the mobile screen.
+- Follow the owner's compact, borderless aesthetic for new panels, modals, buttons and plots. Use palette backgrounds and rounded corners for separation instead of unnecessary outlines or divider lines. Button backgrounds should fit closer to their content while retaining at least 44px interaction targets and visible keyboard focus. History's fixed filter header sits above the scrolling list; its divider is inset to the content gutters on desktop and spans the full panel width when history fills the mobile screen.
 - Prioritize mobile layouts while keeping desktop equally polished.
 - Use a dark theme exclusively. Do not add a light theme or theme switch.
 - Use Roboto Mono from Google Fonts throughout, with a monospace fallback. The current scramble text on the timer, including localized loading and generation error/retry messages, uses Roboto Mono at weight 400 with normal style, -0.6px letter spacing and -0.7px word spacing. Preserve notation and actual spaces exactly; apply spacing only through CSS. Keep the Shuffle icon smaller than header icons while retaining its 44px interaction target.
@@ -646,7 +646,7 @@ The project owner intends to learn from and manually edit this codebase, not mer
 ## Development, Validation and Git
 
 - Follow `README.md` for virtual environment setup, dependency installation, migrations and server commands. Do not install globally when the project environment suffices.
-- Run the backend from the repository root using `.venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload` on Windows.
+- Run the backend from the repository root using `.venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload --no-proxy-headers` on Windows. Datacube resolves proxy headers itself against `DATACUBE_TRUSTED_PROXIES`.
 - Run `npm run dev` in `frontend` for localhost, or `npm run dev:lan` for phone testing on the same network. Vite proxies `/api` to the local backend; do not expose FastAPI separately just to support mobile.
 - Discover the current LAN URL from Vite rather than hard-coding the PC's address. Windows Firewall has been configured to allow Node.js on private networks within the local subnet; do not broaden that rule unnecessarily.
 - Keep the PC and both servers running for phone access. Sign into the same account on PC and phone to share saved solves.
@@ -666,6 +666,18 @@ Local development project path on Windows:
 `C:\dev\cubeapp`
 
 This path is informational only. Code should use relative paths inside the repository rather than hard-coded absolute paths.
+
+## csTimer import
+
+Settings import is functional. Parse csTimer txt/json backups locally, configure one event and optional cube/tag per selected session, review, then save through authenticated `POST /api/solves/import`. Independently validate the 10 MiB and 50,000-record limits, event whitelist, catalog references, raw integer milliseconds, penalties and UTC timestamps on the backend. Commit the entire request atomically; reject untrusted ownership/solve IDs and discard comments/scrambles. There are no stored solve-grouping sessions or new schema requirements.
+
+Skip matching occurrences of existing owned event/timestamp/raw-duration records without overwriting their annotations. Preserve repeated identical source records by occurrence count. Stable account-scoped import UUIDs and transaction rollback make retries and concurrent submissions safe. Explicit catalog selections reuse the user's existing model association, preferring the supplied label and then the oldest association, so imports do not add duplicate dashboard cube choices. Retain the existing compatible legacy-cube reconciliation and never infer catalog identity from an unknown handle.
+
+Use one fixed localized heading per import step, compact borderless controls with full touch targets, mouse-only accent text hover, small asterisk notes, and internally scrolling content with space beside its scrollbar. Show filenames only during file selection and keep the native file input visually hidden behind a localized button. Preserve settings behind the modal, focus containment and restoration. Prevent dismissal and duplicate submission during saving; failures retain configuration for retry. Account resets abort and invalidate pending requests. Refresh history/analytics through existing synchronization after confirmation without resetting filters.
+
+## Native backup and restore
+
+Settings export uses a confirmation styled like sign-out, then downloads the authenticated account's complete versioned `datacube` JSON backup. Keep portable solve IDs separate from local row IDs on restore. Migration 0008 backfills portable IDs and adds a unique per-account index. Back up the local database before migrating. A native restore uses file-local event and cube references, preserves exact stored timestamps, raw durations, penalties, tags, scrambles and cube/catalog values, and bypasses session configuration. Validate the original JSON bytes and all references before preview and again before writing atomically. Add missing portable IDs only. Skip all existing IDs, report added and skipped counts and leave existing rows and their associations untouched. Use one file for native backups, including above 10 MiB. Keep csTimer's limits, assignment flow and distinct overlap rules separate. Use synthetic data or an isolated database for browser testing.
 
 ## Cube catalog integration
 

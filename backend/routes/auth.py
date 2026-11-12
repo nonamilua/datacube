@@ -6,6 +6,7 @@ from sqlmodel import Session, select
 from backend.database import get_session
 from backend.models.account import Category, EVENTS, LoginSession, User
 from backend.services.auth import COOKIE, create_session, current_user, dummy_hash, passwords, token_hash
+from backend.services.turnstile import claim_registration_challenge, turnstile_settings, verify_registration
 
 router = APIRouter(prefix="/api/auth", tags=["accounts"])
 
@@ -27,9 +28,23 @@ class UserRead(BaseModel):
     onboarding_acknowledged: bool
 
 
+class Registration(Credentials):
+    turnstile_token: str | None = None
+
+
+@router.get("/turnstile")
+def registration_challenge(request: Request, response: Response):
+    settings = turnstile_settings(request)
+    response.headers["Cache-Control"] = "no-store"
+    return {"sitekey": settings.sitekey if settings else None}
+
+
 @router.post("/register", response_model=UserRead, status_code=201)
-def register(data: Credentials, request: Request, response: Response, session: Session = Depends(get_session)):
+def register(data: Registration, request: Request, response: Response, session: Session = Depends(get_session)):
+    proof = verify_registration(request, data.turnstile_token)
     user = User(username=data.username, password_hash=passwords.hash(data.password))
+    if proof is not None:
+        claim_registration_challenge(session, proof)
     session.add(user)
     try:
         session.flush()

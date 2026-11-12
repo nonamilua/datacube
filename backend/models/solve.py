@@ -1,9 +1,9 @@
 from datetime import datetime, timezone
 from typing import Literal
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from pydantic import AwareDatetime, ConfigDict, StrictInt, field_validator
-from sqlalchemy import CheckConstraint, Column, DateTime, Text
+from sqlalchemy import CheckConstraint, Column, DateTime, Index, Text
 from sqlmodel import Field, SQLModel
 
 
@@ -74,8 +74,10 @@ class Solve(SQLModel, table=True):
         CheckConstraint("penalty IN ('OK', '+2', 'DNF')", name="ck_solve_penalty"),
         CheckConstraint("custom IS NULL OR length(custom) <= 12", name="ck_solve_custom_length"),
         CheckConstraint("scramble IS NULL OR length(scramble) <= 4096", name="ck_solve_scramble_length"),
+        Index("uq_solves_user_portable", "user_id", "portable_id", unique=True),
     )
     id: UUID = Field(primary_key=True)
+    portable_id: UUID = Field(default_factory=uuid4)
     duration_ms: int
     started_at: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False, index=True))
     penalty: str = "OK"

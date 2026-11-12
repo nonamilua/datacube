@@ -43,53 +43,54 @@
               <input id="history-date" class="history-date" type="date" tabindex="-1" aria-label="filter history" />
               <button id="history-clear" class="history-clear" type="button" aria-label="clear" title="clear" hidden></button>
             </div>
-            <p id="storage-status" class="storage-note" role="status" hidden></p>
-            <p id="empty-message" class="empty-message">no solves yet</p>
-            <ol id="recent-solves" class="solve-list"></ol>
-            <div id="history-status" class="history-status" role="status" aria-live="polite" hidden>
-              <span id="history-spinner" class="history-spinner" aria-hidden="true" hidden></span>
-              <span id="history-status-text"></span>
-              <button id="history-retry" type="button" hidden>retry</button>
+            <div class="history-scroll" tabindex="0">
+              <p id="storage-status" class="storage-note" role="status" hidden></p>
+              <p id="empty-message" class="empty-message">no solves yet</p>
+              <ol id="recent-solves" class="solve-list"></ol>
+              <div id="history-status" class="history-status" role="status" aria-live="polite" hidden>
+                <span id="history-spinner" class="history-spinner" aria-hidden="true" hidden></span>
+                <span id="history-status-text"></span>
+                <button id="history-retry" type="button" hidden>retry</button>
+              </div>
             </div>
           </div>
         </details>
         <details id="settings-panel" class="settings-panel">
           <summary class="icon-button" aria-label="settings" title="settings"></summary>
           <div class="settings-content">
+            <span id="selected-event-icon" class="selected-event-icon" aria-hidden="true" hidden></span>
             <label class="setting-field" for="event-select">event
               <span class="settings-event-row">
                 <span class="settings-control settings-event-control settings-select-control"><select id="event-select"></select></span>
-                <span id="selected-event-icon" class="selected-event-icon" aria-hidden="true" hidden></span>
               </span>
             </label>
             <div class="cube-handle-field">
-              <label class="setting-field" for="cube-name">cube label
+              <label class="setting-field" for="cube-name">cube model
                 <span class="settings-control settings-cube-control"><input id="cube-name" type="text" maxlength="12" autocomplete="off" role="combobox"
                   aria-autocomplete="list" aria-expanded="false" aria-controls="cube-suggestions"
                   aria-describedby="cube-validation cube-model-warning" /></span>
               </label>
               <div id="cube-suggestions" class="cube-suggestions" role="listbox" aria-label="cube models" hidden></div>
             </div>
-            <label class="setting-field cube-model-field" for="cube-model"><span class="model-name-label">model
-                name</span>
+            <div class="setting-field cube-model-field">
               <output id="cube-model"></output>
               <span id="cube-model-warning" role="status"></span>
-            </label>
+            </div>
             <p id="cube-validation" class="validation-message" role="status" hidden></p>
             <div class="settings-switches">
-              <div class="form-check form-switch">
+              <div class="form-check form-switch" title="hide the running timer while solving">
                 <input id="hidden-time" class="form-check-input" type="checkbox" role="switch" />
                 <label class="form-check-label" for="hidden-time">hide timer</label>
               </div>
-              <div class="form-check form-switch">
+              <div class="form-check form-switch" title="generate a scramble before each solve">
                 <input id="scrambles-enabled" class="form-check-input" type="checkbox" role="switch" />
                 <label class="form-check-label" for="scrambles-enabled">scrambles</label>
               </div>
-              <div class="form-check form-switch fixed-tags-switch">
+              <div class="form-check form-switch fixed-tags-switch" title="reuse the last tag for new solves in the same event">
                 <input id="fixed-tags" class="form-check-input" type="checkbox" role="switch" />
                 <label class="form-check-label" for="fixed-tags">fixed tags</label>
               </div>
-              <div class="form-check form-switch outliers-switch">
+              <div class="form-check form-switch outliers-switch" title="hide unusually slow solves only in the times chart">
                 <input id="hide-outliers" class="form-check-input" type="checkbox" role="switch" checked />
                 <label class="form-check-label" for="hide-outliers">hide outliers</label>
               </div>
@@ -106,7 +107,7 @@
                 <span id="account-file-label">file</span>
                 <div class="account-file-controls" role="group" aria-labelledby="account-file-label">
                   <button id="open-import" class="outlined-icon icon-button" type="button" aria-label="import" title="import"></button>
-                  <button id="export-placeholder" class="outlined-icon icon-button" type="button" aria-label="export" title="export" disabled></button>
+                  <button id="open-export" class="outlined-icon icon-button" type="button" aria-label="export" title="export"></button>
                 </div>
               </div>
               <div class="setting-field account-tool-field">
@@ -158,7 +159,7 @@
         </div>
       </div>
       <label class="setting-field" for="solve-custom">custom tag
-        <input id="solve-custom" type="text" maxlength="12" autocomplete="off" aria-describedby="custom-validation" />
+        <span class="edit-tag-control"><input id="solve-custom" type="text" maxlength="12" autocomplete="off" aria-describedby="custom-validation" /></span>
       </label>
       <p id="custom-validation" class="validation-message" role="status" hidden></p>
       <p id="solve-editor-status" class="storage-note" role="status" hidden></p>
@@ -329,26 +330,49 @@
       <div class="import-heading"><span id="about-heading">about</span></div>
       <a href="https://github.com/nonamilua" target="_blank" rel="noopener noreferrer">https://github.com/nonamilua</a>
       <a href="mailto:nardilua@gmail.com">nardilua@gmail.com</a>
-      <p class="about-version"><span>version</span>: beta 0.86</p>
+      <p class="about-version"><span>version</span>: beta 0.88</p>
     </dialog>
     <dialog id="import-dialog" class="logout-confirmation import-dialog" aria-labelledby="import-heading" tabindex="-1">
-      <div class="import-heading"><span id="import-heading">import</span></div>
+      <div class="import-heading"><span id="import-heading" role="heading" aria-level="2">import solves</span></div>
       <div class="import-content">
-        <h2 id="import-step-heading"></h2>
-        <p id="import-filename" class="import-filename" hidden></p>
         <section id="import-file-step">
-          <label class="setting-field" for="import-file">choose file<input id="import-file" type="file" accept=".txt,.json,text/plain,application/json" /></label>
-          <p class="import-note">comments and scrambles are not imported</p>
+          <button id="import-choose-file" class="import-file-button" type="button" aria-controls="import-file" aria-label="choose file" title="choose file"></button>
+          <input id="import-file" class="visually-hidden" tabindex="-1" aria-label="choose file" type="file" accept=".txt,.json,text/plain,application/json" />
+          <p id="import-filename" class="import-filename" hidden></p>
+          <p class="import-note">cstimer comments and scrambles are not imported</p>
         </section>
         <section id="import-config-step" hidden>
           <p class="import-note">assignments apply to every solve in each session</p>
           <p class="import-note">separate mixed events in cstimer before exporting</p>
           <div id="import-sessions"></div>
         </section>
-        <section id="import-review-step" hidden><p id="import-total"></p><div id="import-review"></div><p class="import-note">preview only importing is not available yet</p></section>
-        <p id="import-message" class="validation-message" role="status" hidden></p>
+        <section id="import-review-step" hidden>
+          <p id="import-total"></p>
+          <div id="import-review"></div>
+          <p id="import-cstimer-note" class="import-note">existing solves are kept duplicates are skipped</p>
+          <div id="import-native-review" hidden>
+            <div id="import-native-counts"></div>
+            <p class="import-note">duplicate IDs will be skipped</p>
+          </div>
+        </section>
+        <section id="import-result-step" hidden><p id="import-result" role="status"></p></section>
+        <section id="import-warning-step" hidden><p id="import-warning-text" class="warning-message"></p></section>
       </div>
-      <div class="logout-actions import-navigation"><button id="import-back" type="button">back</button><button id="import-next" type="button">next</button><button id="import-final" type="button" disabled hidden>import</button></div>
+      <p id="import-message" class="validation-message" role="status" hidden></p>
+      <div class="logout-actions import-navigation"><button id="import-back" type="button">back</button><button id="import-next" type="button">next</button><button id="import-final" type="button" hidden>import</button><button id="import-done" type="button" hidden>done</button></div>
+    </dialog>
+    <dialog id="rate-limit-dialog" class="logout-confirmation import-dialog" aria-labelledby="rate-limit-heading" aria-describedby="rate-limit-text">
+      <div class="import-heading"><span id="rate-limit-heading">warning</span></div>
+      <div class="import-content"><p id="rate-limit-text" class="warning-message"></p></div>
+      <form method="dialog" class="logout-actions import-navigation"><button type="submit" autofocus>ok</button></form>
+    </dialog>
+    <dialog id="export-dialog" class="logout-confirmation" aria-labelledby="export-heading" tabindex="-1">
+      <p id="export-heading"></p>
+      <div class="logout-actions">
+        <button id="export-cancel" type="button" autofocus>cancel</button>
+        <button id="export-download" type="button">download</button>
+      </div>
+      <p id="export-message" class="validation-message" role="alert" hidden></p>
     </dialog>
     <dialog id="onboarding-dialog" class="logout-confirmation" aria-labelledby="onboarding-heading" tabindex="-1">
       <p id="onboarding-heading">choose your event and cube in settings</p>
@@ -377,6 +401,11 @@
           <input id="password" name="password" type="password" autocomplete="current-password" minlength="8"
             maxlength="128" aria-describedby="account-message" required />
         </label>
+        <div id="signup-challenge" hidden>
+          <div id="signup-widget"></div>
+          <p id="signup-challenge-message" class="warning-message" role="status" hidden></p>
+          <button id="signup-challenge-retry" class="account-button" type="button" hidden>retry</button>
+        </div>
         <p id="account-message" class="storage-note" role="status" hidden></p>
         <button id="account-submit" class="account-button" type="submit">sign in</button>
         <button id="account-toggle" class="nav-button" type="button">create account</button>

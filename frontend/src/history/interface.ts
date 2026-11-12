@@ -4,7 +4,8 @@ import { currentLanguage, onLanguageChange, setActionLabel, setText, t } from '.
 import { HistoryStore } from './store';
 
 export function setupHistory(makeRow: (solve: StoredSolve) => HTMLLIElement, updateRow: (row: HTMLLIElement, solve: StoredSolve) => void, beforeFilter: () => Promise<boolean>) {
-  const panel = document.querySelector<HTMLElement>('.history-content')!;
+  const panel = document.querySelector<HTMLElement>('.history-scroll')!;
+  const header = document.querySelector<HTMLElement>('.history-header')!;
   const list = document.getElementById('recent-solves')!;
   const filter = document.getElementById('history-filter') as HTMLButtonElement;
   const label = document.getElementById('history-day-label')!;
@@ -17,6 +18,13 @@ export function setupHistory(makeRow: (solve: StoredSolve) => HTMLLIElement, upd
   const nodes = new Map<string,HTMLLIElement>();
   filter.prepend(icon('filter'));
   clear.append(icon('clear'));
+
+  // Keep the header aligned with the list's content, excluding its scrollbar gutter.
+  new ResizeObserver(() => {
+    header.style.setProperty('--history-scrollbar-gutter',`${panel.offsetWidth - panel.clientWidth}px`);
+  }).observe(panel);
+  // Touch gestures are disabled by the header's touch-action; clicks stay native.
+  header.addEventListener('wheel',event => event.preventDefault(),{passive:false});
 
   const store = new HistoryStore(loadHistory,render);
   function render(): void {

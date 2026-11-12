@@ -8,10 +8,16 @@ from sqlmodel import Session, create_engine
 
 from backend.database import ROOT, get_session
 from backend.main import app
+from backend.services import rate_limits
 
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
+    monkeypatch.setenv("DATACUBE_TURNSTILE_MODE", "off")
+    # Keep functional tests isolated from process-local counters and timing.
+    monkeypatch.setattr(rate_limits, "limiter", rate_limits.RequestLimiter(
+        bulk_account=100, bulk_ip=100, signup_ip=100, bulk_concurrent=2,
+    ))
     engine = create_engine(f"sqlite:///{tmp_path / 'test.db'}", connect_args={"check_same_thread": False})
     monkeypatch.setattr("backend.database.engine", engine)
     command.upgrade(Config(str(ROOT / "alembic.ini")), "head")

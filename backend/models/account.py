@@ -22,6 +22,12 @@ class LoginSession(SQLModel, table=True):
     expires_at: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False))
 
 
+class RegistrationChallenge(SQLModel, table=True):
+    __tablename__ = "registration_challenges"
+    token_hash: str = Field(primary_key=True, max_length=64)
+    expires_at: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False, index=True))
+
+
 class Cube(SQLModel, table=True):
     __tablename__ = "cubes"
     __table_args__ = (UniqueConstraint("user_id", "name", "catalog_event", "catalog_model_id", name="uq_cube_user_model_name"),)

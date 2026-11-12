@@ -3,6 +3,13 @@ import { setText, onLanguageChange } from './i18n';
 import { setupLogoutConfirmation } from './logout-confirmation';
 import { setupOnboarding } from './onboarding';
 import { USERNAME_LIMITS, usernameError, passwordError } from './account-validation';
+import { showRateLimitWarning } from './rate-limit-warning';
+import { setupSignupChallenge } from './signup-challenge';
+
+const challengeErrors = new Set([
+  'complete the security check', 'security check rejected try again',
+  'security check expired or already used try again', 'security check unavailable try again',
+]);
 
 export function setupAccounts(onChange: (user: User | null) => Promise<void>): { requireLogin: () => void } {
   const dialog = document.getElementById('account-dialog') as HTMLDialogElement;
@@ -12,6 +19,7 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
   const submit = document.getElementById('account-submit') as HTMLButtonElement;
   const toggle = document.getElementById('account-toggle') as HTMLButtonElement;
   const message = document.getElementById('account-message') as HTMLElement;
+  const challenge = setupSignupChallenge();
   let registering = false;
   let revision = 0;
   const onboarding = setupOnboarding(async user => {
@@ -57,6 +65,7 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
     revision++; onboarding.reset();
     void onChange(null);
     if (!dialog.open) dialog.showModal();
+    if (registering) void challenge.open();
   };
   dialog.addEventListener('cancel', event => event.preventDefault());
   const updateMode = () => {
@@ -71,31 +80,44 @@ export function setupAccounts(onChange: (user: User | null) => Promise<void>): {
   toggle.addEventListener('click', () => {
     registering = !registering;
     updateMode();
+    if (registering) void challenge.open(); else challenge.close();
     message.hidden = true;
     validationMessage = false;
     username.removeAttribute('aria-invalid'); password.removeAttribute('aria-invalid');
   });
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    if (submit.disabled) return;
     const nameError = validate(username), secretError = validate(password);
     if (nameError || secretError) {
       validationMessage = true; showMessage(nameError || secretError);
       (nameError ? username : password).focus();
       return;
     }
+    const token = challenge.token;
+    if (registering && token === undefined) return;
     validationMessage = false;
     submit.disabled = toggle.disabled = true;
     message.hidden = true;
     try {
       const currentRevision = ++revision;
-      const user = await request<User>(`/api/auth/${registering ? 'register' : 'login'}`, { username: username.value, password: password.value });
+      const user = await request<User>(`/api/auth/${registering ? 'register' : 'login'}`, {
+        username: username.value, password: password.value,
+        ...(registering && token ? {turnstile_token:token} : {}),
+      });
       await onChange(user);
       if (currentRevision !== revision) return;
       password.value = '';
+      challenge.close();
       dialog.close();
       onboarding.show(user);
     } catch (error) {
-      showMessage(error instanceof ApiError ? error.message : 'connection unavailable');
+      if (registering && error instanceof ApiError && challengeErrors.has(error.message)) {
+        challenge.failed(error.message);
+      } else {
+        if (registering && token) void challenge.open();
+        if (!showRateLimitWarning(error,submit)) showMessage(error instanceof ApiError ? error.message : 'connection unavailable');
+      }
     } finally {
       submit.disabled = toggle.disabled = false;
     }

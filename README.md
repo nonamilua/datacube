@@ -12,7 +12,8 @@ From the repository root, set up and start the backend:
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r backend/requirements.txt
 .\.venv\Scripts\python.exe -m alembic upgrade head
-.\.venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+$env:DATACUBE_TURNSTILE_MODE = 'development'
+.\.venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload --no-proxy-headers
 ```
 
 In another terminal, start the frontend:
@@ -67,6 +68,42 @@ This local administrative command assigns only records that have no owner. Exist
 For public deployment, use HTTPS and set `COOKIE_SECURE=true` before starting the backend. Plain HTTP remains supported for trusted local Wi-Fi development. Mutating API requests must include `X-Namicubes-Request: 1`; no cross-origin access is enabled.
 
 Vite forwards `/api` to port 8000. Restart Vite after changing its configuration. For hosting later, route `/api` to FastAPI on the same origin; the frontend build does not run the backend. Set `DATABASE_URL` to override the database connection; a future PostgreSQL deployment also needs a PostgreSQL driver. The default SQLite path is resolved relative to the backend source, independent of the terminal directory.
+
+Datacube defaults to **50,000 saved solves per account**. Set `DATACUBE_SOLVE_LIMIT` to a positive integer in the backend environment and restart the backend to change it. For example, in PowerShell run `$env:DATACUBE_SOLVE_LIMIT = '75000'` before starting Uvicorn. Use the same value across backend processes and when running the legacy import command.
+
+Timer saves, csTimer imports, native restores, and legacy assignment all check capacity in the same transaction as the write. Only new additions count. An import that would exceed the limit is rejected as a whole. You can read, edit, export, or delete saved solves even if a reduced limit leaves an account over quota. Timer saves blocked by the limit stay queued on the device and retry automatically after you free space in history. After freeing enough space for a batch, confirm the import again.
+
+### Signup and bulk request limits
+
+Set positive integers in the backend environment before starting the server.
+
+| Variable | Default | Applies to |
+| --- | ---: | --- |
+| `DATACUBE_BULK_ACCOUNT_PER_MINUTE` | 6 | Shared per-account requests for csTimer import, native restore preview and confirmation, and export |
+| `DATACUBE_BULK_IP_PER_MINUTE` | 30 | Shared requests across those operations from one client IP |
+| `DATACUBE_SIGNUP_IP_PER_MINUTE` | 5 | Signup attempts from one client IP |
+| `DATACUBE_BULK_CONCURRENT` | 2 | Bulk operations in progress across the worker |
+
+Each account can have one bulk operation in progress. Limits use a rolling 60-second window and count admitted requests, including ones that later fail validation. Rate and concurrency rejections return `429` with `Retry-After` in seconds. When the only restriction is a busy slot, the response suggests retrying in one second. Timer saves have their own storage quota and run independently of these bulk limits.
+
+Datacube uses the connection IP by default. Set `DATACUBE_TRUSTED_PROXIES` to a comma-separated list of explicit proxy IP addresses or CIDRs to accept `X-Forwarded-For` from those peers. Use proxies that replace that header or append the actual upstream IP. Datacube walks the chain from the connection side to the nearest untrusted IP. Start Uvicorn with `--no-proxy-headers` so Datacube receives the original connection address for this check. With the default empty trust list, clients connecting through the same proxy share its IP limits.
+
+Counters and in-progress slots live in memory **per server process** and reset on restart. A single worker enforces the listed limits across the server. Each additional worker has its own counters and slots, so use shared atomic counters and concurrency leases before running multiple workers or instances if these limits must apply across them.
+
+### Turnstile registration
+
+`DATACUBE_TURNSTILE_MODE=development` uses Cloudflare's visible test widget and test secret. Open the frontend on `localhost` or `127.0.0.1` to register locally. Development mode requires a loopback connection and a loopback hostname. For isolated offline tests, explicitly set `DATACUBE_TURNSTILE_MODE=off`.
+
+For deployment, create a **Managed** Turnstile widget in Cloudflare and authorize the exact public hostname that serves the signup form. Set these environment variables on the backend and apply migration `0009` with `alembic upgrade head` before restarting the app.
+
+| Variable | Value |
+| --- | --- |
+| `DATACUBE_TURNSTILE_MODE` | `production`, the default |
+| `DATACUBE_TURNSTILE_SITE_KEY` | The widget's public site key |
+| `DATACUBE_TURNSTILE_SECRET_KEY` | The same widget's secret, stored only in the backend environment |
+| `DATACUBE_TURNSTILE_HOSTNAME` | The signup hostname, for example `datacube.example.com`, without scheme, port or path |
+
+Datacube fetches the public site key at runtime. The backend verifies every registration token with Siteverify, checks the production hostname and `register` action, and records a temporary token hash so a challenge can create only one account even across workers. Missing or invalid configuration and verification outages block registration. Sign-in uses the existing credentials flow. When configuring a Content Security Policy, allow scripts and frames from `https://challenges.cloudflare.com` for the widget. [Local test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) · [Hostname management](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/) · [Siteverify](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)
 
 API endpoints: `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, `POST /api/auth/logout`, and `GET /api/organization`. Authenticated `POST /api/solves` saves duration, timestamp, penalty, optional event ID and cube name with a client-generated UUID; also send `X-Namicubes-Account` matching the signed-in account ID to guard against account switches in other tabs. `GET /api/solves?limit=10&offset=0` returns only the signed-in user's newest results and total count. Penalties support `OK`, `+2` and `DNF`. `PATCH /api/solves/{id}` updates an owned solve penalty using the same request and account headers. Pencil controls are available below a completed timer and in history. Interactive API documentation is at http://127.0.0.1:8000/docs.
 
@@ -128,7 +165,7 @@ The line chart shows times, ao5, ao12 and best-time progression in seconds. Best
 
 The history icon to the left of settings opens a paginated list for the current account. `GET /api/solves/history` returns up to 50 solves, ordered by UTC timestamp descending and ID descending, with a `next_cursor` containing `started_at` and `id`. Pass those values as `cursor_started_at` and `cursor_id` for the next page. Ownership always comes from the authenticated session. Account initialization warms a latest-50 in-memory cache; scrolling loads older pages without replacing existing action controls. Failed requests retain rows and offer retry.
 
-History's sticky filter header selects a single local calendar day. The browser sends its local midnight and next local midnight as the inclusive `started_from` and exclusive `started_before` UTC bounds, including DST changes. Closing history clears the date, scroll position and older pages and invalidates pending reads. Reopening shows the cached latest overall solves. Account changes clear the cache. Confirmed edits/deletes update affected rows and the cache, with at most a first-page refresh. Pending saves retain their existing account-specific queue and unavailable edit/delete behavior. History has its own scrollbar, appears as a right sidebar on desktop, and fills the viewport below the header on phones. Settings uses the same phone layout. Opening either panel closes the other; outside clicks and Escape close them. Edit, delete and history dates work independently of analytics filters.
+History's fixed filter header selects a single local calendar day and sits above the scrolling solve list, so the scrollbar starts below its divider. Touch drags and wheel input over the header do not scroll the list or page. The browser sends its local midnight and next local midnight as the inclusive `started_from` and exclusive `started_before` UTC bounds, including DST changes. Closing history clears the date, scroll position and older pages and invalidates pending reads. Reopening shows the cached latest overall solves. Account changes clear the cache. Confirmed edits/deletes update affected rows and the cache, with at most a first-page refresh. Pending saves retain their existing account-specific queue and unavailable edit/delete behavior. History has its own scrollbar, appears as a right sidebar on desktop, and fills the viewport below the header on phones. Settings uses the same phone layout. Opening either panel closes the other; outside clicks and Escape close them. Edit, delete and history dates work independently of analytics filters.
 
 Analytics still requests `GET /api/solves/all` during synchronization and calculates statistics from the complete account dataset. This remains a separate performance concern; paginated history never supplies a partial dataset to analytics.
 
@@ -173,10 +210,24 @@ For an explicit local migration, back up the database and run `.venv/Scripts/pyt
 
 The header uses the nine-tiles logo and a two-line datacube wordmark in the existing violet and Roboto Mono. Portuguese displays dados and cubos with an ampersand beside the two lines. The same SVG is the favicon. Existing browser storage keys and session cookie names retain their namicubes identifiers for compatibility with saved preferences, pending solves and sessions.
 
-### csTimer preview
+### Native backup and restore
 
-Settings includes import, disabled export, and about controls. Import accepts JSON backup contents in `.txt` or `.json` files up to **10 MiB**, with at most **50,000 solves across all sessions**. These centralized limits in `frontend/src/import/cstimer.ts` bound file reading and preview processing. Every nonempty `sessionN` is discovered dynamically; cached statistics and global preferences do not determine the preview.
+Use **settings → export → download** to save a versioned `datacube-backup-<username>.json` containing every saved solve for the signed-in account. The v1 format contains `events`, `cubes` and `solves`. A solve's `event_ref` and `cube_ref` are zero-based indexes into the file's lists or `null` for no association. Cubes retain their exact handles and catalog references. Solves retain integer milliseconds, UTC timestamps at stored precision, penalties, tags and exact scramble text, including empty values. Backups contain solve data and its associations only.
 
-This stage is entirely an in-memory preview: choose file, configure selected sessions, then review. Each session gets one required event and optional cube/catalog model and 12-character tag. The explicit scramble-setting mapping reads session `opt.scrType` or legacy `scr`; unknown settings require a choice. No event is inferred from notation. All assignments apply to every solve in that session; mixed events must be separated in csTimer first. Raw milliseconds, penalties (0, 2000, -1) and original Unix-second timestamps converted to UTC are retained; comments, scrambles and other record extensions are discarded. Missing/invalid solve timestamps or malformed records reject the file without a partial preview. Session metadata may be absent.
+Choose a Datacube file using the existing import button. Import detects the format and takes it directly to review, with counts for solves to add and solves skipped because their IDs already exist. Restore validates the whole file and adds missing IDs in one transaction. Importing into the same account fills in missing solves. Existing solves and their associations stay as saved, even when the file changes or omits them. Importing an externally edited file into a fresh account creates a separate copy with the edited values and leaves the source account intact.
 
-Closing the modal or changing accounts discards the draft. The final import button stays disabled. No solve writes, stored sessions, pending-save queues, or automatic imports are implemented. Only read-only cube catalog requests are used. Parser fixtures are synthetic and contain no user exports. Format reference: [csTimer solve records and session metadata](https://github.com/cs0x7f/cstimer/blob/master/src/js/stats/stats.js) and [backup export](https://github.com/cs0x7f/cstimer/blob/master/src/js/export.js).
+The same portable ID follows a solve between accounts and subsequent exports. Different IDs can share the same time and timestamp. New solves use the event and cube specified in the file, reusing exact matching associations when available. Native backups can be exported and restored as one file, including above 10 MiB. The byte and solve-count limits below apply to csTimer.
+
+Migration `0008` adds portable solve IDs. Back up the local database before running `alembic upgrade head` on an existing installation. The migration retains row IDs and solve values. Older deterministic import row IDs receive independent portable IDs. CSV and export editing are outside the current scope.
+
+### csTimer import
+
+The csTimer compatibility path accepts JSON backup contents in `.txt` or `.json` files up to **10 MiB**, with at most **50,000 solves across all sessions**. The frontend parser and backend independently enforce these limits. Every nonempty `sessionN` is discovered dynamically; cached statistics and global preferences are ignored. A localized file button replaces the browser's language-dependent file control. Each step has one fixed heading above internally scrolling content; the filename appears only during file selection.
+
+Choose a file, configure selected sessions, review, then explicitly import. Sessions start collapsed and included. Expand one or more with the plus buttons to change inclusion or assignments. Each session gets one required event and optional cube/catalog model and 12-character tag. The explicit scramble-setting mapping reads session `opt.scrType` or legacy `scr`; unknown settings require a choice. No event is inferred from notation. All assignments apply to every solve in that session; mixed events must be separated in csTimer first. Raw milliseconds, penalties (0, 2000, -1) and original Unix-second timestamps converted to UTC are retained; comments, scrambles and other record extensions are discarded. Invalid records reject the file without a partial import. Session metadata may be absent. Cube and tag assignments stay independent of timer preferences and fixed tags.
+
+Authenticated `POST /api/solves/import` accepts normalized selected sessions with `X-Namicubes-Request` and the current `X-Namicubes-Account`. Ownership comes from the server session; caller-supplied user, category and solve IDs are rejected. Events, catalog references, penalties, plain-text labels, duration and aware timestamps are validated before saving. All selected sessions are committed together in one transaction; failures roll back cubes, events and solves together. No schema migration or stored solve-grouping sessions are needed.
+
+Overlapping backups match existing owned solves by event, original UTC timestamp and raw duration, preserving existing IDs, cube assignments, penalties and tags. Repeated identical records retain their multiplicity across selected sessions. New import UUIDs are deterministic per account, event, timestamp, raw duration and occurrence; concurrent imports and lost-response retries cannot create extra copies. The result reports imported and skipped counts. Explicitly selected catalog models reuse an existing owned model association, preferring its matching label and then its oldest association. Compatible same-label legacy cubes use the existing reconciliation rules; unknown labels never infer a catalog identity. Dashboard filters therefore use the saved cube ID instead of creating an additional label for that selected model.
+
+Drafts remain in memory and survive back/next navigation and failed saves. Escape/backdrop dismissal is deferred while saving; afterwards dismissal discards the draft and restores focus to settings. An account reset aborts the request and ignores stale responses. A confirmed import refreshes owned solves and organization data through the existing synchronization path, retaining analytics filters and deferred rendering. Parser, persistence, rollback, overlap, retry, concurrent import and ownership tests use synthetic data only. Format reference: [csTimer solve records and session metadata](https://github.com/cs0x7f/cstimer/blob/master/src/js/stats/stats.js) and [backup export](https://github.com/cs0x7f/cstimer/blob/master/src/js/export.js).
