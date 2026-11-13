@@ -204,90 +204,102 @@
             aria-controls="compare-custom-popup">all</button></label>
       </div>
       <div class="analytics-stat-area">
-        <dl class="analytics-stats" data-page="1">
-          <div>
-            <dt data-i18n="solve count">solves</dt>
-            <dd id="stat-count">0</dd>
-          </div>
-          <div>
-            <dt>mean</dt>
-            <dd id="stat-mean"></dd>
-          </div>
-          <div>
-            <dt>median</dt>
-            <dd id="stat-median"></dd>
-          </div>
-          <div>
-            <dt>std dev</dt>
-            <dd id="stat-deviation"></dd>
-          </div>
-          <div>
-            <dt>+2 count</dt>
-            <dd id="stat-plusTwoCount">0</dd>
-          </div>
-          <div>
-            <dt>ao5</dt>
-            <dd id="stat-ao5"></dd>
-          </div>
-          <div>
-            <dt>ao12</dt>
-            <dd id="stat-ao12"></dd>
-          </div>
-          <div>
-            <dt>ao50</dt>
-            <dd id="stat-ao50"></dd>
-          </div>
-          <div>
-            <dt>ao100</dt>
-            <dd id="stat-ao100"></dd>
-          </div>
-          <div>
-            <dt>best</dt>
-            <dd id="stat-best"></dd>
-          </div>
-          <div>
-            <dt>best ao5</dt>
-            <dd id="stat-bestAo5"></dd>
-          </div>
-          <div>
-            <dt>best ao12</dt>
-            <dd id="stat-bestAo12"></dd>
-          </div>
-          <div>
-            <dt>best ao50</dt>
-            <dd id="stat-bestAo50"></dd>
-          </div>
-          <div>
-            <dt>best ao100</dt>
-            <dd id="stat-bestAo100"></dd>
-          </div>
-          <div>
-            <dt>worst</dt>
-            <dd id="stat-worst"></dd>
-          </div>
-          <div>
-            <dt>fav event</dt>
-            <dd id="stat-favoriteEvent" class="stat-text"></dd>
-          </div>
-          <div>
-            <dt>best cube</dt>
-            <dd id="stat-bestCube" class="stat-text"></dd>
-          </div>
-          <div>
-            <dt>best custom</dt>
-            <dd id="stat-bestCustom" class="stat-text"></dd>
-          </div>
-        </dl><button id="stats-next" class="icon-button" type="button" aria-label="show best statistics"
-          aria-controls="analysis-panel"></button>
+        <div id="analytics-stat-pages" class="analytics-stat-pages" data-page="1">
+          <dl class="analytics-stats" data-stat-page="1">
+            <div>
+              <dt data-i18n="solve count">solves</dt>
+              <dd id="stat-count">0</dd>
+            </div>
+            <div>
+              <dt>mean</dt>
+              <dd id="stat-mean"></dd>
+            </div>
+            <div>
+              <dt>median</dt>
+              <dd id="stat-median"></dd>
+            </div>
+            <div>
+              <dt>std dev</dt>
+              <dd id="stat-deviation"></dd>
+            </div>
+            <div>
+              <dt>+2 count</dt>
+              <dd id="stat-plusTwoCount">0</dd>
+            </div>
+            <div>
+              <dt>ao5</dt>
+              <dd id="stat-ao5"></dd>
+            </div>
+            <div>
+              <dt>ao12</dt>
+              <dd id="stat-ao12"></dd>
+            </div>
+            <div>
+              <dt>ao50</dt>
+              <dd id="stat-ao50"></dd>
+            </div>
+            <div>
+              <dt>ao100</dt>
+              <dd id="stat-ao100"></dd>
+            </div>
+          </dl>
+          <dl class="analytics-stats" data-stat-page="2">
+            <div>
+              <dt>best</dt>
+              <dd id="stat-best"></dd>
+            </div>
+            <div>
+              <dt>best ao5</dt>
+              <dd id="stat-bestAo5"></dd>
+            </div>
+            <div>
+              <dt>best ao12</dt>
+              <dd id="stat-bestAo12"></dd>
+            </div>
+            <div>
+              <dt>best ao50</dt>
+              <dd id="stat-bestAo50"></dd>
+            </div>
+            <div>
+              <dt>best ao100</dt>
+              <dd id="stat-bestAo100"></dd>
+            </div>
+            <div>
+              <dt>worst</dt>
+              <dd id="stat-worst"></dd>
+            </div>
+            <div>
+              <dt>fav event</dt>
+              <dd id="stat-favoriteEvent" class="stat-text"></dd>
+            </div>
+            <div>
+              <dt>best cube</dt>
+              <dd id="stat-bestCube" class="stat-text"></dd>
+            </div>
+            <div>
+              <dt>best custom</dt>
+              <dd id="stat-bestCustom" class="stat-text"></dd>
+            </div>
+          </dl>
+        </div>
+        <button id="stats-next" class="icon-button" type="button" aria-label="show best statistics"
+          aria-controls="analytics-stat-pages"></button>
       </div>
       <div class="analytics-charts">
-        <figure class="chart-panel">
+        <figure class="chart-panel times-panel">
           <figcaption>times <span class="chart-count"><span id="time-outliers" hidden></span><span id="time-dnfs"
                 hidden></span></span></figcaption>
           <div class="chart-canvas"><canvas id="time-chart" role="img"
               aria-label="solve times rolling averages and best progression"></canvas></div>
         </figure>
-        <figure class="chart-panel">
+        <figure id="activity-panel" class="chart-panel activity-panel" data-stat-page="3">
+          <figcaption>activity · overall</figcaption>
+          <div id="activity-grid" class="activity-grid" role="grid" aria-label="overall solve activity"></div>
+          <div id="activity-tooltip" class="activity-tooltip" aria-hidden="true" hidden>
+            <span></span><span></span>
+          </div>
+        </figure>
+        <figure class="chart-panel distribution-panel">
           <figcaption>distribution <span id="histogram-outliers" hidden></span></figcaption>
           <div class="chart-canvas"><canvas id="histogram-chart" role="img" aria-label="solve time histogram"></canvas>
           </div>
@@ -407,8 +419,10 @@
           <button id="signup-challenge-retry" class="account-button" type="button" hidden>retry</button>
         </div>
         <p id="account-message" class="storage-note" role="status" hidden></p>
-        <button id="account-submit" class="account-button" type="submit">sign in</button>
-        <button id="account-toggle" class="nav-button" type="button">create account</button>
+        <div class="account-form-actions">
+          <button id="account-submit" class="account-button" type="submit">sign in</button>
+          <button id="account-toggle" class="account-button account-button-secondary" type="button">create account</button>
+        </div>
       </form>
     </dialog>
   </main>

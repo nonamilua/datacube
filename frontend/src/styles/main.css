@@ -7,7 +7,7 @@
 
   --muted: #a3a3bd;
   --accent: #71dbdb;
-  --ready: #71dbdb;
+  --ready: #5bdfd4;
   --holding: #cab3da;
 
   --panel-bg: #201d2b;
@@ -479,8 +479,10 @@ select option { background-color: var(--bs-body-bg); text-align: left; }
   background: var(--bs-body-bg);
 }
 
-#signup-challenge:not([hidden]) { display: grid; gap: 8px; }
+#signup-challenge:not([hidden]) { display: grid; gap: var(--dialog-control-gap); }
 #signup-widget { overflow-x: auto; }
+#signup-widget:empty { display: none; }
+#account-message,
 #signup-challenge-message { color: var(--warning); margin: 0; }
 
 .logout-confirmation {
@@ -562,15 +564,31 @@ select option { background-color: var(--bs-body-bg); text-align: left; }
 .account-dialog form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--dialog-section-gap);
+}
+
+.account-dialog .setting-field { gap: var(--dialog-control-gap); }
+
+.account-dialog .setting-field input {
+  width: calc(100% + 2 * var(--compact-box-inset));
+  margin: calc(-1 * var(--compact-box-inset));
+  padding: 4px calc(10px * var(--presentation-scale, 1));
+  border: var(--compact-box-inset) solid transparent;
+  border-radius: calc(var(--compact-box-inset) + var(--compact-box-radius));
+  background-clip: padding-box;
+}
+
+/* Paint over the browser's autofill background without disabling autofill. */
+.account-dialog .setting-field input:is(:autofill, :-webkit-autofill) {
+  box-shadow: inset 0 0 0 100px var(--bs-body-bg);
+  -webkit-text-fill-color: var(--bs-body-color);
+  caret-color: var(--bs-body-color);
 }
 
 .account-dialog h1 {
   font-size: 16px;
   margin: 0;
 }
-
-#account-message { color: var(--warning); }
 
 .account-button {
   min-height: 44px;
@@ -579,6 +597,30 @@ select option { background-color: var(--bs-body-bg); text-align: left; }
   background: transparent;
   color: var(--accent);
   font-size: 12px;
+}
+
+.account-form-actions {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.account-form-actions button {
+  padding-inline: calc(16px * var(--presentation-scale, 1));
+  color: var(--bs-body-color);
+}
+
+.account-form-actions .account-button-secondary,
+.account-form-actions button:disabled { color: var(--muted); }
+
+.account-form-actions button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: calc(-1 * var(--compact-box-inset));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .account-form-actions button:not(:disabled):hover { color: var(--accent); }
 }
 
 .solve-labels {
@@ -1021,8 +1063,15 @@ summary:focus-visible {
   flex-shrink: 0;
 }
 
-.analytics-stats {
+.analytics-stat-pages {
+  position: relative;
   flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.analytics-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
@@ -1088,6 +1137,55 @@ summary:focus-visible {
   font-size: 11px;
   margin-bottom: 8px;
 }
+
+.chart-panel.activity-panel { border: 0; }
+
+.activity-grid {
+  --activity-gap: calc(3px * var(--presentation-scale, 1));
+  display: grid;
+  align-content: center;
+  gap: var(--activity-gap);
+  min-width: 0;
+  height: clamp(48px, calc(18svh - 44px), 100px);
+}
+
+.activity-row {
+  display: grid;
+  grid-template-columns: repeat(var(--activity-weeks), var(--activity-cell));
+  grid-auto-rows: var(--activity-cell);
+  justify-content: center;
+  gap: var(--activity-gap);
+}
+
+.activity-cell {
+  border-radius: clamp(1px, calc(var(--activity-cell) * .25), 4px);
+  background: var(--list-border);
+}
+
+.activity-cell[data-band="1"] { background: color-mix(in srgb, var(--checkbox-bg) 25%, var(--list-border)); }
+.activity-cell[data-band="2"] { background: color-mix(in srgb, var(--checkbox-bg) 45%, var(--list-border)); }
+.activity-cell[data-band="3"] { background: color-mix(in srgb, var(--checkbox-bg) 70%, var(--list-border)); }
+.activity-cell[data-band="4"] { background: var(--checkbox-bg); }
+.activity-cell:focus-visible { outline: 1px solid var(--bs-body-color); outline-offset: 1px; }
+
+.activity-tooltip, .times-tooltip {
+  display: grid;
+  gap: 6px;
+  padding: calc(6px * var(--presentation-scale, 1));
+  border-radius: 6px;
+  background: var(--compare-tooltip-bg);
+  color: var(--bs-body-color);
+  font-size: calc(10px * var(--presentation-scale, 1));
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+.activity-tooltip { position: fixed; z-index: 10; }
+.activity-tooltip > :first-child { color: var(--muted); }
+.times-tooltip { position: absolute; z-index: 1; gap: 2px; white-space: nowrap; }
+.times-tooltip-date { color: var(--muted); margin-bottom: 4px; }
+.times-tooltip-value { display: flex; align-items: center; gap: 4px; }
+.times-tooltip-value > span { width: 1em; height: 1em; }
 
 #histogram-outliers,
 .chart-count {
@@ -1256,10 +1354,12 @@ summary:focus-visible {
     font-size: 10px;
   }
 
-  .analytics-stats[data-page="1"]>div:nth-child(n+10),
-  .analytics-stats[data-page="2"]>div:nth-child(-n+9) {
-    display: none;
-  }
+  .analytics-stat-pages > .analytics-stats { grid-area: 1 / 1; }
+  .analytics-stat-pages:not([data-page="1"]) > [data-stat-page="1"],
+  .analytics-stat-pages:not([data-page="2"]) > [data-stat-page="2"],
+  .analytics-stat-pages:not([data-page="3"]) > [data-stat-page="3"] { visibility: hidden; }
+  .analytics-stat-pages > .activity-panel { position: absolute; inset: 0; }
+  .analytics-stat-pages .activity-grid { flex: 1; min-height: 0; height: auto; }
 
   #stats-next {
     display: inline-flex;
@@ -1267,6 +1367,7 @@ summary:focus-visible {
     width: 44px;
     padding: 0;
     margin-left: 4px;
+    touch-action: manipulation;
   }
 
   .analytics-charts {
@@ -1773,10 +1874,19 @@ a:focus:not(:focus-visible) {
     font-size: 12px;
   }
 
+  .analysis-panel:has(> .analytics-charts:not([hidden])) { overflow-y: auto; }
+
   .analytics-charts {
+    min-height: min-content;
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: auto minmax(calc(124px * var(--presentation-scale, 1)), 1fr);
   }
+
+  .times-panel { grid-area: 1 / 1 / 3; }
+  .analytics-charts > .activity-panel { grid-area: 1 / 2; }
+  .distribution-panel { grid-area: 2 / 2; }
+  /* Canvas intrinsic size must not determine the chart rows' minimum height. */
+  .analytics-charts .chart-canvas { contain: size; }
 
   .compare-charts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1827,11 +1937,11 @@ a:focus:not(:focus-visible) {
   .compare-popup { font-size: var(--wide-font-small); border-radius: var(--wide-radius); }
   .compare-all, .compare-options label { min-height: 36.4px; padding: 2.6px 7.8px; gap: 7.8px; }
   .compare-all input, .compare-options input { width: 16.9px; height: 16.9px; }
-  .analytics-stats { gap: var(--wide-space-small); }
+  .analytics-stats, .analytics-stat-pages { gap: var(--wide-space-small); }
   .analytics-stats div { padding: 5.2px 10.4px; }
   .analytics-stats dd { margin-top: 2.6px; min-height: 26px; }
   .analytics-stats .stat-text[data-long="true"] { font-size: var(--wide-font); }
-  .analytics-charts { min-height: 0; gap: var(--wide-space-medium); }
+  .analytics-charts { gap: var(--wide-space-medium); }
   .compare-charts { gap: var(--wide-space-medium); }
   .chart-panel { padding: var(--wide-space-medium); border-radius: var(--popover-radius); }
   .chart-panel figcaption { font-size: 14.3px; margin-bottom: var(--wide-space); }
@@ -1858,7 +1968,6 @@ a:focus:not(:focus-visible) {
   .history-content .solve-action svg { width: 20.8px; height: 20.8px; }
   .history-content .solve-action { min-width: 46.8px; padding-inline: 7.8px; }
   .account-dialog { width: min(468px, calc(100vw - 41.6px)); padding: var(--wide-space-large); }
-  .account-dialog form { gap: var(--wide-space-large); }
   .account-dialog h1 { font-size: 20.8px; }
   .account-button { min-height: var(--wide-control); font-size: var(--wide-font); }
   .logout-confirmation { width: min(364px, calc(100vw - 41.6px)); font-size: var(--wide-font); }

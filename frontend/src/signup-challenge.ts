@@ -81,7 +81,8 @@ export function setupSignupChallenge() {
       };
       widget = api.render(container, {
         sitekey, action:'register', theme:'dark', language:currentLanguage(),
-        size:container.clientWidth < 300 ? 'compact' : 'flexible',
+        // The empty widget container is hidden until Turnstile renders into it.
+        size:section.clientWidth < 300 ? 'compact' : 'flexible',
         'response-field':false, retry:'never', 'refresh-expired':'manual', 'refresh-timeout':'manual',
         callback(value: string) {
           if (current !== revision) return;

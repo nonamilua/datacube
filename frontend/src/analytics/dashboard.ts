@@ -6,6 +6,7 @@ import { statistics } from './statistics';
 import { createCharts } from './charts';
 import { comparisonLabels } from './comparisons';
 import { setupCompareView } from './compare-view';
+import { setupActivityView } from './activity-view';
 import { DeferredAnalyticsUpdates, type AnalyticsView } from './deferred-updates';
 import { icon } from '../icons';
 import { t, setText, setActionLabel, onLanguageChange, currentLanguage } from '../i18n';
@@ -24,7 +25,13 @@ export function setupDashboard() {
   const compare = document.getElementById('compare-view')!;
   const compareView = setupCompareView(() => updates.invalidate('compare'),() => updates.isActive('compare'));
   const statArea = document.querySelector<HTMLElement>('.analytics-stat-area')!;
+  const statPages = document.getElementById('analytics-stat-pages')!;
   const chartArea = document.querySelector<HTMLElement>('.analytics-charts')!;
+  const activityPanel = document.getElementById('activity-panel')!;
+  const activity = setupActivityView();
+  const next = document.getElementById('stats-next')!;
+  const nextPageLabels = ['show best statistics', 'show overall activity', 'show current statistics'];
+  next.append(icon('next'));
   const datesArea = document.getElementById('analytics-dates')!;
   const dateLabels = [start.closest('label')!, end.closest('label')!];
   const popup = document.getElementById('analytics-date-popup') as HTMLDialogElement;
@@ -34,12 +41,24 @@ export function setupDashboard() {
   const customOption = range.querySelector<HTMLOptionElement>('option[value="custom"]')!;
   const pickerOption = range.querySelector<HTMLOptionElement>('option[value="custom-picker"]')!;
   let comparing = false;
+  function updateStatPage() {
+    const page = Number(statPages.dataset.page);
+    setActionLabel(next, nextPageLabels[page - 1]);
+  }
+  next.addEventListener('click', () => {
+    activity.hideTooltip();
+    statPages.dataset.page = String(Number(statPages.dataset.page) % 3 + 1);
+    updateStatPage();
+  });
   function closeDates() { if (popup.open) popup.close(); }
   function layoutControls() {
     closeDates();
     (mobile.matches ? popupDates : datesArea).append(...dateLabels);
     if (mobile.matches) range.closest('label')!.after(viewButtons);
     else panel.prepend(viewButtons);
+    if (mobile.matches) statPages.append(activityPanel);
+    else chartArea.insertBefore(activityPanel, chartArea.querySelector('.distribution-panel'));
+    updateStatPage();
     customOption.hidden = mobile.matches;
     pickerOption.hidden = !mobile.matches;
   }
@@ -61,6 +80,7 @@ export function setupDashboard() {
     if (popup.open) input.showPicker?.();
   });
   function switchView(nextCompare: boolean) {
+    activity.hideTooltip();
     comparing = nextCompare;
     overview.setAttribute('aria-pressed', String(!comparing));
     compare.setAttribute('aria-pressed', String(comparing));
@@ -74,13 +94,6 @@ export function setupDashboard() {
   const cube = select('filter-cube');
   const custom = select('filter-custom');
   const hideOutliers = document.getElementById('hide-outliers') as HTMLInputElement;
-  const cards = document.querySelector<HTMLElement>('.analytics-stats')!;
-  const next = document.getElementById('stats-next')!;
-  next.append(icon('next'));
-  next.addEventListener('click', () => {
-    cards.dataset.page = cards.dataset.page === '1' ? '2' : '1';
-    setActionLabel(next, cards.dataset.page === '1' ? 'show best statistics' : 'show current statistics');
-  });
   let solves: StoredSolve[] = [];
   let dataKey = '';
   let charts: ReturnType<typeof createCharts> | null = null;
@@ -89,7 +102,7 @@ export function setupDashboard() {
 
   function resizeActive() {
     if (updates.isActive('compare')) compareView.resize();
-    else if (updates.isActive('overview')) charts?.resize();
+    else if (updates.isActive('overview')) { activity.update(solves); charts?.resize(); }
   }
 
   function render(view: AnalyticsView) {
@@ -106,6 +119,7 @@ export function setupDashboard() {
       compareView.update(solves,organization,filters,now);
       return;
     }
+    activity.update(solves, now);
     const available = availableFilters(solves, filters, now);
     setOptions(cube, [[t('all'), ''], ...organization.cubes.filter(item => available.cubeIds.includes(String(item.id))).map(item => [item.name, String(item.id)] as [string, string])], available.cube);
     setOptions(custom, [[t('all'), ''], ...available.customValues.map(value => [value === EMPTY_CUSTOM ? t('none') : value, value] as [string, string])], available.custom);
@@ -184,6 +198,7 @@ export function setupDashboard() {
   // Hidden windows are evaluated at reopening; keep visible hour refreshes.
   window.setInterval(() => {
     if (panel.hidden) return;
+    if (updates.isActive('overview')) activity.update(solves);
     if (refreshPresetDates() || range.value === '2h' || range.value === '4h') updates.invalidate();
   }, 60000);
   onLanguageChange(() => {
@@ -193,7 +208,7 @@ export function setupDashboard() {
     }
     const none = Array.from(custom.options).find(option => option.value === EMPTY_CUSTOM);
     if (none) none.textContent = t('none');
-    setActionLabel(next,cards.dataset.page === '1' ? 'show best statistics' : 'show current statistics');
+    updateStatPage();
     updates.invalidate();
   });
   return {
@@ -204,19 +219,19 @@ export function setupDashboard() {
       updates.invalidate();
     },
     show() { refreshPresetDates(); if (!updates.show(relativeRange())) resizeActive(); },
-    hide() { closeDates(); compareView.close(); updates.hide(); },
+    hide() { closeDates(); activity.hideTooltip(); compareView.close(); updates.hide(); charts?.resetSeriesVisibility(); },
     reset() {
       closeDates();
       solves = []; dataKey = ''; organization = {categories: [], cubes: []};
       range.value = start.value = end.value = event.value = cube.value = custom.value = '';
-      cards.dataset.page = '1'; setActionLabel(next,'show best statistics');
+      statPages.dataset.page = '1'; updateStatPage(); activity.update(solves); activity.hideTooltip();
       comparing = false;
       updates.reset(!panel.hidden);
       compareView.reset();
       overview.setAttribute('aria-pressed','true'); compare.setAttribute('aria-pressed','false');
       statArea.hidden = chartArea.hidden = false;
       eventOptions();
-      for (const card of Array.from(cards.querySelectorAll<HTMLElement>('dd'))) { card.textContent = ''; card.removeAttribute('title'); card.removeAttribute('data-long'); }
+      for (const card of Array.from(statPages.querySelectorAll<HTMLElement>('dd'))) { card.textContent = ''; card.removeAttribute('title'); card.removeAttribute('data-long'); }
       charts?.clear();
       for (const id of ['time-dnfs','time-outliers','histogram-outliers','date-range-message']) document.getElementById(id)!.hidden = true;
       setText(document.getElementById('analytics-empty')!,'no solves');

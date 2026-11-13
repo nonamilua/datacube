@@ -47,7 +47,7 @@ export function statistics(solves: Result[]) {
     ao5: ao5.at(-1) ?? null, ao12: ao12.at(-1) ?? null,
     ao50: ao50.at(-1) ?? null, ao100: ao100.at(-1) ?? null,
     bestAo5: bestAverage(ao5), bestAo12: bestAverage(ao12), bestAo50: bestAverage(ao50), bestAo100: bestAverage(ao100),
-    times, rolling5: ao5, rolling12: ao12, bestProgression: bestProgression(times) };
+    times, rolling5: ao5, rolling12: ao12, rolling50: ao50, rolling100: ao100, bestProgression: bestProgression(times) };
 }
 
 export function histogram(times: number[]) {
@@ -98,6 +98,8 @@ export function timePlot(stats: ReturnType<typeof statistics>, hideOutliers: boo
     // Keep rolling averages and all statistics calculated from the original solves.
     rolling5: stats.rolling5,
     rolling12: stats.rolling12,
+    rolling50: stats.rolling50,
+    rolling100: stats.rolling100,
     omitted: stats.times.filter(isOutlier).length,
   };
 }

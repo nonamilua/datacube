@@ -600,6 +600,26 @@ const timerTab = element<HTMLButtonElement>('timer-tab');
 const analysisTab = element<HTMLButtonElement>('analysis-tab');
 const settings = element<HTMLDetailsElement>('settings-panel');
 const history = element<HTMLDetailsElement>('history-panel');
+const timerPanel = element('timer-panel');
+const desktopPointer = window.matchMedia('(any-pointer: fine)');
+
+function timerUnavailable(): boolean {
+  return !user || editing || deleting || Boolean(editorSolve) || !scramblePopup.hidden || history.open || settings.open || !scrambles.canStart;
+}
+
+async function restoreTimerFocus(panel: HTMLDetailsElement): Promise<void> {
+  const owner = user;
+  if (!owner || !desktopPointer.matches || timerPanel.hidden) return;
+  if (editorSave && !await editorSave) return;
+  if (user !== owner || timerPanel.hidden || timerUnavailable() || document.querySelector('dialog[open]')) return;
+  const focused = document.activeElement;
+  if (focused && focused !== document.body && !panel.contains(focused)) return;
+  if (!focused?.matches(':focus-visible')) area.removeAttribute('data-keyboard-focus');
+  // The toggle can arrive before the next render frame re-enables the timer.
+  area.disabled = false;
+  area.focus({ preventScroll: true });
+}
+
 function closeHistory(): void {
   if (!history.open) return;
   history.open = false;
@@ -617,7 +637,10 @@ settings.addEventListener('toggle', () => {
     closeScramblePopup();
     if (editorSolve) { settings.open = false; void saveEditor().then(saved => { if (saved) settings.open = true; }); }
     else closeHistory();
-  } else { cubeSelector.close(); savePreferences(); }
+  } else {
+    cubeSelector.close(); savePreferences();
+    void restoreTimerFocus(settings);
+  }
 });
 history.querySelector('summary')!.addEventListener('click', () => {
   // Prepare/reset before the native details toggle can paint a previous day.
@@ -625,8 +648,10 @@ history.querySelector('summary')!.addEventListener('click', () => {
   else if (!editorSolve) historyView.open();
 });
 history.addEventListener('toggle', () => {
-  if (!history.open) { closeScramblePopup(); historyView.close(); }
-  if (history.open) {
+  if (!history.open) {
+    closeScramblePopup(); historyView.close();
+    void restoreTimerFocus(history);
+  } else {
     if (!closeSettings()) { history.open = false; return; }
     if (editorSolve) {
       history.open = false;
@@ -663,7 +688,7 @@ async function showPanel(analysis: boolean): Promise<void> {
   closeHistory();
   closeScramblePopup();
   timer.cancelPreparation();
-  element('timer-panel').hidden = analysis;
+  timerPanel.hidden = analysis;
   element('analysis-panel').hidden = !analysis;
   const active = analysis ? analysisTab : timerTab;
   const inactive = analysis ? timerTab : analysisTab;
@@ -673,7 +698,7 @@ async function showPanel(analysis: boolean): Promise<void> {
   else {
     dashboard.hide();
     // Panel closing can finish before the next frame enables the timer.
-    area.disabled = !user || editing || deleting || !scrambles.canStart;
+    area.disabled = timerUnavailable();
     if (!area.disabled) area.focus({ preventScroll: true });
   }
 }
@@ -695,7 +720,7 @@ function render(): void {
   value.classList.toggle('hidden-value', hiddenTime);
   area.dataset.state = timer.state;
   const busy = running || timer.state === 'HOLDING' || timer.state === 'READY';
-  area.disabled = !user || editing || deleting || Boolean(editorSolve) || !scramblePopup.hidden || history.open || settings.open || !scrambles.canStart;
+  area.disabled = timerUnavailable();
   history.inert = busy || !user;
   const actions = element('last-solve-actions');
   const hideActions = busy || timer.state !== 'STOPPED' || !lastSolve;

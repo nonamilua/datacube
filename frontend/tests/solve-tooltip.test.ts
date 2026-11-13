@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { solveDateTitle } from '../src/analytics/solve-tooltip.ts';
+import { solveDateTitle, solveTooltipValues } from '../src/analytics/solve-tooltip.ts';
 
 test('tooltip uses original solve position after chart sampling or omitted times', () => {
   const timestamps = Array.from({length: 1200}, (_, i) => new Date(Date.UTC(2025, 0, 1, 0, i)).toISOString());
@@ -31,4 +31,12 @@ test('tooltip uses yyyy-mm-dd in the device timezone including day and year boun
 test('missing and invalid timestamps do not display a misleading solve number', () => {
   for (const position of [undefined, 0, 2, 1.5]) assert.equal(solveDateTitle(position, ['invalid']), '');
   assert.equal(solveDateTitle(1, ['invalid']), '');
+});
+
+test('Times tooltip reads full values at the same solve position and respects legend visibility', () => {
+  const series = [[11000, 12000, Infinity], [null, 11500, 11600], [null, 11250, 11300], [11000, null, null]];
+  const visible = (index: number) => index !== 2;
+  assert.deepEqual(solveTooltipValues(2, series, visible), [{index: 0, value: 12000}, {index: 1, value: 11500}]);
+  assert.deepEqual(solveTooltipValues(3, series, visible), [{index: 1, value: 11600}]);
+  assert.deepEqual(solveTooltipValues(4, series, visible), []);
 });
