@@ -1,14 +1,18 @@
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from datetime import datetime, timezone
+import json
 from uuid import uuid4
 
 import pytest
+from fastapi import HTTPException, Request
 from sqlmodel import Session
 
 from backend.models.account import Category, Cube
+from backend.models.backup import NATIVE_BACKUP_BYTES
 from backend.models.solve import Solve
 from backend.models.solve_import import IMPORT_BYTES
+from backend.routes.backup import read_native_body
 from backend.tests.test_solves import client, payload
 
 
@@ -185,6 +189,38 @@ def test_version_duplicates_size_and_account_guard(client):
     client.post("/api/auth/logout")
     assert client.get("/api/solves/backup").status_code == 401
     assert client.post("/api/solves/restore/preview", json=document).status_code == 401
+
+
+@pytest.mark.parametrize("suffix", ["/preview", ""])
+def test_native_restore_accepts_exact_byte_limit_and_rejects_one_byte_more(client, suffix):
+    content = b"\xef\xbb\xbf" + json.dumps(backup()).encode()
+    exact = content.ljust(NATIVE_BACKUP_BYTES, b" ")
+    endpoint = f"/api/solves/restore{suffix}"
+
+    rejected = client.post(endpoint, content=exact + b" ")
+    assert rejected.status_code == 413
+    assert rejected.json() == {"detail": "backup exceeds 32 mib"}
+    assert client.get("/api/solves/all").json()["total"] == 0
+
+    accepted = client.post(endpoint, content=exact)
+    assert accepted.status_code == 200, accepted.text
+    assert accepted.json() == {"imported": 1, "skipped": 0}
+
+
+def test_native_upload_stops_reading_at_limit_without_content_length():
+    import asyncio
+
+    chunks = iter([b" " * NATIVE_BACKUP_BYTES, b" "])
+
+    async def receive():
+        chunk = next(chunks, None)
+        assert chunk is not None, "restore kept reading after exceeding the upload limit"
+        return {"type": "http.request", "body": chunk, "more_body": True}
+
+    request = Request({"type": "http", "headers": []}, receive)
+    with pytest.raises(HTTPException) as error:
+        asyncio.run(read_native_body(request))
+    assert error.value.status_code == 413
 
 
 def test_concurrent_restore_cannot_duplicate_rows(client):

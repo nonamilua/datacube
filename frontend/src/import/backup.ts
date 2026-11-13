@@ -1,11 +1,15 @@
 import { ApiError } from '../api/api.ts';
 import type { ImportResult } from './client.ts';
+import { ImportError } from './cstimer.ts';
+
+const NATIVE_BACKUP_BYTES = 32 * 1024 * 1024;
 
 export function isDatacubeBackup(data:unknown):boolean {
   return typeof data === 'object' && data !== null && 'format' in data && data.format === 'datacube';
 }
 
 export async function restoreBackup(owner:number, file:Blob, signal:AbortSignal, preview = false):Promise<ImportResult> {
+  if (file.size > NATIVE_BACKUP_BYTES) throw new ImportError('backup exceeds 32 mib');
   // Send the original bytes so JS does not round timestamps or large integers.
   const response = await fetch(preview ? '/api/solves/restore/preview' : '/api/solves/restore', {
     method:'POST', headers:{'Content-Type':'application/json','X-Namicubes-Request':'1','X-Namicubes-Account':String(owner)},

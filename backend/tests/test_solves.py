@@ -16,7 +16,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("DATACUBE_TURNSTILE_MODE", "off")
     # Keep functional tests isolated from process-local counters and timing.
     monkeypatch.setattr(rate_limits, "limiter", rate_limits.RequestLimiter(
-        bulk_account=100, bulk_ip=100, signup_ip=100, bulk_concurrent=2,
+        bulk_account=100, bulk_ip=100, signup_ip=100, login_ip=100, bulk_concurrent=2,
     ))
     engine = create_engine(f"sqlite:///{tmp_path / 'test.db'}", connect_args={"check_same_thread": False})
     monkeypatch.setattr("backend.database.engine", engine)
@@ -222,6 +222,20 @@ def test_login_logout_and_csrf(client):
     client.headers.pop("X-Namicubes-Request")
     assert client.post("/api/auth/logout").status_code == 403
     assert client.get("/api/auth/me").status_code == 200
+
+
+def test_secure_session_cookie_is_sent_only_over_https(client, monkeypatch):
+    monkeypatch.setenv("COOKIE_SECURE", "true")
+    credentials = {"username": "tester", "password": "test password"}
+    with TestClient(app, base_url="https://solves.example.test", headers={"X-Namicubes-Request": "1"}) as browser:
+        response = browser.post("/api/auth/login", json=credentials)
+        assert response.status_code == 200
+        attributes = {item.strip().lower() for item in response.headers["set-cookie"].split(";")[1:]}
+        assert {"secure", "httponly", "samesite=strict", "path=/"} <= attributes
+        assert browser.get("/api/auth/me").status_code == 200
+        assert browser.get("http://solves.example.test/api/auth/me").status_code == 401
+        assert browser.post("/api/auth/logout").status_code == 204
+        assert browser.get("/api/auth/me").status_code == 401
 
 
 def test_stale_account_guard(client):

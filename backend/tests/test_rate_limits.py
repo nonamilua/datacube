@@ -12,10 +12,10 @@ from backend.tests.test_solve_import import group
 from backend.tests.test_solves import client, payload
 
 
-def configure_limits(monkeypatch, *, account=6, ip=30, signup=5, concurrent=2):
+def configure_limits(monkeypatch, *, account=6, ip=30, signup=5, login=10, concurrent=2):
     now = [100.0]
     monkeypatch.setattr(rate_limits, "limiter", rate_limits.RequestLimiter(
-        bulk_account=account, bulk_ip=ip, signup_ip=signup, bulk_concurrent=concurrent, clock=lambda: now[0],
+        bulk_account=account, bulk_ip=ip, signup_ip=signup, login_ip=login, bulk_concurrent=concurrent, clock=lambda: now[0],
     ))
     monkeypatch.setattr(rate_limits, "TRUSTED_PROXIES", ())
     return now
@@ -103,6 +103,35 @@ def test_explicitly_trusted_proxy_uses_nearest_untrusted_ip(client, monkeypatch)
         assert signup(proxy, "proxied_second", {"X-Forwarded-For": "192.0.2.2, 10.0.0.2"}).status_code == 201
         assert signup(proxy, "fallback_first", {"X-Forwarded-For": "bad-ip"}).status_code == 201
         assert_throttled(signup(proxy, "fallback_second", {"X-Forwarded-For": "192.0.2.3, bad-ip"}), 60)
+
+
+def test_login_throttles_before_verification_and_recovers(client, monkeypatch):
+    now = configure_limits(monkeypatch, login=2, signup=1)
+    verify = auth.passwords.verify
+    checked = []
+
+    def verify_password(password, password_hash):
+        checked.append(password)
+        return verify(password, password_hash)
+
+    monkeypatch.setattr(auth.passwords, "verify", verify_password)
+    headers = {"X-Namicubes-Request": "1"}
+    credentials = {"username": "tester", "password": "test password"}
+    path = "/api/auth/login"
+    with TestClient(app, client=("192.0.2.20", 5000), headers=headers) as browser, \
+            TestClient(app, client=("192.0.2.21", 5000), headers=headers) as other:
+        assert browser.post(path, json=credentials).status_code == 200
+        assert browser.post(path, json={**credentials, "password": "wrong password"}).status_code == 401
+        now[0] += 15
+        spoofed = {"X-Forwarded-For": "192.0.2.21", "Forwarded": "for=192.0.2.21", "X-Real-IP": "192.0.2.21"}
+        assert_throttled(browser.post(path, headers=spoofed, json=credentials), 45)
+        assert_throttled(browser.post(path, content=b"invalid", headers={"Content-Type": "application/json"}), 45)
+        assert checked == ["test password", "wrong password"]
+        assert other.post(path, json=credentials).status_code == 200
+        assert signup(browser, "independent_signup").status_code == 201
+        assert browser.get("/api/auth/me").status_code == 200
+        now[0] += 45
+        assert browser.post(path, json=credentials).status_code == 200
 
 
 def test_bulk_slots_cover_generation_and_timer_saves_work_while_full(client, monkeypatch):

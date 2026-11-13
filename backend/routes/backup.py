@@ -5,7 +5,7 @@ from sqlmodel import Session
 
 from backend.database import get_session
 from backend.models.account import User
-from backend.models.backup import NativeBackup, RestoreResult
+from backend.models.backup import NATIVE_BACKUP_BYTES, NativeBackup, RestoreResult
 from backend.models.solve_import import IMPORT_BYTES
 from backend.services.backup import export_backup, restore_backup
 from backend.services.rate_limits import bulk_user
@@ -13,13 +13,20 @@ from backend.services.rate_limits import bulk_user
 router = APIRouter(prefix="/api/solves", tags=["solves"])
 
 
-async def read_native_body(request: Request) -> bytes:
-    return await request.body()
+async def read_native_body(request: Request) -> bytearray:
+    content = bytearray()
+    async for chunk in request.stream():
+        if len(content) + len(chunk) > NATIVE_BACKUP_BYTES:
+            raise HTTPException(413, "backup exceeds 32 mib")
+        content.extend(chunk)
+    return content
 
 
-def read_backup(content: bytes = Depends(read_native_body)) -> NativeBackup:
+def read_backup(content: bytearray = Depends(read_native_body)) -> NativeBackup:
     try:
-        return NativeBackup.model_validate_json(content.removeprefix(b"\xef\xbb\xbf"))
+        if content.startswith(b"\xef\xbb\xbf"):
+            del content[:3]
+        return NativeBackup.model_validate_json(content)
     except ValidationError as error:
         # Large files go directly to this endpoint for format detection. Keep the
         # legacy size error for files that do not identify themselves as Datacube.

@@ -50,3 +50,15 @@ test('native restore requires two nonnegative integer counts and preserves API e
   for (let index = 0; index < 3; index++) await assert.rejects(restore(),/invalid restore response/);
   await assert.rejects(restore(),{status:413,message:'file exceeds 10 mib'});
 });
+
+test('native restore rejects a file over 32 MiB before uploading', async t => {
+  const limit = 32 * 1024 * 1024;
+  const file = new Blob([new Uint8Array(limit + 1)]);
+  const fetch = t.mock.method(globalThis,'fetch',async () => Response.json({imported:1,skipped:0}));
+  const {signal} = new AbortController();
+  await assert.rejects(restoreBackup(7,file,signal,true),/backup exceeds 32 mib/);
+  await assert.rejects(restoreBackup(7,file,signal),/backup exceeds 32 mib/);
+  assert.equal(fetch.mock.callCount(),0);
+  assert.deepEqual(await restoreBackup(7,file.slice(0,limit),signal,true),{imported:1,skipped:0});
+  assert.equal(fetch.mock.callCount(),1);
+});

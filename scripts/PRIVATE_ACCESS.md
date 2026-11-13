@@ -1,52 +1,31 @@
-# Private access to datacube
+# Private HTTPS with Tailscale
 
-This machine uses Tailscale Serve for private HTTPS access. Only devices allowed
-by the personal Tailscale network can connect. Datacube still requires its own
-username and password. No router port forwarding or public Funnel is used.
+Tailscale Serve can put Datacube on your private tailnet. Datacube still asks for its own sign-in. Keep the host awake and connected while you want to use the app from another device.
 
-The separate server binds only to `127.0.0.1:8765`. It uses the existing backend
-and database, secure session cookies, and a production frontend snapshot stored
-in `.venv/private-access/site`. Development ports 5174 and 8000 are unchanged.
-Only that built public folder is served, never the repository or database files.
-The private process has its own rate counters. It groups IP limits by the
-loopback connection by default. The README documents `DATACUBE_TRUSTED_PROXIES`
-for setups where an explicitly trusted proxy supplies the client address.
+1. Connect the Windows host and your other devices to the same tailnet. Enable HTTPS certificates in Tailscale if prompted.
+2. Follow the backend and frontend dependency setup in the [README](../README.md). In the repository root, build and start the private app.
 
-From PowerShell in `C:\dev\cubeapp`:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\private-access.ps1 -Build
+   ```
 
-```powershell
-# Start the existing snapshot
-powershell -ExecutionPolicy Bypass -File .\scripts\private-access.ps1
-# Refresh the frontend snapshot and restart after app changes
-powershell -ExecutionPolicy Bypass -File .\scripts\private-access.ps1 -Build
-# Check or stop only the private app server
-powershell -ExecutionPolicy Bypass -File .\scripts\private-access.ps1 -Status
-powershell -ExecutionPolicy Bypass -File .\scripts\private-access.ps1 -Stop
-```
+3. Run Tailscale Serve and copy the HTTPS address it prints. Run from Administrator PowerShell if Tailscale asks for it.
 
-The private hostname is stored locally in `.venv/private-access/settings.json`.
-Tailscale's `serve --bg` configuration persists separately in its Windows service.
-Keep the PC powered on, awake, and connected to the internet. The startup shortcut
-starts the private app when this Windows account signs in; it does not wake a
-sleeping PC or run the app before Windows sign-in. Sleep/power settings are not
-changed automatically.
+   ```powershell
+   tailscale serve --bg http://127.0.0.1:8765
+   ```
 
-On the phone, install Tailscale from the official app store, sign in to the same
-personal Tailscale account, enable the VPN connection, and open the private HTTPS
-URL in the emailed instructions. Sign in with the existing datacube account.
-Bookmark that URL. It works over other Wi-Fi networks and mobile data while the
-PC is available. Disconnecting Tailscale on the phone should make the URL
-unreachable. Preferably test this on mobile data before leaving home.
+4. In the repository root, save the exact hostname from that address, without the scheme or path, and restart the private app.
 
-If access fails, check the PC is awake, Tailscale is connected on both devices,
-and `-Status` reports the app running. Logs are in `.venv/private-access/`.
-The app's login and language/preferences on the new HTTPS origin are separate
-from browser storage on localhost, so select the event, cube and preferences on
-the phone as needed. Saved solves remain in the same account/database.
+   ```powershell
+   @{ hostname = 'your-device.your-tailnet.ts.net' } | ConvertTo-Json |
+       Set-Content .\.venv\private-access\settings.json -Encoding utf8
+   powershell -ExecutionPolicy Bypass -File .\scripts\private-access.ps1 -Stop
+   powershell -ExecutionPolicy Bypass -File .\scripts\private-access.ps1
+   ```
 
-To turn off remote access, run `tailscale serve reset` on this PC and stop the
-private app. To disable automatic app startup, remove only the
-`datacube private access.lnk` shortcut from this user's Windows Startup folder.
+5. Open the HTTPS address on another connected device and sign in with your existing Datacube account. The private server uses the same SQLite database as local development by default. Create accounts on localhost first when using the development Turnstile keys.
 
-References: [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve)
-and [install Tailscale on your devices](https://tailscale.com/download).
+The private server binds to loopback on port 8765 and uses secure cookies. Its build, hostname and logs stay in `.venv/private-access`. It has its own rate counters. Unless you configure trusted proxies, devices behind Serve share the loopback IP bucket. See [server settings](../AGENTS.md#server-settings).
+
+Run the script with `-Build` to refresh the snapshot, `-Status` to check the process or `-Stop` to stop it. Tailscale Serve’s background setting persists separately. Use `tailscale serve status` to check it and `tailscale serve reset` to remove the machine’s Serve configuration. [Tailscale Serve docs](https://tailscale.com/docs/reference/tailscale-cli/serve)

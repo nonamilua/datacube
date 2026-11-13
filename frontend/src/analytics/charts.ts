@@ -6,7 +6,7 @@ import { formatTime } from '../timer/timer';
 import { t } from '../i18n';
 import { solveDateTitle, solveTooltipValues } from './solve-tooltip';
 import { chartScale, symbolDimensions, chartPixelRatio } from './presentation';
-import { sampleAverageIndexes, sampleTimeIndexes, timeSampleTarget } from './time-sampling';
+import { evenlySpacedIndexes } from './time-sampling';
 Chart.register(LineController, BarController, LineElement, PointElement, BarElement, LinearScale, CategoryScale, Tooltip, Legend);
 
 declare module 'chart.js' {
@@ -86,7 +86,6 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
     ] },
     options: { responsive: true, maintainAspectRatio: false, devicePixelRatio: chartPixelRatio(), animation: false,
       events: ['pointermove', 'pointerout', 'click'],
-      onResize: (_, {width}) => { if (isVisible()) sampleTimeSeries(width); },
       interaction: { mode: 'solvePosition', axis: 'x', intersect: false },
       plugins: { legend: { position: 'bottom', onClick(event, item, legend) {
         const index = item.datasetIndex;
@@ -179,18 +178,17 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
     line.options.scales!.y!.min = axis.min;
     line.options.scales!.y!.max = axis.max;
   }
-  function sampleTimeSeries(width: number) {
+  function sampleTimeSeries() {
     if (!timeSeries.length) return;
-    const target = Math.min(timeSeries[TIME].length, timeSampleTarget(width));
+    const target = Math.min(timeSeries[TIME].length, mobile.matches ? 600 : 1200);
     if (target === sampledTarget) return;
     sampledTarget = target;
-    const timeIndexes = sampleTimeIndexes(timeSeries[TIME], timeSeries[BEST], target);
-    const averageIndexes = sampleAverageIndexes(timeSeries[TIME].length, target);
+    const indexes = evenlySpacedIndexes(timeSeries[TIME].length, target);
     for (const [index, values] of timeSeries.entries()) {
-      const indexes = index === TIME || index === BEST ? timeIndexes : averageIndexes;
-      line.data.datasets[index].data = indexes.map(i => ({
-        x: i + 1, y: values[i] !== null && Number.isFinite(values[i]) ? values[i]! / 1000 : null,
-      }));
+      // Personal bests have their own series so they can all be retained.
+      line.data.datasets[index].data = index === BEST
+        ? values.flatMap((value, i) => value !== null ? [{x: i + 1, y: value / 1000}] : [])
+        : indexes.map(i => ({x: i + 1, y: values[i] !== null && Number.isFinite(values[i]) ? values[i]! / 1000 : null}));
     }
     updateLineWidths();
   }
@@ -241,7 +239,7 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       dataset.pointHoverBorderWidth = (index === BEST ? 1 : index === TIME ? 0 : 0.5) * scale;
     }
     line.resize(); bars.resize();
-    if (redraw) { applySeriesVisibility(); updateTimeAxis(); sampleTimeSeries(line.width); line.update('none'); bars.update('none'); }
+    if (redraw) { applySeriesVisibility(); updateTimeAxis(); sampleTimeSeries(); line.update('none'); bars.update('none'); }
   }
   document.addEventListener('pointerdown', event => {
     if (timesTooltip.hidden || event.target === lineCanvas) return;
@@ -278,7 +276,7 @@ export function createCharts(lineCanvas: HTMLCanvasElement, histogramCanvas: HTM
       updateTimeAxis();
       line.options.scales!.x!.max = Math.max(2, stats.times.length);
       sampledTarget = -1;
-      sampleTimeSeries(line.width);
+      sampleTimeSeries();
       const distribution = histogram(stats.times);
       histogramTotal = distribution.counts.reduce((total, count) => total + count, distribution.omitted);
       const countAxis = distributionAxis(distribution.counts);

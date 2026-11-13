@@ -7,7 +7,7 @@ from backend.routes.organization import router as organization_router
 from backend.routes.cube_catalog import router as cube_catalog_router
 from backend.routes.solve_import import router as import_router
 from backend.routes.backup import router as backup_router
-from backend.services.rate_limits import limit_signup
+from backend.services.rate_limits import limit_auth
 
 app = FastAPI(title="datacube")
 app.include_router(router)
@@ -26,9 +26,9 @@ async def protect_writes(request: Request, call_next):
     if path.startswith("/api/") and request.method not in ("GET", "HEAD", "OPTIONS"):
         if request.headers.get("x-namicubes-request") != "1":
             return JSONResponse({"detail": "request header required"}, status_code=403)
-    if request.method == "POST" and path == "/api/auth/register":
+    if request.method == "POST" and path in ("/api/auth/register", "/api/auth/login"):
         try:
-            limit_signup(request)
+            limit_auth(request, signup=path == "/api/auth/register")
         except HTTPException as error:
             return JSONResponse({"detail": error.detail}, status_code=error.status_code, headers=error.headers)
     return await call_next(request)

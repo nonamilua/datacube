@@ -8,6 +8,7 @@ dist/
 __pycache__/
 *.pyc
 .pytest_cache/
+/.pytest-*/
 *.db
 *.sqlite3
 *.sqlite
@@ -17,3 +18,8 @@ __pycache__/
 *.db-shm
 *.db-wal
 *.log
+*.pem
+*.key
+*.p12
+*.pfx
+datacube-backup*.json

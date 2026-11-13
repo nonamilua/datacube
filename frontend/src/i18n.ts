@@ -50,6 +50,7 @@ export const translations: Record<string, readonly [string, string]> = {
   'no solves in file':['arquivo sem tempos','archivo sin tiempos'],
   'choose a txt or json file':['escolha um arquivo txt ou json','elige un archivo txt o json'],
   'file exceeds 10 mib':['arquivo excede 10 mib','archivo supera 10 mib'],
+  'backup exceeds 32 mib':['backup excede 32 mib','respaldo supera 32 mib'],
   'too many solves':['limite de 50000 tempos excedido','límite de 50000 tiempos superado'],
   'file unavailable':['arquivo indisponível','archivo no disponible'],
 

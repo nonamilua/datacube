@@ -62,10 +62,11 @@ def throttled(retry_after: int) -> HTTPException:
 
 
 class RequestLimiter:
-    def __init__(self, *, bulk_account: int, bulk_ip: int, signup_ip: int, bulk_concurrent: int, clock=monotonic):
+    def __init__(self, *, bulk_account: int, bulk_ip: int, signup_ip: int, login_ip: int, bulk_concurrent: int, clock=monotonic):
         self.bulk_account = bulk_account
         self.bulk_ip = bulk_ip
         self.signup_ip = signup_ip
+        self.login_ip = login_ip
         self.bulk_concurrent = bulk_concurrent
         self.clock = clock
         self.lock = Lock()
@@ -91,11 +92,12 @@ class RequestLimiter:
         if retry:
             raise throttled(retry)
 
-    def signup(self, address: str) -> None:
-        key = ("signup_ip", address)
+    def auth(self, address: str, *, signup: bool) -> None:
+        key = ("signup_ip" if signup else "login_ip", address)
+        limit = self.signup_ip if signup else self.login_ip
         with self.lock:
             now = self.clock()
-            self.check([(key, self.signup_ip)], now)
+            self.check([(key, limit)], now)
             self.hits.setdefault(key, deque()).append(now)
 
     @contextmanager
@@ -120,12 +122,13 @@ limiter = RequestLimiter(
     bulk_account=positive_setting("DATACUBE_BULK_ACCOUNT_PER_MINUTE", 6),
     bulk_ip=positive_setting("DATACUBE_BULK_IP_PER_MINUTE", 30),
     signup_ip=positive_setting("DATACUBE_SIGNUP_IP_PER_MINUTE", 5),
+    login_ip=positive_setting("DATACUBE_LOGIN_IP_PER_MINUTE", 10),
     bulk_concurrent=positive_setting("DATACUBE_BULK_CONCURRENT", 2),
 )
 
 
-def limit_signup(request: Request) -> None:
-    limiter.signup(client_ip(request))
+def limit_auth(request: Request, *, signup: bool) -> None:
+    limiter.auth(client_ip(request), signup=signup)
 
 
 async def bulk_user(request: Request, user: User = Depends(current_user)):
