@@ -1,13 +1,46 @@
 # datacube
 
-I built datacube for everyday speedcubing practice. Pick an event, time your solves, and come back later to see how you’ve been doing. It runs in the browser and works on phones too.
+**Track your solves. Analyze your performance. Understand your progress.**
 
-- Hold Space on a keyboard or press and hold the timer on a touchscreen. Release when the timer changes color to start.
-- Turn on scrambles or hide the running timer in settings. Pick a cube from the catalog or give yours a label.
-- Open history to find a solve, check its scramble, or add a tag, +2, or DNF.
-- Use Overview for times, averages, the distribution, and overall activity. Use Compare to see how your cubes or tags stack up within an event.
+Datacube is a browser-based speedcubing timer and analytics platform that turns your solving history into meaningful insights. Built with a focus on statistics and data visualization, it goes beyond traditional timing tools by providing interactive ways to explore your results, compare your puzzles, and understand how your performance changes over time.
 
-The interface is available in English, Brazilian Portuguese and Spanish. Solves follow your account. Settings are saved per account in the browser you’re using.
+### More than just averages
+
+Your average time only tells part of the story. Datacube lets you examine your solving performance from multiple perspectives:
+
+- **Track your progress:** Visualize individual solve times, rolling averages, and personal bests across your solving history.
+
+  <p align="center">
+    <img src="screenshots/times-plot.png" width="75%" alt="Solve times and rolling averages">
+  </p>
+
+- **Understand your consistency:** Explore time distributions to see how your results are spread out, rather than relying exclusively on averages.
+
+  <p align="center">
+    <img src="screenshots/histogram-dashboard.png" width="75%" alt="Solve time distribution histogram">
+  </p>
+
+- **Compare your cubes:** Use side-by-side statistical comparisons and boxplots to evaluate the performance and consistency of different puzzles.
+
+  <p align="center">
+    <img src="screenshots/boxplots-dashboard.png" width="75%" alt="Cube performance comparison boxplots">
+  </p>
+
+- **Analyze your practice:** Organize solves with custom tags to compare training categories, techniques, or practice conditions.
+- **Explore your activity:** Track your solving frequency through a calendar heatmap and examine how consistently you've been practicing.
+- **Focus on what matters:** Filter analytics by event, date range, cube, or tag to investigate specific subsets of your data.
+
+### Everything you need for everyday practice
+
+Datacube also provides the essential features of a modern speedcubing timer:
+
+- Responsive keyboard and touchscreen timing, with optional WCA event scrambles.
+- Persistent solve history with timestamps, penalties, scrambles, and custom labels.
+- User accounts with solve histories accessible across devices.
+- Import support for csTimer, plus complete JSON backups and restoration.
+- A responsive interface available in English, Brazilian Portuguese, and Spanish.
+
+Whether you're experimenting with a new cube, working on your consistency, or simply curious about your long-term improvement, Datacube gives you the tools to explore your results beyond the timer.
 
 ## Run it locally
 
