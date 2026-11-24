@@ -1,7 +1,5 @@
 # datacube
 
-**Track your solves. Analyze your performance. Understand your progress.**
-
 Datacube is a browser-based speedcubing timer and analytics platform that turns your solving history into meaningful insights. Built with a focus on statistics and data visualization, it goes beyond traditional timing tools by providing interactive ways to explore your results, compare your puzzles, and understand how your performance changes over time.
 
 ### More than just averages
@@ -17,7 +15,7 @@ Your average time only tells part of the story. Datacube lets you examine your s
 - **Understand your consistency:** Explore time distributions to see how your results are spread out, rather than relying exclusively on averages.
 
   <p align="center">
-    <img src="screenshots/histogram-dashboard.png" width="75%" alt="Solve time distribution histogram">
+    <img src="screenshots/histogram-dashboard.png" width="60%" alt="Solve time distribution histogram">
   </p>
 
 - **Compare your cubes:** Use side-by-side statistical comparisons and boxplots to evaluate the performance and consistency of different puzzles.
