@@ -7,24 +7,29 @@ Datacube is a browser-based speedcubing timer and analytics platform that turns 
 Your average time only tells part of the story. Datacube lets you examine your solving performance from multiple perspectives:
 
 - **Track your progress:** Visualize individual solve times, rolling averages, and personal bests across your solving history.
-
-  <p align="center">
+  <div align="center">
     <img src="screenshots/times-plot.png" width="75%" alt="Solve times and rolling averages">
-  </p>
-
+  </div>
 - **Understand your consistency:** Explore time distributions to see how your results are spread out, rather than relying exclusively on averages.
-  <p align="center">
+  <div align="center">
     <img src="screenshots/histogram-dashboard.png" width="60%" alt="Solve time distribution histogram">
-  </p>
+  </div>
 - **Compare your cubes:** Use side-by-side statistical comparisons and boxplots to evaluate the performance and consistency of different puzzles.
-
-  <p align="center">
+  <div align="center">
     <img src="screenshots/boxplots-dashboard.png" width="60%" alt="Cube performance comparison boxplots">
-  </p>
-
+  </div>
 - **Analyze your practice:** Organize solves with custom tags to compare training categories, techniques, or practice conditions.
+  <div align="center">
+    <img src="screenshots/custom-tag-comparison.png" width="60%" alt="Comparison of solve times by practice tag">
+  </div>
 - **Explore your activity:** Track your solving frequency through a calendar heatmap and examine how consistently you've been practicing.
+  <div align="center">
+    <img src="screenshots/dashboard-activity.png" width="60%" alt="Solving activity calendar heatmap">
+  </div>
 - **Focus on what matters:** Filter analytics by event, date range, cube, or tag to investigate specific subsets of your data.
+  <div align="center">
+    <img src="screenshots/dashboard-filters-cards.png" width="60%" alt="Analytics filters and statistics cards">
+  </div>
 
 ### Everything you need for everyday practice
 
