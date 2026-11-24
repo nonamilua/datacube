@@ -12,7 +12,7 @@ Your average time only tells part of the story. Datacube lets you examine your s
   </div>
 - **Understand your consistency:** Explore time distributions to see how your results are spread out, rather than relying exclusively on averages.
   <div align="center">
-    <img src="screenshots/histogram-dashboard.png" width="60%" alt="Solve time distribution histogram">
+    <img src="screenshots/histogram-dashboard.png" width="50%" alt="Solve time distribution histogram">
   </div>
 - **Compare your cubes:** Use side-by-side statistical comparisons and boxplots to evaluate the performance and consistency of different puzzles.
   <div align="center">
@@ -28,7 +28,7 @@ Your average time only tells part of the story. Datacube lets you examine your s
   </div>
 - **Focus on what matters:** Filter analytics by event, date range, cube, or tag to investigate specific subsets of your data.
   <div align="center">
-    <img src="screenshots/dashboard-filters-cards.png" width="75%" alt="Analytics filters and statistics cards">
+    <img src="screenshots/dashboard-filters-cards.png" width="80%" alt="Analytics filters and statistics cards">
   </div>
 
 ### Everything you need for everyday practice
