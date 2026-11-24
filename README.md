@@ -24,11 +24,11 @@ Your average time only tells part of the story. Datacube lets you examine your s
   </div>
 - **Explore your activity:** Track your solving frequency through a calendar heatmap and examine how consistently you've been practicing.
   <div align="center">
-    <img src="screenshots/dashboard-activity.png" width="60%" alt="Solving activity calendar heatmap">
+    <img src="screenshots/dashboard-activity.png" width="40%" alt="Solving activity calendar heatmap">
   </div>
 - **Focus on what matters:** Filter analytics by event, date range, cube, or tag to investigate specific subsets of your data.
   <div align="center">
-    <img src="screenshots/dashboard-filters-cards.png" width="60%" alt="Analytics filters and statistics cards">
+    <img src="screenshots/dashboard-filters-cards.png" width="75%" alt="Analytics filters and statistics cards">
   </div>
 
 ### Everything you need for everyday practice
