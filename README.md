@@ -13,11 +13,9 @@ Your average time only tells part of the story. Datacube lets you examine your s
   </p>
 
 - **Understand your consistency:** Explore time distributions to see how your results are spread out, rather than relying exclusively on averages.
-
   <p align="center">
     <img src="screenshots/histogram-dashboard.png" width="60%" alt="Solve time distribution histogram">
   </p>
-
 - **Compare your cubes:** Use side-by-side statistical comparisons and boxplots to evaluate the performance and consistency of different puzzles.
 
   <p align="center">
