@@ -1,5 +1,7 @@
 # datacube
 
+**Try Datacube online:** [datacube57.duckdns.org](https://datacube57.duckdns.org)
+
 Datacube is a browser-based speedcubing timer and analytics platform that turns your solving history into meaningful insights. Built with a focus on statistics and data visualization, it goes beyond traditional timing tools by providing interactive ways to explore your results, compare your puzzles, and understand how your performance changes over time.
 
 ### More than just averages
